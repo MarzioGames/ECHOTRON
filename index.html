@@ -427,10 +427,27 @@ async function setupSDK(){
         sdk=window.CrazyGames.SDK;
         await sdk.init();
         sdk.game.loadingFinished(); // ✅ required: signals loading screen is done
+        setupSDKMuteHandler();      // ✅ required: listen for platform mute events
         console.log('[CrazyGames] SDK ready');
     } catch(e){ sdk=null; console.warn('[CrazyGames] SDK init failed, running standalone'); }
 }
 setupSDK();
+
+// ── CrazyGames mute event handler ────────────────────────────────
+// Required to pass SDK audit when "supports mute" is checked.
+// The platform sends this event when the user mutes via CrazyGames UI.
+function setupSDKMuteHandler(){
+    if(!sdk) return;
+    try{
+        sdk.game.addEventHandler('mute', (isMuted) => {
+            audioMuted = isMuted;
+            if(audioReady) masterGain.gain.value = isMuted ? 0 : 0.7;
+            const b = document.getElementById('btn-mute');
+            b.textContent = isMuted ? '[ ♪ OFF ]' : '[ ♪ ON ]';
+            b.classList.toggle('muted', isMuted);
+        });
+    } catch(e){ console.warn('[CrazyGames] mute handler failed:', e); }
+}
 
 // ── gameplayStart / gameplayStop ─────────────────────────────────
 // CrazyGames REQUIRES these calls to track session time correctly.
