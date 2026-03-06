@@ -336,8 +336,11 @@
         <button class="btn" id="btn-solo">SOLO EXTRACTION</button>
         <button class="btn" id="btn-duelo" style="color:var(--p2);border-color:#1a1a1a;">NEURAL DUEL (1 VS 1)</button>
         <div class="menu-controls">
-            P1 MOVE: <span>A / D</span> &nbsp;·&nbsp; ORBIT SHIFT: <span>SPACE</span> &nbsp;·&nbsp; PAUSE: <span>ESC</span><br>
-            P2 MOVE: <span>← / →</span> &nbsp;·&nbsp; P2 SHIFT: <span>SHIFT</span> &nbsp;·&nbsp; MUTE: <span>M</span>
+            P1 MOVE: <span>A / D</span> &nbsp;·&nbsp; ORBIT IN: <span>SPACE</span> &nbsp;·&nbsp; ORBIT OUT: <span>S</span> &nbsp;·&nbsp; PAUSE: <span>ESC</span><br>
+            P2 MOVE: <span>← / →</span> &nbsp;·&nbsp; P2 IN: <span>SHIFT</span> &nbsp;·&nbsp; P2 OUT: <span>↓</span> &nbsp;·&nbsp; MUTE: <span>M</span>
+        </div>
+        <div style="position:absolute;bottom:20px;width:100%;text-align:center;font-size:9px;letter-spacing:3px;color:#252525;">
+            CRIADO POR <span style="color:#3a3a3a;">MARZIO</span>
         </div>
     </div>
 
@@ -376,10 +379,12 @@
             <div class="touch-btn" id="touch-left">◀</div>
         </div>
         <div id="touch-mid-wrap">
-            <div class="touch-btn-mid" id="touch-orbit">ORBIT</div>
+            <div class="touch-btn-mid" id="touch-orbit-in">IN</div>
+            <div class="touch-btn-mid" id="touch-orbit-out">OUT</div>
             <div id="touch-p2-wrap">
                 <div class="touch-btn-mid" id="touch-p2-left" style="color:#00ccff;border-color:#001a22;">◀</div>
-                <div class="touch-btn-mid" id="touch-p2-orbit" style="color:#00ccff;border-color:#001a22;">ORB</div>
+                <div class="touch-btn-mid" id="touch-p2-orbit-in" style="color:#00ccff;border-color:#001a22;">IN</div>
+                <div class="touch-btn-mid" id="touch-p2-orbit-out" style="color:#00ccff;border-color:#001a22;">OUT</div>
                 <div class="touch-btn-mid" id="touch-p2-right" style="color:#00ccff;border-color:#001a22;">▶</div>
             </div>
         </div>
@@ -404,8 +409,9 @@ const CONFIG = {
     SPAWN_INTERVAL_HELL: 40,
     SPEED_SCALE:         0.015,
     BASE_RADIUS:         75,
+    INNER_RADIUS:        50,   // Space — closer orbit
+    FAR_RADIUS:          105,  // S — farther orbit
     LIVES:               3,
-    // Duel: every N rings scored, fire a sabotage ring at opponent
     DUEL_SABOTAGE_EVERY: 8,
 };
 
@@ -836,8 +842,8 @@ class Player {
         this.radius=CONFIG.BASE_RADIUS; this.targetRadius=CONFIG.BASE_RADIUS;
         this.lives=CONFIG.LIVES; this.score=0; this.invul=0;
         this.obstacles=[]; this.shield=false; this.streak=0;
-        this.sabotagePending=0; // sabotage rings queued by opponent
-        this.sabotageFired=0;   // rings scored — tracks when to fire sabotage
+        this.sabotagePending=0;
+        this.sabotageFired=0;
     }
 
     // Called by opponent when they score N rings
@@ -874,6 +880,19 @@ class Player {
         if(keys[this.ctrl.L]) this.vel-=0.013;
         if(keys[this.ctrl.R]) this.vel+=0.013;
         this.vel*=0.84; this.angle+=this.vel;
+
+        // ── ORBIT CONTROL ──
+        // Space/Up  → inner orbit (50)
+        // S/Down    → far orbit (105)
+        // default   → base orbit (75)
+        if(keys[this.ctrl.IN]){
+            this.targetRadius = CONFIG.INNER_RADIUS;
+        } else if(keys[this.ctrl.OUT]){
+            this.targetRadius = CONFIG.FAR_RADIUS;
+        } else {
+            this.targetRadius = CONFIG.BASE_RADIUS;
+        }
+
         this.radius+=(this.targetRadius-this.radius)*0.18;
         if(this.invul>0) this.invul--;
         if(nearMissCooldown>0) nearMissCooldown--;
@@ -898,9 +917,21 @@ class Player {
             o.r+=o.speed; o.gap+=o.gapSpeed;
             if(o.sizeDelta) o.size=Math.max(o.targetSize*.4,o.size+o.sizeDelta);
 
-            if(o.r>this.radius-7 && o.r<this.radius+7 && this.invul<=0){
+            // ── IMPROVED HITBOX ──
+            // Radial zone: tighter (±5px instead of ±7) — feels more fair
+            // Angular hitbox: subtract a small margin from both gap edges
+            // so the player dot (4px square) doesn't get clipped by the ring edge
+            const HIT_ZONE   = 5;                     // radial thickness
+            const DOT_MARGIN = 0.055;                 // ~3° angular forgiveness per edge
+
+            if(o.r > this.radius - HIT_ZONE && o.r < this.radius + HIT_ZONE && this.invul<=0){
                 const pPos=(this.angle%TAU+TAU)%TAU;
-                const inGap=pPos>o.gap && pPos<o.gap+o.size;
+                // Gap is slightly "wider" for the player due to dot margin
+                const gapStart = (o.gap + DOT_MARGIN + TAU) % TAU;
+                const gapEnd   = (o.gap + o.size - DOT_MARGIN + TAU) % TAU;
+                const inGap = gapEnd > gapStart
+                    ? pPos > gapStart && pPos < gapEnd
+                    : pPos > gapStart || pPos < gapEnd; // wraps around TAU
 
                 // ── NEAR-MISS DETECTION ──
                 // Player is in the "near miss zone" just outside the gap edges
@@ -1043,10 +1074,10 @@ function initGame(mode){
     document.getElementById('touch-controls').style.display=isTouch?'flex':'none';
     document.getElementById('touch-p2-wrap').style.display=(isTouch&&mode==='duelo')?'flex':'none';
 
-    p1=new Player('#ff6600',{L:'KeyA',R:'KeyD'},mode==='duelo'?120:225,'CASTIEL');
+    p1=new Player('#ff6600',{L:'KeyA',R:'KeyD',IN:'Space',OUT:'KeyS'},mode==='duelo'?120:225,'CASTIEL');
     p2=null;
     if(mode==='duelo'){
-        p2=new Player('#00ccff',{L:'ArrowLeft',R:'ArrowRight'},330,'S.I.M.O.N.');
+        p2=new Player('#00ccff',{L:'ArrowLeft',R:'ArrowRight',IN:'ShiftLeft',OUT:'ArrowDown'},330,'S.I.M.O.N.');
         document.getElementById('p2-hud').style.display='flex';
         document.getElementById('duel-score-bar').classList.remove('hidden');
     } else {
@@ -1199,8 +1230,7 @@ document.getElementById('btn-duel-menu').addEventListener('click',showMenu);
 
 window.addEventListener('keydown',e=>{
     keys[e.code]=true;
-    if(e.code==='Space'){ e.preventDefault(); if(p1) p1.targetRadius=p1.targetRadius===CONFIG.BASE_RADIUS?50:CONFIG.BASE_RADIUS; }
-    if(e.code==='ShiftLeft'||e.code==='ShiftRight'){ if(p2) p2.targetRadius=p2.targetRadius===CONFIG.BASE_RADIUS?50:CONFIG.BASE_RADIUS; }
+    if(e.code==='Space') e.preventDefault();
     if(e.code==='Escape'){ if(codeConsole.style.display==='block') resumeLoop(); else pauseGame(); }
     if(e.code==='KeyM') toggleMute();
 });
@@ -1226,15 +1256,9 @@ function setupTouch(id,code){
     el.addEventListener('mouseup',   ()=>{ keys[code]=false; el.classList.remove('active'); });
 }
 setupTouch('touch-left','KeyA'); setupTouch('touch-right','KeyD');
+setupTouch('touch-orbit-in','Space'); setupTouch('touch-orbit-out','KeyS');
 setupTouch('touch-p2-left','ArrowLeft'); setupTouch('touch-p2-right','ArrowRight');
-function setupOrbitTouch(id,getter){
-    const el=document.getElementById(id); if(!el) return;
-    const t=()=>{ const p=getter(); if(p) p.targetRadius=p.targetRadius===CONFIG.BASE_RADIUS?50:CONFIG.BASE_RADIUS; };
-    el.addEventListener('touchstart',e=>{ e.preventDefault(); t(); },{passive:false});
-    el.addEventListener('click',t);
-}
-setupOrbitTouch('touch-orbit',()=>p1);
-setupOrbitTouch('touch-p2-orbit',()=>p2);
+setupTouch('touch-p2-orbit-in','ShiftLeft'); setupTouch('touch-p2-orbit-out','ArrowDown');
 
 // ── BOOT: start menu animation ────────────────────────────────────
 startMenuAnim();
