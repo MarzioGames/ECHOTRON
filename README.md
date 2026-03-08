@@ -1,35 +1,23 @@
 # PULSE
-**PULSE**
 
-PULSE is a minimalist arcade reflex game set in a cyberpunk dystopia. You play as CASTIEL, a rogue signal trying to escape a neural network in 2041.
+**PULSE** is an arcade reflex game set in 2041, where you control a neural operator attempting to escape a hostile digital system. Pass through extraction rings as difficulty scales in real time — every ring cleared brings you closer to freedom, every mistake costs a life.
 
-Navigate your dot through an endless stream of closing rings by orbiting inward, outward, or holding your position. Survive long enough and the system will try to stop you.
+**Game Modes**
+Solo Extraction — one player against the system. Neural Duel — two players on the same screen, each controlling their side of the field, able to fire sabotage rings at the opponent every 8 rings scored.
 
-**Features**
-- 5 difficulty tiers that escalate automatically: INIT → TRACE → BREACH → CRITICAL → HELL_SYNC
-- Solo mode with 100-ring extraction goal
-- Local 1v1 Neural Duel with real-time sabotage mechanics
-- Procedural audio engine built entirely with Web Audio API — no sound files
-- Near-miss detection system
-- Contextual narrative that reacts to what you do in real time
-- Combo multiplier system
-- Full mobile support with touch controls
-- CrazyGames SDK integrated
+**5 Difficulty Tiers**
+INIT → TRACE → BREACH → CRITICAL → HELL_SYNC. As your score climbs, rings spin faster, shrink, and the available gap narrows. HELL_SYNC is the final state — maximum speed, minimum gaps, critical visual mode active.
+
+**Skin System**
+Three operators available in the Neural Store: CASTIEL (orange, default, free), S.I.M.O.N. (blue, dashed rings, 150 credits), VOID (purple, pulsing rings, 300 credits). P1 and P2 equip skins independently. Credits are earned by playing — 1 per ring cleared. Completing the game with VOID equipped unlocks an exclusive ending.
+
+**Cheat Codes**
+Open the terminal during gameplay or from the main menu. BERRYBURN grants 1000 neural credits instantly. SKIP advances score to near-victory. GHOST activates invincibility. PULSE2 restores all lives. 1337 forces HELL\_SYNC immediately. MATRIX triggers a particle burst.
 
 **Controls**
+P1: A/D to move, SPACE to orbit inward, S to orbit outward. P2: ←/→ to move, SHIFT to orbit inward, ↓ to orbit outward. ESC pauses, M mutes audio.
 
-| Action | P1 | P2 |
-|---|---|---|
-| Move | A / D | ← / → |
-| Orbit inward | SPACE | SHIFT |
-| Orbit outward | S | ↓ |
-| Pause | ESC | — |
-| Mute | M | — |
+**Tech**
+Pure HTML, CSS and JavaScript. No frameworks, no external assets. Web Audio API for all sound. Fully responsive with automatic scaling. CrazyGames SDK compliant. localStorage for persistent credits, skin unlocks, and all-time best score.
 
-**Built with** vanilla HTML, CSS and JavaScript — single file, zero dependencies, zero build tools.
-
-**Created by Marzio**
-
-© 2026 Marzio. All rights reserved.
-Original game created by Marzio.
-Unauthorized copying or redistribution is prohibited.
+> © 2026 Marzio — All rights reserved. Unauthorized redistribution prohibited.
