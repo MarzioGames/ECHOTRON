@@ -71,7 +71,7 @@
         }
 
         /* ── TOP CONTROLS ── */
-        .top-ctrl{ position:absolute; top:12px; right:14px; display:flex; gap:5px; z-index:250; }
+        .top-ctrl{ position:absolute; top:12px; right:14px; display:flex; gap:5px; z-index:850; }
         .top-btn{
             background:#fff; border:1px solid var(--border); color:var(--ink3);
             cursor:pointer; font-size:8px; padding:5px 10px; font-weight:bold;
@@ -81,6 +81,10 @@
         .top-btn:hover{ border-color:var(--main); color:var(--main); background:#fff8f5; }
         #btn-mute{ color:var(--code); border-color:#c0ddc0; }
         #btn-mute.muted{ color:var(--ink3); border-color:var(--border); }
+        #btn-dark{ color:var(--ink2); }
+        .dark-mode #btn-dark{ color:var(--gold); background:#050508; border-color:#333; }
+        .dark-mode .top-btn{ background:#050508; border-color:#222; color:#444; }
+        .dark-mode .top-btn:hover{ color:var(--main); border-color:var(--main); background:#050508; }
 
         /* ── HUD ── */
         .hud{ position:absolute; top:0; width:100%; display:flex; justify-content:space-between; padding:14px 24px 0; z-index:50; pointer-events:none; }
@@ -167,9 +171,10 @@
             animation:scoreAnim .9s ease-out forwards;
         }
         .near-miss-popup{
-            position:absolute; font-size:8px; letter-spacing:2px; pointer-events:none;
+            position:absolute; font-size:8px; letter-spacing:3px; pointer-events:none;
             z-index:450; animation:nearMiss .7s ease-out forwards;
-            font-family:'Share Tech Mono',monospace; color:var(--ink3);
+            font-family:'Orbitron',monospace; font-weight:700;
+            transform:translateX(-50%);
         }
 
         /* ── CODE CONSOLE ── */
@@ -304,6 +309,45 @@
         .skin-equipped{ font-size:7px; letter-spacing:2px; color:var(--gold); }
         .skin-lock{ position:absolute; top:8px; right:8px; font-size:10px; color:var(--ink3); }
 
+        /* ── DARK MODE ── */
+        .dark-mode{
+            --bg:#080810; --ink:#e0e0e0; --ink2:#888; --ink3:#444;
+            --border:#1e1e2a; --border2:#141420; --gold:#ffcc00; --code:#00ff41;
+            --main:#ff6600; --p2:#00ccff; --error:#ff3333;
+        }
+        .dark-mode #game-wrapper{ background:var(--bg); border-color:#1a1a2a; box-shadow:0 2px 40px rgba(0,0,0,.6); }
+        .dark-mode html, .dark-mode body{ background:#000; }
+        body.dark-mode{ background:#000; }
+        .dark-mode .ui-layer{ background:rgba(5,5,8,.97); }
+        .dark-mode #main-menu{ background:rgba(5,5,8,.88); }
+        .dark-mode .btn{ background:transparent; border-color:#1e1e2a; color:#333; }
+        .dark-mode .btn:hover{ border-color:var(--main); color:var(--main); background:transparent; }
+        .dark-mode #code-console{ background:#000; border-color:var(--code); box-shadow:0 0 40px rgba(0,255,65,.08); }
+        .dark-mode #code-input{ color:var(--code); }
+        .dark-mode .console-hint{ color:#1a3a1a; }
+        .dark-mode .skin-card{ background:#050508; border-color:#1a1a22; }
+        .dark-mode .skin-card:hover{ border-color:#333; box-shadow:none; }
+        .dark-mode .skin-card canvas{ border-color:#111; }
+        .dark-mode .shop-credits{ background:#111100; border-color:#332200; }
+        .dark-mode .shop-tabs{ border-color:#1a1a22; }
+        .dark-mode .shop-tab{ background:#050508; color:#333; }
+        .dark-mode .shop-tab.active{ background:#e0e0e0; color:#000; }
+        .dark-mode #shop-screen{ background:rgba(5,5,8,.98); }
+        .dark-mode #pause-overlay{ background:rgba(5,5,8,.95); border-top-color:#333; }
+        .dark-mode #victory-screen{ background:#050508; border-top-color:var(--main); }
+        .dark-mode .vs-msg{ border-left-color:#1a1a22; color:#555; }
+        .dark-mode #game-over{ border-top-color:var(--error); }
+        .dark-mode .narrative-entry.context{ background:rgba(255,102,0,.06); }
+        .dark-mode .narrative-entry.system { background:rgba(0,255,65,.04); }
+        .dark-mode .narrative-entry.warning{ background:rgba(255,0,0,.05); }
+        .dark-mode .touch-btn{ background:rgba(255,255,255,.02); border-color:#1a1a1a; color:#2a2a2a; }
+        .dark-mode .touch-btn-mid{ background:rgba(255,255,255,.02); border-color:#1a1a1a; color:#222; }
+        .dark-mode #combo-display{ background:rgba(0,0,0,.7); border-color:var(--gold); }
+        .dark-mode .near-miss-popup{ background:rgba(0,0,0,.85) !important; }
+        .dark-mode #sabotage-warn{ background:rgba(0,0,0,.8); border-color:#440000; }
+        .dark-mode #ad-overlay{ background:rgba(5,5,8,.98); }
+        .dark-mode #btn-dark{ color:var(--gold); }
+
         /* ── SHOP TABS ── */
         .shop-tabs{ display:flex; gap:0; margin-bottom:20px; border:1px solid var(--border); }
         .shop-tab{
@@ -328,6 +372,7 @@
     <div class="top-ctrl">
         <button class="top-btn" id="btn-mute">[ ♪ ON ]</button>
         <button class="top-btn" id="btn-console" style="color:var(--code)">[ TERMINAL ]</button>
+        <button class="top-btn" id="btn-dark">[ ◑ ]</button>
         <button class="top-btn" id="btn-pause">[ PAUSE ]</button>
         <button class="top-btn" id="btn-fs">[ ⛶ ]</button>
     </div>
@@ -469,7 +514,26 @@
         <button class="btn" id="btn-shop-back" style="width:200px;">← BACK</button>
     </div>
 
-    <!-- VICTORY -->
+    <!-- TUTORIAL -->
+    <div id="tutorial-screen" class="ui-layer hidden">
+        <div id="tut-phase-label" style="font-size:8px;letter-spacing:4px;color:var(--ink3);margin-bottom:10px;"></div>
+        <div id="tut-instruction" style="font-family:'Orbitron',monospace;font-size:16px;letter-spacing:4px;color:var(--ink);margin-bottom:6px;text-align:center;"></div>
+        <div id="tut-sub" style="font-size:9px;letter-spacing:2px;color:var(--ink3);margin-bottom:28px;text-align:center;"></div>
+        <canvas id="tut-canvas" width="450" height="300" style="border:1px solid var(--border);display:block;"></canvas>
+        <div id="tut-hint" style="font-size:8px;letter-spacing:2px;color:var(--ink3);margin-top:14px;height:18px;text-align:center;"></div>
+        <button class="btn" id="btn-tut-skip" style="margin-top:16px;width:200px;font-size:8px;color:var(--ink3);">SKIP TRAINING</button>
+    </div>
+
+    <!-- TUTORIAL COMPLETE -->
+    <div id="tutorial-complete" class="ui-layer hidden">
+        <div style="font-size:8px;letter-spacing:4px;color:var(--ink3);margin-bottom:12px;">CALIBRATION COMPLETE</div>
+        <h1 style="font-family:'Orbitron',monospace;font-size:28px;letter-spacing:6px;color:var(--ink);margin-bottom:6px;">NEURAL LINK</h1>
+        <h1 style="font-family:'Orbitron',monospace;font-size:28px;letter-spacing:6px;color:var(--ink);margin-bottom:32px;">CALIBRATED</h1>
+        <div id="tut-complete-skin" style="font-size:9px;letter-spacing:3px;color:var(--main);margin-bottom:6px;"></div>
+        <div style="font-size:8px;letter-spacing:2px;color:var(--ink3);margin-bottom:32px;">STATUS: READY FOR EXTRACTION</div>
+        <button class="btn" id="btn-tut-begin">BEGIN EXTRACTION</button>
+        <button class="btn" id="btn-tut-menu" style="color:var(--ink3);font-size:9px;">BACK TO MENU</button>
+    </div>
     <div id="victory-screen" class="ui-layer">
         <h1>EXTRACTION COMPLETE</h1>
         <p id="final-msg" class="vs-msg"></p>
@@ -618,9 +682,10 @@ function drawSkinPreview(canvasId, skin){
     if(!c) return;
     const cx = c.getContext('2d');
     cx.clearRect(0,0,80,80);
-    cx.fillStyle='#f0f0eb';
+    cx.fillStyle= darkMode ? '#080810' : '#f0f0eb';
     cx.fillRect(0,0,80,80);
-    cx.strokeStyle='rgba(0,0,0,0.06)'; cx.lineWidth=0.5;
+    cx.strokeStyle= darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)';
+    cx.lineWidth=0.5;
     for(let i=0;i<=80;i+=20){ cx.beginPath(); cx.moveTo(i,0); cx.lineTo(i,80); cx.stroke(); cx.beginPath(); cx.moveTo(0,i); cx.lineTo(80,i); cx.stroke(); }
     cx.lineWidth=1;
 
@@ -873,6 +938,7 @@ function menuLoop(now=0){
     if(!menuActive) return;
     _tickPerf(now);
     mctx.clearRect(0,0,900,600);
+    if(darkMode){ mctx.fillStyle='#080810'; mctx.fillRect(0,0,900,600); }
 
     // On low perf, only draw 3 of the 5 rings
     const ringSlice = _lowPerf ? menuRings.slice(0,3) : menuRings;
@@ -913,10 +979,10 @@ function menuLoop(now=0){
         mctx.arc(ring.x, ring.y, ring.r, ring.gap+ring.gapSize, ring.gap);
         mctx.stroke();
 
-        // Dot on ring — dark on white
+        // Dot on ring — adapts to mode
         const dx = Math.cos(ring.dotAngle)*ring.r + ring.x;
         const dy = Math.sin(ring.dotAngle)*ring.r + ring.y;
-        mctx.fillStyle = ring.color;
+        mctx.fillStyle = darkMode ? '#ffffff' : ring.color;
         mctx.beginPath(); mctx.arc(dx,dy,2.5,0,TAU); mctx.fill();
         mctx.restore();
     });
@@ -1033,6 +1099,8 @@ let globalCombo=0, comboTimer=0, maxCombo=0;
 let sessionBest=0, lastTier=null;
 let nearMissTimeout=null;
 const keys={};
+const PARTICLE_CAP = 80;
+let darkMode = _lsGet('pulse_dark', false);
 
 // ── PARTICLES ────────────────────────────────────────────────────
 function spawnParticles(x,y,color,n=10){
@@ -1068,24 +1136,26 @@ function showScorePopup(x,y,text,color){
 }
 function showNearMissPopup(x,y,color){
     const el=document.createElement('div'); el.className='near-miss-popup';
-    el.style.cssText=`color:${color};left:${x/450*100}%;top:${y/300*100}%;text-shadow:0 0 10px ${color};`;
-    el.textContent='CLOSE'; wrapper.appendChild(el); setTimeout(()=>el.remove(),700);
+    el.style.cssText=`color:${color};left:${x/450*100}%;top:${y/300*100}%;border:1px solid ${color};background:rgba(255,255,255,0.92);padding:2px 7px;`;
+    el.textContent='NEAR'; wrapper.appendChild(el); setTimeout(()=>el.remove(),700);
 }
 
 // ── NEAR-MISS SYSTEM ─────────────────────────────────────────────
-// Fires when player passes within a small margin of a ring's edge (not the gap)
 let nearMissCooldown = 0;
+let _nearMissFrame = 0; // tracks canvas flash duration
+
 function triggerNearMiss(x,y,color){
     if(nearMissCooldown>0) return;
     nearMissCooldown=25;
     playNearMiss();
     showNearMissPopup(x,y,color);
-    // Simple opacity flash — no radial-gradient recompute
-    nearFlash.style.background='rgba(255,255,255,0.04)';
-    nearFlash.style.opacity='1';
-    clearTimeout(nearMissTimeout);
-    nearMissTimeout=setTimeout(()=>nearFlash.style.opacity='0',80);
+    // Small burst of colored particles at near-miss point
+    spawnParticles(x, y, color, _lowPerf ? 5 : 10);
+    // Canvas border flash — drawn in game loop for N frames
+    _nearMissColor = color;
+    _nearMissFrame = 8;
 }
+let _nearMissColor = '#c84000';
 
 // ── COMBO ────────────────────────────────────────────────────────
 function addCombo(){
@@ -1135,7 +1205,8 @@ function pauseGame(){
 }
 function showMenu(){
     gameActive=false; paused=false; hellMode=false; lastTier=null;
-    sdkGameplayStop(); // ✅ CrazyGames: back to menu = no gameplay
+    exitTutorial();
+    sdkGameplayStop();
     wrapper.classList.remove('critical-mode'); wrapper.style.transform='';
     ['game-over','duel-victory'].forEach(id=>document.getElementById(id).classList.add('hidden'));
     document.getElementById('victory-screen').style.display='none';
@@ -1334,11 +1405,13 @@ class Player {
         // ── RINGS: batch by shadow state to minimize state changes ──
         // Pass 1: all rings (shadow ON if not low-perf)
         this.obstacles.forEach(o=>{
-            // On white bg: use dark/saturated colors that read on light
-            const col = o.isSabotage ? '#cc0022'
-                      : o.type==='safe'  ? '#1a6b1a'
-                      : o.type==='slow'  ? '#7700bb'
-                      : (this.skin?.ringColor || this.color);
+            const col = o.isSabotage
+                ? (darkMode ? '#ff0044' : '#cc0022')
+                : o.type==='safe'
+                ? (darkMode ? '#ffffff' : '#1a6b1a')
+                : o.type==='slow'
+                ? (darkMode ? '#cc44ff' : '#7700bb')
+                : (this.skin?.ringColor || this.color);
 
             ctx.globalAlpha = 0.22+(o.r/265)*0.78;
             ctx.strokeStyle = col;
@@ -1386,11 +1459,12 @@ class Player {
         }
 
         if(!(this.invul>0 && frameCount%4<2)){
-            if(!_lowPerf){ ctx.shadowColor=this.color; ctx.shadowBlur=10; }
-            ctx.fillStyle=this.color;
+            if(!_lowPerf){ ctx.shadowColor=this.color; ctx.shadowBlur= darkMode ? 18 : 10; }
+            ctx.fillStyle = darkMode ? '#ffffff' : this.color;
             ctx.fillRect(px-5,py-5,10,10);
             ctx.shadowBlur=0;
-            ctx.fillStyle='rgba(0,0,0,0.18)'; ctx.globalAlpha=1;
+            ctx.fillStyle = darkMode ? this.color : 'rgba(0,0,0,0.18)';
+            ctx.globalAlpha = darkMode ? .55 : 1;
             ctx.fillRect(px-3,py-3,6,6);
             ctx.globalAlpha=1;
         }
@@ -1422,6 +1496,9 @@ function initGame(mode){
 
     ['main-menu','game-over','duel-victory'].forEach(id=>document.getElementById(id).classList.add('hidden'));
     document.getElementById('victory-screen').style.display='none';
+    document.getElementById('shop-screen').style.display='none';
+    document.getElementById('tutorial-screen').classList.add('hidden');
+    document.getElementById('tutorial-complete').classList.add('hidden');
     document.getElementById('hud-main').classList.remove('hidden');
 
     const isTouch='ontouchstart' in window||navigator.maxTouchPoints>0;
@@ -1438,12 +1515,12 @@ function initGame(mode){
         p2.skin = skinP2;
         document.getElementById('p2-hud').style.display='flex';
         document.getElementById('duel-score-bar').classList.remove('hidden');
+        document.querySelector('#p2-hud .hud-label').textContent = skinP2.name+' //';
     } else {
         document.getElementById('p2-hud').style.display='none';
     }
-    // Update HUD labels to skin names
+    // Update HUD P1 label
     document.querySelector('#hud-main .hud-label').textContent = '// '+skin.name;
-    document.querySelector('#p2-hud .hud-label').textContent = skinP2.name+' //';
 
     stopHellDrone(); setDroneIntensity(0.1);
     addNarrativeEntry("SYSTEM: 'NEURAL LINK ESTABLISHED — BEGINNING EXTRACTION'", 'system');
@@ -1530,7 +1607,7 @@ function _drawCredit(c, w, h){
     c.letterSpacing = '3px';
     c.textAlign = 'center';
     c.globalAlpha = 0.22;
-    c.fillStyle = '#000000';
+    c.fillStyle = darkMode ? '#ffffff' : '#000000';
     c.fillText(t, w/2, h - 10);
     c.globalAlpha = 1;
     c.restore();
@@ -1566,7 +1643,6 @@ setInterval(_checkIntegrity, 3000);
 // PERFORMANCE MONITOR — auto-detects weak PCs and reduces fx
 // ════════════════════════════════════════════════════════════════════
 let _lastTime = 0, _fpsSmooth = 60, _lowPerf = false;
-const PARTICLE_CAP = 80; // hard cap on simultaneous particles
 
 function _tickPerf(now){
     const dt = now - _lastTime; _lastTime = now;
@@ -1592,20 +1668,289 @@ function _hudStyle(id, prop, val){
 }
 
 // ════════════════════════════════════════════════════════════════════
-// GAME LOOP
+// TUTORIAL SYSTEM
 // ════════════════════════════════════════════════════════════════════
+let tutActive = false, tutRafId = null;
+let tutPhase = 0, tutFrame = 0;
+let tutPlayer = null, tutRings = [], tutComplete = false;
+let tutHintTimer = 0;
+
+const TUT_PHASES = [
+    {
+        label: 'PHASE 01 — MOVEMENT',
+        instruction: 'ORBIT THE CORE',
+        sub: 'Press  A / D  to move',
+        hint: 'Keep moving — feel the orbit',
+        goal: 'move', // completes when player moves 180°
+        goalFrames: 180,
+        rings: [], // no rings — just move
+    },
+    {
+        label: 'PHASE 02 — EXTRACTION',
+        instruction: 'PASS THROUGH THE GAP',
+        sub: 'Time your position to pass inside the ring',
+        hint: 'The gap is the opening — pass through it',
+        goal: 'pass', // completes after 3 successful passes
+        goalCount: 3,
+        rings: [{ speed: 0.55, gapSize: 1.5 }], // slow, wide gap
+    },
+    {
+        label: 'PHASE 03 — ORBIT SHIFT',
+        instruction: 'SHIFT YOUR ORBIT',
+        sub: 'SPACE = inner orbit  ·  S = outer orbit',
+        hint: 'Some rings only pass on the correct orbit radius',
+        goal: 'orbit', // completes after using both orbits successfully
+        goalCount: 2,
+        rings: [
+            { speed: 0.6, gapSize: 1.3, forceRadius: 50  }, // inner only
+            { speed: 0.6, gapSize: 1.3, forceRadius: 105 }, // outer only
+        ],
+    },
+];
+
+const tutCanvas = document.getElementById('tut-canvas');
+const tutCtx    = tutCanvas ? tutCanvas.getContext('2d') : null;
+
+function startTutorial(){
+    tutActive   = true; tutPhase = 0; tutComplete = false;
+    document.getElementById('main-menu').classList.add('hidden');
+    document.getElementById('tutorial-screen').classList.remove('hidden');
+    document.getElementById('tutorial-complete').classList.add('hidden');
+    stopMenuAnim(); initAudio(); resumeAudio();
+    loadTutPhase(0);
+    if(tutRafId) cancelAnimationFrame(tutRafId);
+    tutLoop();
+}
+
+function loadTutPhase(i){
+    tutFrame = 0; tutRings = []; tutHintTimer = 0;
+    const phase = TUT_PHASES[i];
+    document.getElementById('tut-phase-label').textContent  = phase.label;
+    document.getElementById('tut-instruction').textContent  = phase.instruction;
+    document.getElementById('tut-sub').textContent          = phase.sub;
+    document.getElementById('tut-hint').textContent         = '';
+
+    // Create tutorial player
+    const skin = getActiveSkinP1();
+    tutPlayer = {
+        angle: 0, vel: 0,
+        radius: CONFIG.BASE_RADIUS, targetRadius: CONFIG.BASE_RADIUS,
+        color: skin.dotColor, skin: skin,
+        passed: 0, orbitUsed: new Set(),
+        movedAngle: 0, lastAngle: 0,
+        invul: 0,
+    };
+
+    // Spawn tutorial rings
+    if(phase.rings){
+        phase.rings.forEach((cfg, idx) => {
+            tutRings.push({
+                r: 0,
+                gap: Math.PI * 0.5,
+                gapSize: cfg.gapSize,
+                speed: cfg.speed,
+                gapSpeed: 0,
+                forceRadius: cfg.forceRadius || null,
+                passed: false,
+                grace: 30,
+                idx,
+            });
+        });
+    }
+}
+
+function tutLoop(now=0){
+    if(!tutActive) return;
+    tutFrame++;
+
+    // ── CLEAR ──
+    tutCtx.fillStyle = darkMode ? '#080810' : '#f0f0eb';
+    tutCtx.fillRect(0,0,450,300);
+    if(!_lowPerf){
+        tutCtx.strokeStyle = darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.05)';
+        tutCtx.lineWidth=0.5;
+        for(let gx=0;gx<=450;gx+=30){ tutCtx.beginPath(); tutCtx.moveTo(gx,0); tutCtx.lineTo(gx,300); tutCtx.stroke(); }
+        for(let gy=0;gy<=300;gy+=30){ tutCtx.beginPath(); tutCtx.moveTo(0,gy); tutCtx.lineTo(450,gy); tutCtx.stroke(); }
+        tutCtx.lineWidth=1;
+    }
+
+    const phase = TUT_PHASES[tutPhase];
+    const cx=225, cy=150;
+
+    // ── PLAYER MOVEMENT ──
+    const accel = 0.012, friction = 0.88, maxVel = 0.045;
+    if(keys['KeyA'])  tutPlayer.vel -= accel;
+    if(keys['KeyD'])  tutPlayer.vel += accel;
+    tutPlayer.vel *= friction;
+    tutPlayer.vel  = Math.max(-maxVel, Math.min(maxVel, tutPlayer.vel));
+    tutPlayer.lastAngle = tutPlayer.angle;
+    tutPlayer.angle += tutPlayer.vel;
+
+    // Orbit shift
+    if(keys['Space'])       tutPlayer.targetRadius = CONFIG.INNER_RADIUS;
+    else if(keys['KeyS'])   tutPlayer.targetRadius = CONFIG.FAR_RADIUS;
+    else                    tutPlayer.targetRadius = CONFIG.BASE_RADIUS;
+    tutPlayer.radius += (tutPlayer.targetRadius - tutPlayer.radius) * 0.18;
+    if(tutPlayer.invul > 0) tutPlayer.invul--;
+
+    // Track movement for phase 1
+    if(tutPhase === 0){
+        tutPlayer.movedAngle += Math.abs(tutPlayer.angle - tutPlayer.lastAngle);
+    }
+
+    // ── DRAW RINGS ──
+    tutCtx.save(); tutCtx.translate(cx, cy);
+    for(let ri=0; ri<tutRings.length; ri++){
+        const o = tutRings[ri];
+        o.r += o.speed;
+        o.gap += (o.gapSpeed || 0);
+
+        // Reset only after ring fully leaves canvas
+        if(o.r > 280){
+            o.r = 0;
+            o.passed = false;
+            o.grace = 40;
+        }
+        if(o.grace > 0) o.grace--;
+
+        // Don't draw or check if still spawning
+        if(o.r < 2) continue;
+
+        let col = tutPlayer.skin?.ringColor || tutPlayer.color;
+        const alpha = 0.2 + (o.r/265)*0.8;
+
+        if(o.forceRadius === CONFIG.INNER_RADIUS) col = '#0070aa';
+        if(o.forceRadius === CONFIG.FAR_RADIUS)   col = '#660099';
+
+        tutCtx.globalAlpha = alpha;
+        tutCtx.strokeStyle = col;
+        tutCtx.lineWidth   = 5;
+        tutCtx.beginPath();
+        tutCtx.arc(0,0,o.r, o.gap+o.gapSize, o.gap);
+        tutCtx.stroke();
+
+        if(o.forceRadius){
+            tutCtx.globalAlpha = 0.12;
+            tutCtx.strokeStyle = col;
+            tutCtx.lineWidth   = 1;
+            tutCtx.setLineDash([4,8]);
+            tutCtx.beginPath(); tutCtx.arc(0,0,o.forceRadius,0,TAU); tutCtx.stroke();
+            tutCtx.setLineDash([]);
+        }
+
+        // Collision — skip if already passed, in grace, or too small
+        if(!o.passed && o.grace === 0 && o.r > 18 && tutPlayer.invul === 0
+           && Math.abs(tutPlayer.radius - o.r) < 7){
+
+            const pPos = ((tutPlayer.angle % TAU) + TAU) % TAU;
+            const gEnd = ((o.gap % TAU) + TAU) % TAU;
+            const gStart = ((gEnd - o.gapSize) + TAU) % TAU;
+            let inGap = gStart <= gEnd
+                ? pPos>=gStart && pPos<=gEnd
+                : pPos>=gStart || pPos<=gEnd;
+
+            if(o.forceRadius && Math.abs(tutPlayer.radius - o.forceRadius) > 20) inGap = false;
+
+            if(inGap){
+                // Successful pass
+                o.passed = true;
+                tutPlayer.passed++;
+                if(o.forceRadius) tutPlayer.orbitUsed.add(o.forceRadius);
+                playScore();
+                tutCtx.globalAlpha=0.12; tutCtx.fillStyle=col;
+                tutCtx.beginPath(); tutCtx.arc(0,0,o.r,0,TAU); tutCtx.fill();
+            } else {
+                // Hit
+                tutPlayer.invul = 50;
+                o.r = 0; o.passed = false; o.grace = 40;
+                playHit();
+            }
+        }
+    } // end tutRings for loop
+    tutCtx.globalAlpha=1;
+
+    // ── DRAW PLAYER DOT ──
+    const px = Math.cos(tutPlayer.angle)*tutPlayer.radius;
+    const py = Math.sin(tutPlayer.angle)*tutPlayer.radius;
+    const blinking = tutPlayer.invul>0 && tutFrame%4<2;
+    if(!blinking){
+        tutCtx.fillStyle = darkMode ? '#fff' : tutPlayer.color;
+        tutCtx.fillRect(px-5,py-5,10,10);
+        tutCtx.fillStyle = darkMode ? tutPlayer.color : 'rgba(0,0,0,0.2)';
+        tutCtx.globalAlpha = .55; tutCtx.fillRect(px-3,py-3,6,6); tutCtx.globalAlpha=1;
+    }
+
+    // ── ORBIT RADIUS INDICATORS ──
+    if(tutPhase === 2){
+        [CONFIG.INNER_RADIUS, CONFIG.BASE_RADIUS, CONFIG.FAR_RADIUS].forEach((r,i)=>{
+            const isActive = Math.abs(tutPlayer.radius - r) < 8;
+            tutCtx.globalAlpha = isActive ? 0.25 : 0.07;
+            tutCtx.strokeStyle = i===0?'#0070aa':i===1?(tutPlayer.skin?.ringColor||tutPlayer.color):'#660099';
+            tutCtx.lineWidth=1; tutCtx.setLineDash([2,6]);
+            tutCtx.beginPath(); tutCtx.arc(0,0,r,0,TAU); tutCtx.stroke();
+            tutCtx.setLineDash([]);
+        });
+        tutCtx.globalAlpha=1;
+    }
+
+    tutCtx.restore();
+
+    // ── PHASE PROGRESS BAR ──
+    let progress = 0;
+    if(phase.goal==='move')   progress = Math.min(1, tutPlayer.movedAngle / (Math.PI*2));
+    if(phase.goal==='pass')   progress = Math.min(1, tutPlayer.passed / phase.goalCount);
+    if(phase.goal==='orbit')  progress = Math.min(1, tutPlayer.orbitUsed.size / phase.goalCount);
+
+    tutCtx.fillStyle = darkMode ? '#1a1a22' : '#e8e8e0';
+    tutCtx.fillRect(0, 294, 450, 6);
+    tutCtx.fillStyle = tutPlayer.skin?.ringColor || tutPlayer.color;
+    tutCtx.fillRect(0, 294, 450*progress, 6);
+
+    // Hint after 3 seconds
+    tutHintTimer++;
+    if(tutHintTimer === 180) document.getElementById('tut-hint').textContent = phase.hint;
+
+    // ── PHASE COMPLETION ──
+    if(progress >= 1 && !tutComplete){
+        tutComplete = true;
+        setTimeout(()=>{
+            tutPhase++;
+            if(tutPhase >= TUT_PHASES.length){
+                // All phases done
+                tutActive = false;
+                document.getElementById('tutorial-screen').classList.add('hidden');
+                document.getElementById('tutorial-complete').classList.remove('hidden');
+                document.getElementById('tut-complete-skin').textContent =
+                    'OPERATOR: '+(getActiveSkinP1().name);
+            } else {
+                tutComplete = false;
+                loadTutPhase(tutPhase);
+            }
+        }, 600);
+    }
+
+    tutRafId = requestAnimationFrame(tutLoop);
+}
+
+function exitTutorial(){
+    tutActive = false;
+    if(tutRafId) cancelAnimationFrame(tutRafId);
+    document.getElementById('tutorial-screen').classList.add('hidden');
+    document.getElementById('tutorial-complete').classList.add('hidden');
+}
 function loop(now=0){
     if(!gameActive) return;
     _tickPerf(now);
     frameCount++;
 
-    // ── CLEAR: opaque white — Portal / Aperture Science style ──
-    ctx.fillStyle='#f0f0eb';
+    // ── CLEAR: switches with dark mode ──
+    ctx.fillStyle = darkMode ? '#080810' : '#f0f0eb';
     ctx.fillRect(0,0,450,300);
 
     // Subtle tile grid
     if(!_lowPerf){
-        ctx.strokeStyle='rgba(0,0,0,0.05)'; ctx.lineWidth=0.5;
+        ctx.strokeStyle = darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.05)';
+        ctx.lineWidth=0.5;
         for(let gx=0;gx<=450;gx+=30){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,300); ctx.stroke(); }
         for(let gy=0;gy<=300;gy+=30){ ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(450,gy); ctx.stroke(); }
         ctx.lineWidth=1;
@@ -1663,6 +2008,19 @@ function loop(now=0){
 
     updateParticles();
 
+    // ── NEAR-MISS border flash ──
+    if(_nearMissFrame > 0){
+        _nearMissFrame--;
+        const alpha = (_nearMissFrame/8)*0.6;
+        ctx.save();
+        ctx.strokeStyle = _nearMissColor;
+        ctx.globalAlpha = alpha;
+        ctx.lineWidth = 6;
+        ctx.strokeRect(3, 3, 444, 294);
+        ctx.globalAlpha = 1;
+        ctx.restore();
+    }
+
     if(shake>0){
         wrapper.style.transform=`translate(${(Math.random()-.5)*shake}px,${(Math.random()-.5)*shake}px)`;
         if(!isWinning) shake*=0.87;
@@ -1712,7 +2070,22 @@ function endGame(){
 // ════════════════════════════════════════════════════════════════════
 // EVENTS
 // ════════════════════════════════════════════════════════════════════
-document.getElementById('btn-solo').addEventListener('click',()=>initGame('solo'));
+document.getElementById('btn-dark').addEventListener('click', toggleDarkMode);
+
+function applyDarkMode(){
+    document.body.classList.toggle('dark-mode', darkMode);
+    document.getElementById('btn-dark').textContent = darkMode ? '[ ○ ]' : '[ ◑ ]';
+}
+function toggleDarkMode(){
+    darkMode = !darkMode;
+    _lsSet('pulse_dark', darkMode);
+    applyDarkMode();
+}
+applyDarkMode();
+document.getElementById('btn-tutorial').addEventListener('click', startTutorial);
+document.getElementById('btn-tut-skip').addEventListener('click',()=>{ exitTutorial(); showMenu(); });
+document.getElementById('btn-tut-begin').addEventListener('click',()=>{ exitTutorial(); initGame('solo'); });
+document.getElementById('btn-tut-menu').addEventListener('click',()=>{ exitTutorial(); showMenu(); });
 document.getElementById('btn-duelo').addEventListener('click',()=>initGame('duelo'));
 document.getElementById('btn-shop').addEventListener('click',openShop);
 document.getElementById('btn-shop-back').addEventListener('click',()=>{
