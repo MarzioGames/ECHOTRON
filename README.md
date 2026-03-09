@@ -14,6 +14,16 @@ Navigate your operator through an endless stream of expanding rings. Time your o
 
 ---
 
+## Screenshots
+
+![Menu Principal](https://github.com/user-attachments/assets/2b24fd4d-4dc1-4e4b-a134-ba34d56c6cd1)
+![Gameplay](https://github.com/user-attachments/assets/42b40138-cbf6-4512-9b75-d6503d88a70c)
+![Dark Mode](https://github.com/user-attachments/assets/05d45364-b2f5-4afc-8060-400ef23ff53b)
+![Neural Store](https://github.com/user-attachments/assets/afb9cbad-476e-485f-ba36-2393f4e3d0d2)
+![Conquistas](https://github.com/user-attachments/assets/18d8b795-3b5a-4d37-b8ac-07a8027a5a2e)
+
+---
+
 ## Gameplay
 
 Rings expand outward from the center of the screen. Each ring has a gap — pass through it to score. Miss the gap and you lose a life. Lose all three lives and the signal dies.
