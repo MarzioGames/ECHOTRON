@@ -309,6 +309,39 @@
         .skin-equipped{ font-size:7px; letter-spacing:2px; color:var(--gold); }
         .skin-lock{ position:absolute; top:8px; right:8px; font-size:10px; color:var(--ink3); }
 
+        /* ── ACHIEVEMENTS SCREEN ── */
+        #ach-screen{ overflow-y:auto; }
+        #ach-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; width:560px; }
+        .ach-card{
+            border:1px solid var(--border); padding:14px 12px;
+            display:flex; flex-direction:column; align-items:center; gap:6px;
+            text-align:center; background:#fff; transition:all .2s;
+        }
+        .dark-mode .ach-card{ background:#050508; }
+        .ach-card.unlocked{ border-color:var(--gold); }
+        .ach-card.locked{ opacity:.4; filter:grayscale(1); }
+        .ach-card-icon{ font-size:22px; color:var(--gold); }
+        .ach-card.locked .ach-card-icon{ color:var(--ink3); }
+        .ach-card-name{ font-family:'Orbitron',monospace; font-size:8px; letter-spacing:2px; color:var(--ink); }
+        .ach-card-desc{ font-size:7px; letter-spacing:1px; color:var(--ink3); line-height:1.7; }
+        .ach-card-status{ font-size:7px; letter-spacing:2px; color:var(--gold); }
+        .ach-card.locked .ach-card-status{ color:var(--ink3); }
+
+        /* ── ACHIEVEMENTS POPUP ── */
+        .ach-popup{
+            position:absolute; bottom:54px; left:50%; transform:translateX(-50%) translateY(20px);
+            background:rgba(245,245,240,0.97); border:1px solid var(--gold);
+            padding:10px 18px; display:flex; align-items:center; gap:12px;
+            font-family:'Share Tech Mono',monospace; z-index:500; opacity:0;
+            transition:opacity .3s, transform .3s; pointer-events:none;
+            white-space:nowrap;
+        }
+        .dark-mode .ach-popup{ background:rgba(5,5,8,0.97); }
+        .ach-popup.visible{ opacity:1; transform:translateX(-50%) translateY(0); }
+        .ach-icon{ font-size:18px; color:var(--gold); }
+        .ach-label{ font-size:7px; letter-spacing:3px; color:var(--ink3); }
+        .ach-name{ font-size:11px; letter-spacing:3px; color:var(--gold); font-family:'Orbitron',monospace; }
+
         /* ── DARK MODE ── */
         .dark-mode{
             --bg:#080810; --ink:#e0e0e0; --ink2:#888; --ink3:#444;
@@ -437,6 +470,7 @@
         <button class="btn" id="btn-solo">SOLO EXTRACTION</button>
         <button class="btn" id="btn-duelo" style="color:var(--p2);border-color:#1a1a1a;">NEURAL DUEL (1 VS 1)</button>
         <button class="btn" id="btn-shop" style="color:var(--gold);border-color:#1a1a1a;">NEURAL STORE</button>
+        <button class="btn" id="btn-ach" style="color:var(--ink3);font-size:9px;">ACHIEVEMENTS</button>
         <div class="menu-controls">
             P1 MOVE: <span>A / D</span> &nbsp;·&nbsp; ORBIT IN: <span>SPACE</span> &nbsp;·&nbsp; ORBIT OUT: <span>S</span> &nbsp;·&nbsp; PAUSE: <span>ESC</span><br>
             P2 MOVE: <span>← / →</span> &nbsp;·&nbsp; P2 IN: <span>SHIFT</span> &nbsp;·&nbsp; P2 OUT: <span>↓</span> &nbsp;·&nbsp; MUTE: <span>M</span>
@@ -512,6 +546,15 @@
         </div>
 
         <button class="btn" id="btn-shop-back" style="width:200px;">← BACK</button>
+    </div>
+
+    <!-- ACHIEVEMENTS -->
+    <div id="ach-screen" class="ui-layer hidden">
+        <h2 style="font-family:'Orbitron',monospace;font-size:18px;letter-spacing:8px;color:var(--ink);margin-bottom:4px;">ACHIEVEMENTS</h2>
+        <div style="font-size:8px;letter-spacing:4px;color:var(--ink3);margin-bottom:24px;">OPERATOR RECORDS</div>
+        <div id="ach-grid"></div>
+        <div id="ach-count" style="font-size:8px;letter-spacing:3px;color:var(--ink3);margin-top:20px;"></div>
+        <button class="btn" id="btn-ach-back" style="width:200px;margin-top:16px;">← BACK</button>
     </div>
 
     <div id="victory-screen" class="ui-layer hidden">
@@ -1190,6 +1233,7 @@ function showMenu(){
     ['game-over','duel-victory'].forEach(id=>document.getElementById(id).classList.add('hidden'));
     document.getElementById('victory-screen').classList.add('hidden');
     document.getElementById('shop-screen').style.display='none';
+    document.getElementById('ach-screen').classList.add('hidden');
     document.getElementById('pause-overlay').style.display='none';
     document.getElementById('hud-main').classList.add('hidden');
     document.getElementById('duel-score-bar').classList.add('hidden');
@@ -1212,6 +1256,7 @@ class Player {
         this.obstacles=[]; this.shield=false; this.streak=0;
         this.sabotagePending=0;
         this.sabotageFired=0;
+        this.trail=[]; // dot trail history
     }
 
     // Called by opponent when they score N rings
@@ -1234,10 +1279,25 @@ class Player {
         const shrinking = isSabotage ? false : (tier.shrinking && Math.random()<0.30);
         const speedMult = isSabotage ? 1.6   : (type==='slow'?0.55:1);
 
+        const speed = (1.15+this.score*CONFIG.SPEED_SCALE+tier.speedBonus)*speedMult;
+        const realGap = Math.random()*TAU;
+        const realGapSpeed = spinning?(Math.random()-.5)*.045:0;
+
+        // ── WARNING GHOST: shows gap position at player radius before ring arrives ──
+        if(!isSabotage && !_lowPerf){
+            this.obstacles.push({
+                r: this.radius, gap: realGap, gapSpeed: realGapSpeed,
+                size: gapSize, targetSize: gapSize, sizeDelta: 0,
+                speed: 0, type: 'warning', scored: false, spinning, shrinking: false,
+                isSabotage: false, alpha: 0,
+                warnLife: 48,
+            });
+        }
+
         this.obstacles.push({
-            r:0, gap:Math.random()*TAU, gapSpeed:spinning?(Math.random()-.5)*.045:0,
+            r:0, gap: realGap, gapSpeed: realGapSpeed,
             size:shrinking?gapSize*1.4:gapSize, targetSize:gapSize, sizeDelta:shrinking?-.005:0,
-            speed:(1.15+this.score*CONFIG.SPEED_SCALE+tier.speedBonus)*speedMult,
+            speed,
             type, scored:false, spinning, shrinking,
             isSabotage, alpha:isSabotage?1:0,
         });
@@ -1282,6 +1342,15 @@ class Player {
 
         for(let i=this.obstacles.length-1;i>=0;i--){
             const o=this.obstacles[i];
+
+            // ── WARNING GHOST RINGS: fade and remove, no collision ──
+            if(o.type==='warning'){
+                o.warnLife--;
+                o.gap += o.gapSpeed; // rotate in sync with real ring
+                if(o.warnLife<=0) this.obstacles.splice(i,1);
+                continue;
+            }
+
             o.r+=o.speed; o.gap+=o.gapSpeed;
             if(o.sizeDelta) o.size=Math.max(o.targetSize*.4,o.size+o.sizeDelta);
 
@@ -1325,7 +1394,12 @@ class Player {
                             this.lives--; this.streak=0; breakCombo();
                             this.invul=80; shake=this.lives<=0?80:this.lives===1?60:35;
                             spawnParticles(px,py,this.color,20); playHit();
-                            if(this.lives<=0) playDeath();
+                            if(this.lives<=0){
+                                playDeath();
+                                totalDeaths++;
+                                _lsSet('pulse_deaths', totalDeaths);
+                                if(totalDeaths>=100) unlockAch('seriously');
+                            }
                             checkNarrativeTriggers(this);
                             wrapper.classList.add('critical-mode');
                             setTimeout(()=>{ if(!hellMode&&!isWinning) wrapper.classList.remove('critical-mode'); },280);
@@ -1336,7 +1410,11 @@ class Player {
                     const px=Math.cos(this.angle)*this.radius+this.x;
                     const py=Math.sin(this.angle)*this.radius+150;
                     o.scored=true; this.score++; this.streak++;
+                    if(Math.abs(this.vel)<0.003) this._stillStreak=(this._stillStreak||0)+1;
+                    else this._stillStreak=0;
+                    if(hellMode) this._hellRings=(this._hellRings||0)+1;
                     checkNarrativeTriggers(this);
+                    checkAchievements(this);
 
                     if(o.type==='safe'){
                         this.shield=true; spawnParticles(px,py,'#ffffff',10);
@@ -1380,6 +1458,53 @@ class Player {
         }
 
         ctx.translate(this.x,150);
+
+        // ── DOT TRAIL ──
+        const px=Math.cos(this.angle)*this.radius;
+        const py=Math.sin(this.angle)*this.radius;
+        const speed = Math.abs(this.vel);
+
+        // Record trail point if moving fast enough
+        if(speed > 0.004 && !_lowPerf){
+            this.trail.push({ x:px, y:py, life:1, color:this.color });
+            if(this.trail.length > 14) this.trail.shift();
+        }
+
+        // Draw trail
+        if(!_lowPerf){
+            for(let t=0;t<this.trail.length;t++){
+                const tp = this.trail[t];
+                tp.life -= 0.07;
+                if(tp.life <= 0){ this.trail.splice(t,1); t--; continue; }
+                const sz = 2 + tp.life * 4;
+                ctx.globalAlpha = tp.life * 0.35;
+                ctx.fillStyle = darkMode ? '#ffffff' : tp.color;
+                ctx.fillRect(tp.x - sz/2, tp.y - sz/2, sz, sz);
+            }
+            ctx.globalAlpha=1;
+        }
+
+        // ── WARNING GHOST RINGS ──
+        this.obstacles.forEach(o=>{
+            if(o.type!=='warning') return;
+            const lifeRatio = o.warnLife/48;
+            const pulse = 0.5 + Math.sin(frameCount*0.4)*0.5;
+            ctx.globalAlpha = lifeRatio * 0.5 * pulse;
+            ctx.strokeStyle = darkMode ? '#ffffff' : (this.skin?.ringColor || this.color);
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5,5]);
+            // Draw at player's current radius — exactly where ring will intersect
+            ctx.beginPath();
+            ctx.arc(0, 0, this.radius, o.gap + o.size, o.gap);
+            ctx.stroke();
+            // Draw the solid wall part dimly so player sees what to avoid
+            ctx.globalAlpha = lifeRatio * 0.12 * pulse;
+            ctx.beginPath();
+            ctx.arc(0, 0, this.radius, o.gap, o.gap + o.size + TAU - o.size);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.globalAlpha=1;
+        });
 
         // ── RINGS: batch by shadow state to minimize state changes ──
         // Pass 1: all rings (shadow ON if not low-perf)
@@ -1426,10 +1551,6 @@ class Player {
 
         ctx.shadowBlur=0; ctx.globalAlpha=1;
 
-        // ── DOT — dark square on white bg ──
-        const px=Math.cos(this.angle)*this.radius;
-        const py=Math.sin(this.angle)*this.radius;
-
         if(this.shield){
             if(!_lowPerf){ ctx.shadowColor=this.color; ctx.shadowBlur=8; }
             ctx.strokeStyle=this.color; ctx.lineWidth=1.5;
@@ -1453,6 +1574,83 @@ class Player {
 }
 
 // ════════════════════════════════════════════════════════════════════
+// ACHIEVEMENTS
+// ════════════════════════════════════════════════════════════════════
+const ACHIEVEMENTS = {
+    ghost:        { label:'GHOST',         desc:'Pass 5 rings without moving',      icon:'◈' },
+    flawless:     { label:'FLAWLESS',      desc:'Complete extraction with full HP',  icon:'✦' },
+    hell_survivor:{ label:'HELL SURVIVOR', desc:'Pass 20 rings in HELL_SYNC',        icon:'⚡' },
+    void_touched: { label:'VOID TOUCHED',  desc:'Play as VOID operator',             icon:'◉' },
+    combo_master: { label:'COMBO MASTER',  desc:'Reach ×10 combo',                  icon:'×' },
+    untouchable:  { label:'UNTOUCHABLE',   desc:'Pass 15 rings in a row',            icon:'▣' },
+    seriously:    { label:'SERIOUSLY?',    desc:'Die 100 times. Really.',            icon:'💀' },
+};
+
+let unlockedAch = _lsGet('pulse_ach', []);
+let totalDeaths  = _lsGet('pulse_deaths', 0);
+
+function openAch(){
+    document.getElementById('main-menu').classList.add('hidden');
+    document.getElementById('ach-screen').classList.remove('hidden');
+    renderAchScreen();
+}
+
+function renderAchScreen(){
+    const grid = document.getElementById('ach-grid');
+    grid.innerHTML = '';
+    let unlocked = 0;
+    Object.entries(ACHIEVEMENTS).forEach(([id, ach])=>{
+        const isUnlocked = unlockedAch.includes(id);
+        if(isUnlocked) unlocked++;
+        const card = document.createElement('div');
+        card.className = 'ach-card ' + (isUnlocked ? 'unlocked' : 'locked');
+        card.innerHTML = `
+            <div class="ach-card-icon">${ach.icon}</div>
+            <div class="ach-card-name">${ach.label}</div>
+            <div class="ach-card-desc">${ach.desc}</div>
+            <div class="ach-card-status">${isUnlocked ? '[ UNLOCKED ]' : '[ LOCKED ]'}</div>
+        `;
+        grid.appendChild(card);
+    });
+    const total = Object.keys(ACHIEVEMENTS).length;
+    document.getElementById('ach-count').textContent =
+        `${unlocked} / ${total} UNLOCKED`;
+}
+
+function unlockAch(id){
+    if(unlockedAch.includes(id)) return;
+    unlockedAch.push(id);
+    _lsSet('pulse_ach', unlockedAch);
+    showAchPopup(ACHIEVEMENTS[id]);
+}
+
+function showAchPopup(ach){
+    const el = document.createElement('div');
+    el.className = 'ach-popup';
+    el.innerHTML = `<span class="ach-icon">${ach.icon}</span><div><div class="ach-label">ACHIEVEMENT UNLOCKED</div><div class="ach-name">${ach.label}</div></div>`;
+    document.getElementById('game-wrapper').appendChild(el);
+    setTimeout(()=>el.classList.add('visible'), 50);
+    setTimeout(()=>{ el.classList.remove('visible'); setTimeout(()=>el.remove(), 400); }, 3200);
+}
+
+function checkAchievements(player){
+    // VOID TOUCHED
+    if(equippedSkinP1==='void') unlockAch('void_touched');
+    // COMBO MASTER
+    if(globalCombo>=10) unlockAch('combo_master');
+    // UNTOUCHABLE — 15 ring streak
+    if(player.streak>=15) unlockAch('untouchable');
+    // GHOST — 5 rings with near-zero velocity
+    if(player._stillStreak && player._stillStreak>=5) unlockAch('ghost');
+    // HELL SURVIVOR — 20 rings in hell mode
+    if(hellMode && player._hellRings && player._hellRings>=20) unlockAch('hell_survivor');
+}
+
+function checkFlawless(player){
+    if(player.lives===CONFIG.LIVES) unlockAch('flawless');
+}
+
+// ════════════════════════════════════════════════════════════════════
 // GAME INIT
 // ════════════════════════════════════════════════════════════════════
 let p1,p2;
@@ -1464,7 +1662,6 @@ function initGame(mode){
     isWinning=false; shake=0; paused=false; particles=[];
     globalCombo=0; comboTimer=0; maxCombo=0; lastTier=null;
     nearMissCooldown=0; firedEvents.clear();
-
     wrapper.classList.remove('critical-mode'); wrapper.style.transform='';
     comboDisplay.classList.remove('visible');
     diagBox.textContent='';
@@ -1476,6 +1673,7 @@ function initGame(mode){
     ['main-menu','game-over','duel-victory'].forEach(id=>document.getElementById(id).classList.add('hidden'));
     document.getElementById('victory-screen').classList.add('hidden');
     document.getElementById('shop-screen').style.display='none';
+    document.getElementById('ach-screen').classList.add('hidden');
     document.getElementById('hud-main').classList.remove('hidden');
 
     const isTouch='ontouchstart' in window||navigator.maxTouchPoints>0;
@@ -1528,6 +1726,7 @@ function triggerVictory(){
     if(p1.score>sessionBest) sessionBest=p1.score;
     if(p1.score>allTimeScore){ allTimeScore=p1.score; }
     awardCredits(p1.score);
+    checkFlawless(p1);
     playVictory();
 
     const isVoidEnding = equippedSkinP1 === 'void';
@@ -1619,14 +1818,13 @@ setInterval(_checkIntegrity, 3000);
 // ════════════════════════════════════════════════════════════════════
 // PERFORMANCE MONITOR — auto-detects weak PCs and reduces fx
 // ════════════════════════════════════════════════════════════════════
-let _lastTime = 0, _fpsSmooth = 60, _lowPerf = false;
+let _lastTime = 0, _fpsSmooth = 60, _lowPerf = false, _perfLocked = false;
 
 function _tickPerf(now){
     const dt = now - _lastTime; _lastTime = now;
     const fps = dt > 0 ? 1000/dt : 60;
     _fpsSmooth = _fpsSmooth*0.92 + fps*0.08;
-    // If sustained below 40fps, enter low-perf mode (reduces shadows + particles)
-    _lowPerf = _fpsSmooth < 40;
+    if(!_perfLocked) _lowPerf = _fpsSmooth < 40;
 }
 // ── HUD CACHE — only write DOM when values actually change ────────
 const _hudCache = {};
@@ -1791,6 +1989,11 @@ function toggleDarkMode(){
     applyDarkMode();
 }
 applyDarkMode();
+document.getElementById('btn-ach').addEventListener('click', openAch);
+document.getElementById('btn-ach-back').addEventListener('click',()=>{
+    document.getElementById('ach-screen').classList.add('hidden');
+    document.getElementById('main-menu').classList.remove('hidden');
+});
 document.getElementById('btn-solo').addEventListener('click',()=>initGame('solo'));
 document.getElementById('btn-duelo').addEventListener('click',()=>initGame('duelo'));
 document.getElementById('btn-shop').addEventListener('click',openShop);
@@ -1827,6 +2030,22 @@ codeInput.addEventListener('keydown',e=>{
     if(val==='GHOST'){ if(p1){ p1.invul=9999; setDiag("SYSTEM: 'PHASE SHIFT ACTIVE.'"); } }
     if(val==='MATRIX'){ spawnParticles(225,150,'#00ff41',80); setDiag("SYSTEM: 'REALITY IS CODE.'"); }
     if(val==='BERRYBURN'){ neuralCredits+=1000; saveProgress(); setDiag("SYSTEM: '1000 NEURAL CREDITS INJECTED.'"); }
+    if(val==='ONIX'){
+        Object.keys(ACHIEVEMENTS).forEach(id => unlockAch(id));
+        setDiag("SYSTEM: 'ALL RECORDS OVERWRITTEN. WELCOME, GHOST.'");
+    }
+    if(val==='LISO LISO LISO'){
+        _perfLocked = true;
+        _lowPerf = false;
+        _fpsSmooth = 60;
+        setDiag("SYSTEM: 'MAXIMUM PERFORMANCE LOCKED. NO LIMITS.'");
+    }
+    if(val==='SEQUINHO'){
+        _perfLocked = false;
+        _lowPerf = false;
+        _fpsSmooth = 60;
+        setDiag("SYSTEM: 'AUTO PERFORMANCE RESTORED.'");
+    }
     resumeLoop();
 });
 
