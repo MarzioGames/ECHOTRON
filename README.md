@@ -1,23 +1,137 @@
 # PULSE
 
-**PULSE** is an arcade reflex game set in 2041, where you control a neural operator attempting to escape a hostile digital system. Pass through extraction rings as difficulty scales in real time — every ring cleared brings you closer to freedom, every mistake costs a life.
+> **NEURAL EXTRACTION PROTOCOL · 2041**
 
-**Game Modes**
-Solo Extraction — one player against the system. Neural Duel — two players on the same screen, each controlling their side of the field, able to fire sabotage rings at the opponent every 8 rings scored.
+PULSE is a minimalist arcade reflex game set in a cyberpunk dystopia. You are CASTIEL — a rogue signal trying to escape a collapsing neural network before the system erases you.
 
-**5 Difficulty Tiers**
-INIT → TRACE → BREACH → CRITICAL → HELL_SYNC. As your score climbs, rings spin faster, shrink, and the available gap narrows. HELL_SYNC is the final state — maximum speed, minimum gaps, critical visual mode active.
+Navigate your operator through an endless stream of expanding rings. Time your orbits. Pass through the gap. Don't get hit. Reach 100 rings and escape.
 
-**Skin System**
-Three operators available in the Neural Store: CASTIEL (orange, default, free), S.I.M.O.N. (blue, dashed rings, 150 credits), VOID (purple, pulsing rings, 300 credits). P1 and P2 equip skins independently. Credits are earned by playing — 1 per ring cleared. Completing the game with VOID equipped unlocks an exclusive ending.
+---
 
-**Cheat Codes**
-Open the terminal during gameplay or from the main menu. BERRYBURN grants 1000 neural credits instantly. SKIP advances score to near-victory. GHOST activates invincibility. PULSE2 restores all lives. 1337 forces HELL\_SYNC immediately. MATRIX triggers a particle burst.
+## Play
 
-**Controls**
-P1: A/D to move, SPACE to orbit inward, S to orbit outward. P2: ←/→ to move, SHIFT to orbit inward, ↓ to orbit outward. ESC pauses, M mutes audio.
+🎮 **[Play on GitHub Pages](https://syscolor.github.io/PULSE/)**
 
-**Tech**
-Pure HTML, CSS and JavaScript. No frameworks, no external assets. Web Audio API for all sound. Fully responsive with automatic scaling. CrazyGames SDK compliant. localStorage for persistent credits, skin unlocks, and all-time best score.
+---
 
-> © 2026 Marzio — All rights reserved. Unauthorized redistribution prohibited.
+## Gameplay
+
+Rings expand outward from the center of the screen. Each ring has a gap — pass through it to score. Miss the gap and you lose a life. Lose all three lives and the signal dies.
+
+The game escalates automatically through 5 difficulty tiers:
+
+| Tier | Description |
+|---|---|
+| `INIT` | Slow rings, wide gaps. Learn the system. |
+| `TRACE` | Speed increases. Gaps tighten. |
+| `BREACH` | Spinning rings appear. Gaps shrink further. |
+| `CRITICAL` | Shrinking gaps. Higher pressure. |
+| `HELL_SYNC` | Maximum speed. Minimum mercy. |
+
+---
+
+## Features
+
+- **Solo Extraction** — reach 100 rings to trigger the escape sequence
+- **Neural Duel** — local 1v1 split-screen with sabotage mechanics
+- **5 difficulty tiers** that escalate automatically based on score
+- **Skin system** with Neural Store — 3 operators, P1 and P2 equipped independently
+- **Neural Credits** — earned by playing, spent in the store
+- **Combo multiplier** — chain rings for score bonuses
+- **Near-miss detection** — canvas flash + particles when you barely survive
+- **Warning ring** — ghost arc previews incoming ring gap position
+- **Dot trail** — motion trail follows your operator at speed
+- **Achievement system** — 7 unlockable achievements tracked across sessions
+- **Dark mode** — toggleable via `[ ◑ ]` button, persisted across sessions
+- **Contextual narrative** — dialogue reacts to what happens in real time
+- **Procedural audio** — full soundtrack built with Web Audio API, zero audio files
+- **Terminal / Cheat codes** — secret codes accessible in-game
+- **CrazyGames SDK** integrated and compliant
+- **Full mobile support** with touch controls
+- **Responsive scaling** — adapts to any screen size
+
+---
+
+## Operators
+
+| Operator | Color | Ring Style | Price | Notes |
+|---|---|---|---|---|
+| **CASTIEL** | Orange `#c84000` | Solid | Free | Default P1 |
+| **S.I.M.O.N.** | Blue `#0070aa` | Dashed | 150 ⬡ | Default P2 |
+| **VOID** | Purple `#660099` | Pulsing | 300 ⬡ | Unlocks exclusive ending |
+
+Playing as VOID and completing Solo Extraction triggers a unique ending sequence.
+
+---
+
+## Controls
+
+| Action | P1 | P2 |
+|---|---|---|
+| Move | `A` / `D` | `←` / `→` |
+| Orbit inward | `SPACE` | `SHIFT` |
+| Orbit outward | `S` | `↓` |
+| Pause | `ESC` | — |
+| Mute | `M` | — |
+
+---
+
+## Achievements
+
+| Icon | Name | Condition |
+|---|---|---|
+| ◈ | `GHOST` | Pass 5 rings without moving |
+| ✦ | `FLAWLESS` | Complete extraction with full HP |
+| ⚡ | `HELL SURVIVOR` | Pass 20 rings in HELL_SYNC |
+| ◉ | `VOID TOUCHED` | Play as the VOID operator |
+| × | `COMBO MASTER` | Reach ×10 combo |
+| ▣ | `UNTOUCHABLE` | Pass 15 rings in a row |
+| 💀 | `SERIOUSLY?` | Die 100 times |
+
+All achievements are tracked across sessions via `localStorage`.
+
+---
+
+## Terminal Codes
+
+Open the terminal with `[ TERMINAL ]` button or during gameplay. Type a code and press `Enter`.
+
+| Code | Effect |
+|---|---|
+| `BERRYBURN` | +1000 Neural Credits |
+| `SKIP` | Jump to ring 99 |
+| `1337` / `ROTOR` | Force HELL_SYNC |
+| `PULSE2` | Restore all lives, exit hell mode |
+| `GHOST` | Invincibility |
+| `MATRIX` | Particle burst |
+| `ONIX` | Unlock all achievements |
+| `LISO LISO LISO` | Force maximum performance mode |
+| `SEQUINHO` | Restore auto performance mode |
+
+---
+
+## Tech
+
+- Pure **HTML + CSS + JavaScript** — single file, zero dependencies, zero build tools
+- **Web Audio API** — procedural drone, hit sounds, score tones, victory fanfare
+- **Canvas 2D** — all rendering, particles, rings, dot trail
+- **localStorage** — credits, skins, achievements, dark mode, best score
+- **CrazyGames SDK** — gameplayStart/Stop, mute handler, ad integration
+
+---
+
+## Structure
+
+```
+PULSE/
+├── index.html      # entire game — single file
+├── README.md
+└── LICENSE
+```
+
+---
+
+## License
+
+© 2026 Marzio. All rights reserved.  
+Original game created by Marzio. Unauthorized copying or redistribution is prohibited.
