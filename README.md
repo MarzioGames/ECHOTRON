@@ -43,11 +43,13 @@ The game escalates automatically through 5 difficulty tiers:
 ## Features
 
 - **Solo Extraction** — reach 100 rings to trigger the escape sequence
+- **Signal Upgrades** — roguelike upgrade system exclusive to Solo mode
 - **Neural Duel** — local 1v1 split-screen with sabotage mechanics
 - **5 difficulty tiers** that escalate automatically based on score
 - **Skin system** with Neural Store — 3 operators, P1 and P2 equipped independently
 - **Neural Credits** — earned by playing, spent in the store
 - **Combo multiplier** — chain rings for score bonuses
+- **Shield overflow** — collecting a second shield converts to +1 life
 - **Near-miss detection** — canvas flash + particles when you barely survive
 - **Warning ring** — ghost arc previews incoming ring gap position
 - **Dot trail** — motion trail follows your operator at speed
@@ -59,6 +61,26 @@ The game escalates automatically through 5 difficulty tiers:
 - **CrazyGames SDK** integrated and compliant
 - **Full mobile support** with touch controls
 - **Responsive scaling** — adapts to any screen size
+
+---
+
+## Signal Upgrades *(Solo only)*
+
+Every 25 rings the game pauses and offers 3 random upgrades to choose from. Each run is different — upgrades never repeat within a run and stack across choices.
+
+| Category | Upgrade | Effect |
+|---|---|---|
+| ⚡ Mobility | `OVERCLOCK` | Move 25% faster |
+| 〜 Mobility | `DRIFT` | Less friction — smoother orbit |
+| ◎ Mobility | `SNAP ORBIT` | Orbit switch is instant |
+| ▮ Survival | `EXTRA LIFE` | +1 life (max 5) |
+| ✦ Survival | `SECOND CHANCE` | Survive one fatal hit with 1 life |
+| ◈ Survival | `GHOST SHIELD` | Next hit is ignored |
+| ⬡ Score | `DOUBLE CREDITS` | Neural credits earned ×2 this run |
+| × Score | `COMBO EXTEND` | Combo timer lasts 50% longer |
+| ◉ Score | `RING MAGNET` | Gap size increased slightly |
+| ★ Style | `OVERCHARGE` | Trail is longer and brighter |
+| ◐ Style | `NEON` | Rings glow intensely |
 
 ---
 
@@ -115,6 +137,7 @@ Open the terminal with `[ TERMINAL ]` button or during gameplay. Type a code and
 | `GHOST` | Invincibility |
 | `MATRIX` | Particle burst |
 | `ONIX` | Unlock all achievements |
+| `HOGHOG` | Force upgrade screen — 4 uses per run *(Solo only)* |
 | `LISO LISO LISO` | Force maximum performance mode |
 | `SEQUINHO` | Restore auto performance mode |
 
