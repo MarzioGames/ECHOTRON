@@ -6,11 +6,6 @@ PULSE is a minimalist arcade reflex game set in a cyberpunk dystopia. You are CA
 
 Navigate your operator through an endless stream of expanding rings. Time your orbits. Pass through the gap. Don't get hit. Reach 100 rings and escape.
 
----
-
-## Play
-
-🎮 **[Play on GitHub Pages](https://syscolor.github.io/PULSE/)**
 
 ---
 
