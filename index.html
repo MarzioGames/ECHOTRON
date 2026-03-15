@@ -49,8 +49,10 @@
         }
         @keyframes spin{ to{ transform:rotate(360deg); } }
         @keyframes pulseGlow{
-            0%,100%{ opacity:.7; }
-            50%    { opacity:1; }
+            0%  { opacity:.85; text-shadow: 0 0 8px rgba(200,70,0,.3), 0 0 20px rgba(200,70,0,.1); transform: scale(1); letter-spacing:20px; }
+            45% { opacity:1;   text-shadow: 0 0 18px rgba(220,80,0,.7), 0 0 40px rgba(220,80,0,.4), 0 0 80px rgba(200,50,0,.2); transform: scale(1.04); letter-spacing:22px; }
+            55% { opacity:1;   text-shadow: 0 0 18px rgba(220,80,0,.7), 0 0 40px rgba(220,80,0,.4), 0 0 80px rgba(200,50,0,.2); transform: scale(1.04); letter-spacing:22px; }
+            100%{ opacity:.85; text-shadow: 0 0 8px rgba(200,70,0,.3), 0 0 20px rgba(200,70,0,.1); transform: scale(1); letter-spacing:20px; }
         }
         @keyframes diffBadge{
             0%  { opacity:0; transform:translateX(-50%) scale(.7); }
@@ -397,6 +399,13 @@
         .dark-mode #sabotage-warn{ background:rgba(0,0,0,.8); border-color:#440000; }
         .dark-mode #ad-overlay{ background:rgba(5,5,8,.98); }
         .dark-mode #btn-dark{ color:var(--gold); }
+        @keyframes pulseGlowDark{
+            0%  { opacity:.8; text-shadow: 0 0 10px rgba(255,120,30,.4), 0 0 30px rgba(255,100,0,.15); transform: scale(1); letter-spacing:20px; }
+            45% { opacity:1;  text-shadow: 0 0 22px rgba(255,140,40,.9), 0 0 55px rgba(255,100,0,.5), 0 0 100px rgba(220,60,0,.25); transform: scale(1.04); letter-spacing:22px; }
+            55% { opacity:1;  text-shadow: 0 0 22px rgba(255,140,40,.9), 0 0 55px rgba(255,100,0,.5), 0 0 100px rgba(220,60,0,.25); transform: scale(1.04); letter-spacing:22px; }
+            100%{ opacity:.8; text-shadow: 0 0 10px rgba(255,120,30,.4), 0 0 30px rgba(255,100,0,.15); transform: scale(1); letter-spacing:20px; }
+        }
+        .dark-mode #main-menu h1{ color:#ffffff !important; animation: pulseGlowDark 1.8s ease-in-out infinite !important; }
 
         /* ── SHOP TABS ── */
         .shop-tabs{ display:flex; gap:0; margin-bottom:20px; border:1px solid var(--border); }
@@ -466,13 +475,13 @@
     <!-- HUD -->
     <div id="hud-main" class="hud hidden">
         <div class="hud-block">
-            <div class="hud-label">// CASTIEL</div>
+            <div class="hud-label">// FIZZ</div>
             <div class="hud-lives" id="p1-lives-display" style="color:var(--main)">▮▮▮</div>
             <div class="hud-score" id="p1-score" style="color:var(--main)">000</div>
             <div class="hud-sync">SYNC: <span id="p1-s">0</span>% &nbsp;·&nbsp; <span style="color:var(--gold)" id="hud-credits">⬡0</span></div>
         </div>
         <div class="hud-block" style="text-align:right;align-items:flex-end;" id="p2-hud">
-            <div class="hud-label">S.I.M.O.N. //</div>
+            <div class="hud-label">SERAPH //</div>
             <div class="hud-lives" id="p2-lives-display" style="color:var(--p2)">▮▮▮</div>
             <div class="hud-score" id="p2-score" style="color:var(--p2)">000</div>
         </div>
@@ -482,7 +491,7 @@
 
     <!-- MAIN MENU -->
     <div id="main-menu" class="ui-layer">
-        <h1 style="letter-spacing:20px;font-size:74px;color:#111;font-family:'Orbitron',monospace;font-weight:900;animation:pulseGlow 3s infinite;">PULSE</h1>
+        <h1 style="letter-spacing:20px;font-size:74px;color:#111;font-family:'Orbitron',monospace;font-weight:900;animation:pulseGlow 1.8s ease-in-out infinite;">PULSE</h1>
         <div class="menu-subtitle">NEURAL EXTRACTION PROTOCOL · 2041</div>
         <button class="btn" id="btn-solo">SOLO EXTRACTION</button>
         <button class="btn" id="btn-duelo" style="color:var(--p2);border-color:#1a1a1a;">NEURAL DUEL (1 VS 1)</button>
@@ -508,21 +517,21 @@
 
         <!-- P1 grid -->
         <div class="shop-grid" id="shop-grid-p1">
-            <div class="skin-card" id="p1-skin-card-castiel">
-                <canvas id="p1-skin-preview-castiel" width="80" height="80"></canvas>
-                <div class="skin-name" style="color:#c84000;">CASTIEL</div>
+            <div class="skin-card" id="p1-skin-card-fizz">
+                <canvas id="p1-skin-preview-fizz" width="80" height="80"></canvas>
+                <div class="skin-name" style="color:#c84000;">FIZZ</div>
                 <div class="skin-desc">Original signal.<br>The rogue extraction.</div>
                 <div class="skin-owned">✓ OWNED</div>
-                <div class="skin-equipped hidden" id="p1-skin-eq-castiel">[ EQUIPPED ]</div>
-                <div id="p1-skin-action-castiel"></div>
+                <div class="skin-equipped hidden" id="p1-skin-eq-fizz">[ EQUIPPED ]</div>
+                <div id="p1-skin-action-fizz"></div>
             </div>
-            <div class="skin-card" id="p1-skin-card-simon">
-                <canvas id="p1-skin-preview-simon" width="80" height="80"></canvas>
-                <div class="skin-name" style="color:#0070aa;">S.I.M.O.N.</div>
+            <div class="skin-card" id="p1-skin-card-seraph">
+                <canvas id="p1-skin-preview-seraph" width="80" height="80"></canvas>
+                <div class="skin-name" style="color:#0070aa;">SERAPH</div>
                 <div class="skin-desc">Synthetic intelligence.<br>Cold and precise.</div>
-                <div id="p1-skin-action-simon"></div>
-                <div class="skin-equipped hidden" id="p1-skin-eq-simon">[ EQUIPPED ]</div>
-                <div class="skin-lock" id="p1-skin-lock-simon">🔒</div>
+                <div id="p1-skin-action-seraph"></div>
+                <div class="skin-equipped hidden" id="p1-skin-eq-seraph">[ EQUIPPED ]</div>
+                <div class="skin-lock" id="p1-skin-lock-seraph">🔒</div>
             </div>
             <div class="skin-card" id="p1-skin-card-void">
                 <canvas id="p1-skin-preview-void" width="80" height="80"></canvas>
@@ -540,25 +549,33 @@
                 <div class="skin-equipped hidden" id="p1-skin-eq-yan">[ EQUIPPED ]</div>
                 <div class="skin-lock" id="p1-skin-lock-yan">🔒</div>
             </div>
+            <div class="skin-card" id="p1-skin-card-mequintoshi">
+                <canvas id="p1-skin-preview-mequintoshi" width="80" height="80"></canvas>
+                <div class="skin-name" style="color:#c8b89a;">MEQUINTOSHI</div>
+                <div class="skin-desc">A relic from 1984.<br>Still running. Somehow.</div>
+                <div id="p1-skin-action-mequintoshi"></div>
+                <div class="skin-equipped hidden" id="p1-skin-eq-mequintoshi">[ EQUIPPED ]</div>
+                <div class="skin-lock" id="p1-skin-lock-mequintoshi">🔒</div>
+            </div>
         </div>
 
         <!-- P2 grid -->
         <div class="shop-grid hidden" id="shop-grid-p2">
-            <div class="skin-card" id="p2-skin-card-castiel">
-                <canvas id="p2-skin-preview-castiel" width="80" height="80"></canvas>
-                <div class="skin-name" style="color:#c84000;">CASTIEL</div>
+            <div class="skin-card" id="p2-skin-card-fizz">
+                <canvas id="p2-skin-preview-fizz" width="80" height="80"></canvas>
+                <div class="skin-name" style="color:#c84000;">FIZZ</div>
                 <div class="skin-desc">Original signal.<br>The rogue extraction.</div>
                 <div class="skin-owned">✓ OWNED</div>
-                <div class="skin-equipped hidden" id="p2-skin-eq-castiel">[ EQUIPPED ]</div>
-                <div id="p2-skin-action-castiel"></div>
+                <div class="skin-equipped hidden" id="p2-skin-eq-fizz">[ EQUIPPED ]</div>
+                <div id="p2-skin-action-fizz"></div>
             </div>
-            <div class="skin-card" id="p2-skin-card-simon">
-                <canvas id="p2-skin-preview-simon" width="80" height="80"></canvas>
-                <div class="skin-name" style="color:#0070aa;">S.I.M.O.N.</div>
+            <div class="skin-card" id="p2-skin-card-seraph">
+                <canvas id="p2-skin-preview-seraph" width="80" height="80"></canvas>
+                <div class="skin-name" style="color:#0070aa;">SERAPH</div>
                 <div class="skin-desc">Synthetic intelligence.<br>Cold and precise.</div>
-                <div id="p2-skin-action-simon"></div>
-                <div class="skin-equipped hidden" id="p2-skin-eq-simon">[ EQUIPPED ]</div>
-                <div class="skin-lock" id="p2-skin-lock-simon">🔒</div>
+                <div id="p2-skin-action-seraph"></div>
+                <div class="skin-equipped hidden" id="p2-skin-eq-seraph">[ EQUIPPED ]</div>
+                <div class="skin-lock" id="p2-skin-lock-seraph">🔒</div>
             </div>
             <div class="skin-card" id="p2-skin-card-void">
                 <canvas id="p2-skin-preview-void" width="80" height="80"></canvas>
@@ -575,6 +592,14 @@
                 <div id="p2-skin-action-yan"></div>
                 <div class="skin-equipped hidden" id="p2-skin-eq-yan">[ EQUIPPED ]</div>
                 <div class="skin-lock" id="p2-skin-lock-yan">🔒</div>
+            </div>
+            <div class="skin-card" id="p2-skin-card-mequintoshi">
+                <canvas id="p2-skin-preview-mequintoshi" width="80" height="80"></canvas>
+                <div class="skin-name" style="color:#c8b89a;">MEQUINTOSHI</div>
+                <div class="skin-desc">A relic from 1984.<br>Still running. Somehow.</div>
+                <div id="p2-skin-action-mequintoshi"></div>
+                <div class="skin-equipped hidden" id="p2-skin-eq-mequintoshi">[ EQUIPPED ]</div>
+                <div class="skin-lock" id="p2-skin-lock-mequintoshi">🔒</div>
             </div>
         </div>
 
@@ -659,13 +684,13 @@
 const TAU = Math.PI * 2;
 const CONFIG = {
     WIN_SCORE:           100,
-    SPAWN_INTERVAL:      108,
-    SPAWN_INTERVAL_HELL: 40,
-    SPEED_SCALE:         0.015,
+    SPAWN_INTERVAL:      120,
+    SPAWN_INTERVAL_HELL: 48,
+    SPEED_SCALE:         0.011,
     BASE_RADIUS:         75,
     INNER_RADIUS:        50,   // Space — closer orbit
     FAR_RADIUS:          105,  // S — farther orbit
-    LIVES:               3,
+    LIVES:               4,
     DUEL_SABOTAGE_EVERY: 8,
 };
 
@@ -673,18 +698,18 @@ const CONFIG = {
 // SKIN SYSTEM
 // ════════════════════════════════════════════════════════════════════
 const SKINS = {
-    castiel: {
-        id:       'castiel',
-        name:     'CASTIEL',
+    fizz: {
+        id:       'fizz',
+        name:     'FIZZ',
         dotColor: '#c84000',
         ringColor:'#c84000',
         ringStyle:'solid',
         trailColor:'#a03000',
         price:    0,
     },
-    simon: {
-        id:       'simon',
-        name:     'S.I.M.O.N.',
+    seraph: {
+        id:       'seraph',
+        name:     'SERAPH',
         dotColor: '#0070aa',
         ringColor:'#0070aa',
         ringStyle:'dashed',
@@ -709,6 +734,16 @@ const SKINS = {
         trailColor:'#ff0000',
         price:    500,
     },
+    mequintoshi: {
+        id:       'mequintoshi',
+        name:     'MEQUINTOSHI',
+        dotColor: '#c8b89a',
+        ringColor:'#888866',
+        ringStyle:'dashed',
+        trailColor:'#a09070',
+        price:    0,
+        secret:   true,
+    },
 };
 
 // ── Persistence via localStorage ─────────────────────────────────
@@ -716,16 +751,16 @@ function _lsGet(k, def){ try{ const v=localStorage.getItem(k); return v!==null?J
 function _lsSet(k, v){ try{ localStorage.setItem(k,JSON.stringify(v)); } catch(e){} }
 
 let neuralCredits    = _lsGet('pulse_credits', 0);
-let ownedSkins       = _lsGet('pulse_owned',   ['castiel', 'simon']);
-let equippedSkinP1   = _lsGet('pulse_skin_p1', 'castiel');
-let equippedSkinP2   = _lsGet('pulse_skin_p2', 'simon');
+let ownedSkins       = _lsGet('pulse_owned',   ['fizz', 'seraph']);
+let equippedSkinP1   = _lsGet('pulse_skin_p1', 'fizz');
+let equippedSkinP2   = _lsGet('pulse_skin_p2', 'seraph');
 let allTimeScore     = _lsGet('pulse_best',     0);
 
 // legacy key migration
 const _legacy = _lsGet('pulse_skin', null);
 if(_legacy){ equippedSkinP1 = _legacy; _lsSet('pulse_skin_p1', _legacy); }
-// ensure simon is always owned (P2 default)
-if(!ownedSkins.includes('simon')){ ownedSkins.push('simon'); saveProgress(); }
+// ensure seraph is always owned (P2 default)
+if(!ownedSkins.includes('seraph')){ ownedSkins.push('seraph'); saveProgress(); }
 
 function saveProgress(){
     _lsSet('pulse_credits',  neuralCredits);
@@ -740,8 +775,8 @@ function awardCredits(score, player=null){
     neuralCredits += Math.floor(score * mult); 
     saveProgress(); 
 }
-function getActiveSkinP1(){ return SKINS[equippedSkinP1] || SKINS.castiel; }
-function getActiveSkinP2(){ return SKINS[equippedSkinP2] || SKINS.castiel; }
+function getActiveSkinP1(){ return SKINS[equippedSkinP1] || SKINS.fizz; }
+function getActiveSkinP2(){ return SKINS[equippedSkinP2] || SKINS.fizz; }
 
 // ── Active shop tab ───────────────────────────────────────────────
 let activeShopTab = 'p1';
@@ -830,6 +865,13 @@ function refreshShopUI(){
 
             if(!card) return;
 
+            // Secret skins — only visible if owned
+            if(skin.secret && !owned){
+                card.style.display = 'none';
+                return;
+            }
+            card.style.display = '';
+
             card.classList.toggle('active', isEq);
             card.classList.toggle('locked', !owned && neuralCredits < skin.price);
 
@@ -868,11 +910,11 @@ function equipSkin(player, id){
     refreshShopUI();
 }
 const TIERS = [
-    { name:'INIT',      minScore:0,  gapMin:1.25, gapMax:1.55, spinning:false, shrinking:false, speedBonus:0    },
-    { name:'TRACE',     minScore:15, gapMin:1.05, gapMax:1.40, spinning:false, shrinking:true,  speedBonus:0.05 },
-    { name:'BREACH',    minScore:35, gapMin:0.85, gapMax:1.25, spinning:true,  shrinking:true,  speedBonus:0.12 },
-    { name:'CRITICAL',  minScore:60, gapMin:0.65, gapMax:1.05, spinning:true,  shrinking:true,  speedBonus:0.22 },
-    { name:'HELL_SYNC', minScore:80, gapMin:0.50, gapMax:0.85, spinning:true,  shrinking:true,  speedBonus:0.35 },
+    { name:'INIT',      minScore:0,  gapMin:1.40, gapMax:1.70, spinning:false, shrinking:false, speedBonus:0    },
+    { name:'TRACE',     minScore:20, gapMin:1.15, gapMax:1.50, spinning:false, shrinking:true,  speedBonus:0.04 },
+    { name:'BREACH',    minScore:42, gapMin:0.95, gapMax:1.30, spinning:true,  shrinking:true,  speedBonus:0.09 },
+    { name:'CRITICAL',  minScore:65, gapMin:0.75, gapMax:1.10, spinning:true,  shrinking:true,  speedBonus:0.16 },
+    { name:'HELL_SYNC', minScore:82, gapMin:0.58, gapMax:0.90, spinning:true,  shrinking:true,  speedBonus:0.26 },
 ];
 function getTier(score){ for(let i=TIERS.length-1;i>=0;i--) if(score>=TIERS[i].minScore) return TIERS[i]; return TIERS[0]; }
 
@@ -954,6 +996,523 @@ function requestAdBreak(cb){
 let audioCtx=null, masterGain=null, droneNode=null, droneGain=null;
 let hellDroneNode=null, hellDroneGain=null;
 let audioMuted=false, audioReady=false;
+let menuMusicNodes=[], menuMusicGain=null, menuMusicActive=false;
+
+// ── MENU MUSIC ──────────────────────────────────────────────────────
+function startMenuMusic(){
+    if(!audioReady || menuMusicActive) return;
+    menuMusicActive = true;
+
+    const t = audioCtx.currentTime;
+    menuMusicGain = audioCtx.createGain();
+    menuMusicGain.gain.setValueAtTime(0, t);
+    menuMusicGain.gain.linearRampToValueAtTime(0.26, t + 1.5);
+    menuMusicGain.connect(masterGain);
+
+    // ── REVERB CONVOLVER — makes everything sound like a large empty room ──
+    function makeReverb(decaySecs){
+        const len = audioCtx.sampleRate * decaySecs;
+        const buf = audioCtx.createBuffer(2, len, audioCtx.sampleRate);
+        for(let c = 0; c < 2; c++){
+            const d = buf.getChannelData(c);
+            for(let i = 0; i < len; i++)
+                d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 2.5);
+        }
+        const conv = audioCtx.createConvolver();
+        conv.buffer = buf;
+        return conv;
+    }
+    const reverb = makeReverb(3.5);
+    const reverbGain = audioCtx.createGain();
+    reverbGain.gain.value = 0.45;
+    reverb.connect(reverbGain); reverbGain.connect(menuMusicGain);
+
+    function connectWithReverb(node){
+        node.connect(menuMusicGain);
+        node.connect(reverb);
+    }
+
+    // ── WIND — filtered noise, hollow & breathing ──
+    function makeWind(freq, q, vol, lfoRate, lfoAmt){
+        const sz = audioCtx.sampleRate * 4;
+        const buf = audioCtx.createBuffer(1, sz, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for(let i=0;i<sz;i++) d[i]=Math.random()*2-1;
+        const src = audioCtx.createBufferSource();
+        src.buffer = buf; src.loop = true;
+        const flt = audioCtx.createBiquadFilter();
+        flt.type='bandpass'; flt.frequency.value=freq; flt.Q.value=q;
+        const g = audioCtx.createGain(); g.gain.value=vol;
+        const lfo = audioCtx.createOscillator();
+        const lfoG = audioCtx.createGain();
+        lfo.type='sine'; lfo.frequency.value=lfoRate; lfoG.gain.value=lfoAmt;
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        src.connect(flt); flt.connect(g);
+        connectWithReverb(g);
+        src.start(); lfo.start();
+        menuMusicNodes.push(src, lfo);
+    }
+    makeWind(280,  1.5, 0.14, 0.07, 0.08); // deep hollow
+    makeWind(780,  2.5, 0.05, 0.11, 0.03); // mid whistle
+    makeWind(2600, 6.0, 0.02, 0.17, 0.015);// high hiss
+
+    // ── PIANO — C418 style, very sparse, long silences ──
+    const melodyNotes = [261.6, 311.1, 349.2, 392.0, 466.1, 392.0, 349.2, 311.1, 261.6, 233.1, 261.6, 349.2];
+    let melIdx = 0;
+    function scheduleMelody(){
+        if(!menuMusicActive) return;
+        const now = audioCtx.currentTime;
+        const freq = melodyNotes[melIdx % melodyNotes.length];
+        melIdx++;
+
+        [1, 2, 3].forEach((harmonic, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = 'sine';
+            o.frequency.value = freq * harmonic;
+            const vol = [0.10, 0.04, 0.015][i];
+            g.gain.setValueAtTime(0, now);
+            g.gain.linearRampToValueAtTime(vol, now + 0.015);
+            g.gain.exponentialRampToValueAtTime(vol * 0.3, now + 0.5);
+            g.gain.exponentialRampToValueAtTime(0.001, now + 3.0);
+            o.connect(g); connectWithReverb(g);
+            o.start(now); o.stop(now + 3.5);
+        });
+
+        // C418 soul — silêncio muito longo entre notas
+        const gap = Math.random() < 0.4
+            ? 800 + Math.random() * 1200   // às vezes toca logo
+            : 5000 + Math.random() * 9000; // mas geralmente fica em silêncio
+        if(menuMusicActive) setTimeout(scheduleMelody, gap);
+    }
+    setTimeout(scheduleMelody, 2000 + Math.random() * 3000);
+
+    // ── CONTRABAIXO — pizzicato esparso, só aparece de vez em quando ──
+    const bassLine = [65.4, 73.4, 82.4, 65.4, 87.3, 73.4, 82.4, 65.4];
+    let bassIdx = 0;
+    function scheduleBass(){
+        if(!menuMusicActive) return;
+        const now = audioCtx.currentTime;
+        const freq = bassLine[bassIdx % bassLine.length];
+        bassIdx++;
+        [freq, freq*2].forEach((f, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = i===0 ? 'triangle' : 'sine';
+            o.frequency.value = f;
+            g.gain.setValueAtTime(0, now);
+            g.gain.linearRampToValueAtTime(i===0 ? 0.18 : 0.05, now + 0.008);
+            g.gain.exponentialRampToValueAtTime(0.03, now + 0.6);
+            g.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+            o.connect(g); connectWithReverb(g);
+            o.start(now); o.stop(now + 2.0);
+        });
+        // Baixo esparso — 4 a 8 segundos entre notas
+        const gap = 4000 + Math.random() * 4000;
+        if(menuMusicActive) setTimeout(scheduleBass, gap);
+    }
+    setTimeout(scheduleBass, 3000 + Math.random() * 2000);
+
+    // ── PORTAL PING — metallic resonant tones, like test chamber machinery ──
+    function schedulePing(){
+        if(!menuMusicActive) return;
+        const now = audioCtx.currentTime;
+        const freqs = [523.2, 622.2, 466.1, 587.3, 698.4];
+        const freq = freqs[Math.floor(Math.random()*freqs.length)];
+        [freq, freq*1.5].forEach((f, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type='sine'; o.frequency.value=f;
+            g.gain.setValueAtTime(i===0?0.07:0.03, now);
+            g.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
+            o.connect(g); connectWithReverb(g);
+            o.start(now); o.stop(now + 2.8);
+        });
+        if(menuMusicActive) setTimeout(schedulePing, 5000 + Math.random()*8000);
+    }
+    setTimeout(schedulePing, 4000 + Math.random()*3000);
+
+    // ── HUMAN FALL FLAT — distant hollow knock / footstep echo ──
+    function scheduleKnock(){
+        if(!menuMusicActive) return;
+        const now = audioCtx.currentTime;
+        const buf = audioCtx.createBuffer(1, audioCtx.sampleRate*0.1, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3);
+        const src = audioCtx.createBufferSource();
+        const flt = audioCtx.createBiquadFilter();
+        const g = audioCtx.createGain();
+        src.buffer=buf;
+        flt.type='lowpass'; flt.frequency.value=200; flt.Q.value=2;
+        g.gain.setValueAtTime(0.35, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now+0.12);
+        src.connect(flt); flt.connect(g); connectWithReverb(g);
+        src.start(now);
+        if(menuMusicActive) setTimeout(scheduleKnock, 7000 + Math.random()*12000);
+    }
+    setTimeout(scheduleKnock, 6000 + Math.random()*5000);
+
+    // ── C418 STYLE — minecraft ambient piano, minimalista ──
+    // Notas simples, pausas longas, melodia quase acidental
+    // Escala: C major pentatonic — C D E G A — simples e contemplativa
+    const c418Notes = [
+        261.6,  // C4
+        293.6,  // D4
+        329.6,  // E4
+        392.0,  // G4
+        440.0,  // A4
+        523.2,  // C5
+        392.0,  // G4
+        329.6,  // E4
+        261.6,  // C4
+        196.0,  // G3
+        220.0,  // A3
+        261.6,  // C4
+        293.6,  // D4
+        261.6,  // C4
+    ];
+    let c418Idx = 0;
+    function scheduleC418(){
+        if(!menuMusicActive) return;
+        const now = audioCtx.currentTime;
+        const freq = c418Notes[c418Idx % c418Notes.length];
+        c418Idx++;
+
+        // Tom de piano suave — sine puro com harmônicos sutis
+        [1, 2, 4].forEach((harmonic, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = 'sine';
+            o.frequency.value = freq * harmonic;
+            const vol = [0.08, 0.025, 0.008][i];
+            // Ataque gentil, sustain longo, fade suave — exatamente como C418
+            g.gain.setValueAtTime(0, now);
+            g.gain.linearRampToValueAtTime(vol, now + 0.02);
+            g.gain.setValueAtTime(vol, now + 0.1);
+            g.gain.exponentialRampToValueAtTime(vol * 0.4, now + 1.5);
+            g.gain.exponentialRampToValueAtTime(0.001, now + 4.5);
+            o.connect(g); connectWithReverb(g);
+            o.start(now); o.stop(now + 5.0);
+        });
+
+        // Pausa longa e irregular — alma do C418
+        // Às vezes toca logo, às vezes fica em silêncio por 8 segundos
+        const gap = 1500 + Math.random() * 6500;
+        if(menuMusicActive) setTimeout(scheduleC418, gap);
+    }
+    // Começa depois de tudo já estar tocando — entra suavemente
+    setTimeout(scheduleC418, 5000 + Math.random() * 4000);
+
+    // ── SINO + NOTAS CRISTALINAS — Cm em oitava alta, brilhante ──
+    const bellNotes1=[523.2,622.2,523.2,466.1,392.0,466.1,523.2,587.3,622.2,523.2,392.0,466.1];
+    let bni1=0;
+    function scheduleBell1(){
+        if(!menuMusicActive) return;
+        const now=audioCtx.currentTime, freq=bellNotes1[bni1%bellNotes1.length]; bni1++;
+        // Sino — fundamental + harmônico 2.756 (tom metálico)
+        [1, 2.756, 5.404].forEach((h,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type='sine'; o.frequency.value=freq*h;
+            const vol=[0.07,0.025,0.008][i];
+            g.gain.setValueAtTime(vol,now);
+            g.gain.exponentialRampToValueAtTime(0.001,now+[2.5,1.0,0.4][i]);
+            o.connect(g); connectWithReverb(g); o.start(now); o.stop(now+3.0);
+        });
+        const gap=Math.random()<0.3 ? 500+Math.random()*700 : 4000+Math.random()*7000;
+        if(menuMusicActive) setTimeout(scheduleBell1, gap);
+    }
+    setTimeout(scheduleBell1, 3000+Math.random()*3000);
+}
+
+function stopMenuMusic(){
+    if(!menuMusicActive) return;
+    menuMusicActive = false;
+    if(menuMusicGain){
+        menuMusicGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.8);
+        setTimeout(()=>{
+            menuMusicNodes.forEach(n=>{ try{ n.stop(); }catch(e){} });
+            menuMusicNodes = [];
+            menuMusicGain = null;
+        }, 900);
+    }
+}
+
+function stopMenuMusic(){
+    if(!menuMusicActive) return;
+    menuMusicActive = false;
+    if(menuMusicGain){
+        menuMusicGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.8);
+        setTimeout(()=>{
+            menuMusicNodes.forEach(n=>{ try{ n.stop(); }catch(e){} });
+            menuMusicNodes = [];
+            menuMusicGain = null;
+        }, 900);
+    }
+}
+
+// ── MENU TRACK 2 — Corredor vazio, ecos distantes, piano de câmara ──
+function startMenuMusic2(){
+    if(!audioReady || menuMusicActive) return;
+    menuMusicActive = true;
+
+    const t = audioCtx.currentTime;
+    menuMusicGain = audioCtx.createGain();
+    menuMusicGain.gain.setValueAtTime(0, t);
+    menuMusicGain.gain.linearRampToValueAtTime(0.24, t + 1.5);
+    menuMusicGain.connect(masterGain);
+
+    // Large hall reverb
+    const rvLen = audioCtx.sampleRate * 5;
+    const rvBuf = audioCtx.createBuffer(2, rvLen, audioCtx.sampleRate);
+    for(let c=0;c<2;c++){
+        const d=rvBuf.getChannelData(c);
+        for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,1.8);
+    }
+    const reverb=audioCtx.createConvolver(); reverb.buffer=rvBuf;
+    const rvG=audioCtx.createGain(); rvG.gain.value=0.6;
+    reverb.connect(rvG); rvG.connect(menuMusicGain);
+    function wet(n){ n.connect(menuMusicGain); n.connect(reverb); }
+
+    // ── Vento suave de corredor ──
+    [180, 500, 1400].forEach((freq,i)=>{
+        const sz=audioCtx.sampleRate*4;
+        const buf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let j=0;j<sz;j++) d[j]=Math.random()*2-1;
+        const src=audioCtx.createBufferSource(); src.buffer=buf; src.loop=true;
+        const flt=audioCtx.createBiquadFilter(); flt.type='bandpass'; flt.frequency.value=freq; flt.Q.value=[1.0,2.0,5.0][i];
+        const g=audioCtx.createGain(); g.gain.value=[0.12,0.04,0.018][i];
+        const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
+        lfo.type='sine'; lfo.frequency.value=[0.05,0.08,0.13][i]; lfoG.gain.value=[0.07,0.03,0.012][i];
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        src.connect(flt); flt.connect(g); wet(g);
+        src.start(); lfo.start();
+        menuMusicNodes.push(src,lfo);
+    });
+
+    // ── Piano câmara — acordes Cm arpejados muito lentos ──
+    const chords=[
+        [130.8,155.6,196.0,261.6], // Cm
+        [116.5,138.6,174.6,233.1], // Bbm
+        [146.8,174.6,220.0,293.6], // Dm7b5
+        [130.8,155.6,185.0,261.6], // Cm/G
+    ];
+    let ci=0;
+    function scheduleChamberPiano(){
+        if(!menuMusicActive) return;
+        const now=audioCtx.currentTime;
+        const chord=chords[ci%chords.length]; ci++;
+        chord.forEach((freq,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type='sine'; o.frequency.value=freq;
+            const delay=i*0.08;
+            g.gain.setValueAtTime(0,now+delay);
+            g.gain.linearRampToValueAtTime(0.06-i*0.01,now+delay+0.02);
+            g.gain.exponentialRampToValueAtTime(0.02,now+delay+1.5);
+            g.gain.exponentialRampToValueAtTime(0.001,now+delay+5.0);
+            o.connect(g); wet(g);
+            o.start(now+delay); o.stop(now+delay+5.5);
+        });
+        if(menuMusicActive) setTimeout(scheduleChamberPiano, 6000+Math.random()*6000);
+    }
+    setTimeout(scheduleChamberPiano, 3000+Math.random()*3000);
+
+    // ── Contrabaixo pizzicato Cm ──
+    const bassC=[65.4,77.8,82.4,65.4,87.3,77.8,98.0,65.4];
+    let bi=0;
+    function scheduleBassC(){
+        if(!menuMusicActive) return;
+        const now=audioCtx.currentTime, freq=bassC[bi%bassC.length]; bi++;
+        [freq,freq*2].forEach((f,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type=i===0?'triangle':'sine'; o.frequency.value=f;
+            g.gain.setValueAtTime(i===0?0.20:0.05,now);
+            g.gain.exponentialRampToValueAtTime(0.03,now+0.5);
+            g.gain.exponentialRampToValueAtTime(0.001,now+1.6);
+            o.connect(g); wet(g);
+            o.start(now); o.stop(now+1.8);
+        });
+        if(menuMusicActive) setTimeout(scheduleBassC, 2200+Math.random()*2000);
+    }
+    setTimeout(scheduleBassC, 2000+Math.random()*2000);
+
+    // ── Pings metálicos ──
+    function schedulePingC(){
+        if(!menuMusicActive) return;
+        const now=audioCtx.currentTime;
+        const notes=[261.6,311.1,349.2,415.3,466.1];
+        const f=notes[Math.floor(Math.random()*notes.length)];
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+        o.type='sine'; o.frequency.value=f;
+        g.gain.setValueAtTime(0.06,now);
+        g.gain.exponentialRampToValueAtTime(0.001,now+3.0);
+        o.connect(g); wet(g);
+        o.start(now); o.stop(now+3.5);
+        if(menuMusicActive) setTimeout(schedulePingC, 6000+Math.random()*9000);
+    }
+    setTimeout(schedulePingC, 5000+Math.random()*4000);
+
+    // ── RITMO LEVE — batida suave a 70bpm, distingue da trilha 1 ──
+    let beatN=0;
+    function scheduleBeat2(){
+        if(!menuMusicActive) return;
+        const now=audioCtx.currentTime;
+        // Kick suave apenas nos beats 1 e 3
+        if(beatN%4===0 || beatN%4===2){
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type='sine'; o.frequency.setValueAtTime(90,now);
+            o.frequency.exponentialRampToValueAtTime(35,now+0.15);
+            g.gain.setValueAtTime(0.18,now);
+            g.gain.exponentialRampToValueAtTime(0.001,now+0.22);
+            o.connect(g); g.connect(menuMusicGain);
+            o.start(now); o.stop(now+0.25);
+        }
+        beatN++;
+        if(menuMusicActive) setTimeout(scheduleBeat2, 857); // 70bpm
+    }
+    setTimeout(scheduleBeat2, 6000+Math.random()*3000);
+
+    // ── SINO CRISTALINO — Bbm oitava alta ──
+    const bellNotes2=[622.2,739.9,622.2,554.4,493.9,554.4,622.2,659.3,739.9,622.2,493.9,554.4];
+    let bni2=0;
+    function scheduleBell2(){
+        if(!menuMusicActive) return;
+        const now=audioCtx.currentTime, freq=bellNotes2[bni2%bellNotes2.length]; bni2++;
+        [1, 2.756, 5.404].forEach((h,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type='sine'; o.frequency.value=freq*h;
+            const vol=[0.06,0.02,0.006][i];
+            g.gain.setValueAtTime(vol,now);
+            g.gain.exponentialRampToValueAtTime(0.001,now+[2.2,0.9,0.35][i]);
+            o.connect(g); wet(g); o.start(now); o.stop(now+2.5);
+        });
+        const gap=Math.random()<0.3 ? 400+Math.random()*600 : 3500+Math.random()*6000;
+        if(menuMusicActive) setTimeout(scheduleBell2, gap);
+    }
+    setTimeout(scheduleBell2, 2500+Math.random()*2500);
+}
+
+function startMenuMusic3(){
+    if(!audioReady || menuMusicActive) return;
+    menuMusicActive = true;
+
+    const t = audioCtx.currentTime;
+    menuMusicGain = audioCtx.createGain();
+    menuMusicGain.gain.setValueAtTime(0, t);
+    menuMusicGain.gain.linearRampToValueAtTime(0.26, t + 1.5);
+    menuMusicGain.connect(masterGain);
+
+    // Shorter reverb — tighter space
+    const rvLen=audioCtx.sampleRate*2.5;
+    const rvBuf=audioCtx.createBuffer(2,rvLen,audioCtx.sampleRate);
+    for(let c=0;c<2;c++){
+        const d=rvBuf.getChannelData(c);
+        for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,3.0);
+    }
+    const reverb=audioCtx.createConvolver(); reverb.buffer=rvBuf;
+    const rvG=audioCtx.createGain(); rvG.gain.value=0.4;
+    reverb.connect(rvG); rvG.connect(menuMusicGain);
+    function wet(n){ n.connect(menuMusicGain); n.connect(reverb); }
+
+    // ── Vento de ventilador ── mais agudo que os outros
+    [600,1200,3000].forEach((freq,i)=>{
+        const sz=audioCtx.sampleRate*3;
+        const buf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let j=0;j<sz;j++) d[j]=Math.random()*2-1;
+        const src=audioCtx.createBufferSource(); src.buffer=buf; src.loop=true;
+        const flt=audioCtx.createBiquadFilter(); flt.type='bandpass'; flt.frequency.value=freq; flt.Q.value=[2,4,8][i];
+        const g=audioCtx.createGain(); g.gain.value=[0.08,0.035,0.012][i];
+        const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
+        lfo.type='sine'; lfo.frequency.value=[0.15,0.22,0.31][i]; lfoG.gain.value=[0.05,0.02,0.008][i];
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        src.connect(flt); flt.connect(g); wet(g);
+        src.start(); lfo.start();
+        menuMusicNodes.push(src,lfo);
+    });
+
+    // ── Pulso elétrico — click periódico de relé ──
+    function scheduleClick(){
+        if(!menuMusicActive) return;
+        const now=audioCtx.currentTime;
+        const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*0.05,audioCtx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,4);
+        const src=audioCtx.createBufferSource(),flt=audioCtx.createBiquadFilter(),g=audioCtx.createGain();
+        src.buffer=buf; flt.type='highpass'; flt.frequency.value=800;
+        g.gain.setValueAtTime(0.22,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.06);
+        src.connect(flt); flt.connect(g); wet(g); src.start(now);
+        if(menuMusicActive) setTimeout(scheduleClick, 3000+Math.random()*5000);
+    }
+    setTimeout(scheduleClick, 2000+Math.random()*3000);
+
+    // ── Piano Am — mais esparso, notas mais agudas ──
+    const amNotes=[220,261.6,329.6,220,293.6,261.6,349.2,293.6,220,196.0,220,261.6];
+    let ai=0;
+    function scheduleAmPiano(){
+        if(!menuMusicActive) return;
+        const now=audioCtx.currentTime, freq=amNotes[ai%amNotes.length]; ai++;
+        [1,2,3].forEach((h,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type='sine'; o.frequency.value=freq*h;
+            const vol=[0.09,0.03,0.009][i];
+            g.gain.setValueAtTime(vol,now);
+            g.gain.exponentialRampToValueAtTime(vol*0.25,now+0.1);
+            g.gain.exponentialRampToValueAtTime(0.001,now+3.5);
+            o.connect(g); wet(g); o.start(now); o.stop(now+4.0);
+        });
+        if(menuMusicActive) setTimeout(scheduleAmPiano, 2800+Math.random()*5200);
+    }
+    setTimeout(scheduleAmPiano, 4000+Math.random()*3000);
+
+    // ── Contrabaixo Am ──
+    const bassA=[55,65.4,55,73.4,82.4,65.4,55,61.7];
+    let abi=0;
+    function scheduleBassA(){
+        if(!menuMusicActive) return;
+        const now=audioCtx.currentTime, freq=bassA[abi%bassA.length]; abi++;
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain(),flt=audioCtx.createBiquadFilter();
+        o.type='triangle'; o.frequency.value=freq;
+        flt.type='lowpass'; flt.frequency.value=400; flt.Q.value=1.2;
+        g.gain.setValueAtTime(0,now);
+        g.gain.linearRampToValueAtTime(0.24,now+0.01);
+        g.gain.exponentialRampToValueAtTime(0.05,now+0.6);
+        g.gain.exponentialRampToValueAtTime(0.001,now+1.8);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(now); o.stop(now+2.0);
+        if(menuMusicActive) setTimeout(scheduleBassA, 1800+Math.random()*2400);
+    }
+    setTimeout(scheduleBassA, 1500+Math.random()*2000);
+
+    // ── CELESTA + SINO — Am oitava alta, cristalino ──
+    const celestaNotes=[880,1046.5,880,783.9,698.4,783.9,880,987.8,1046.5,880,698.4,783.9];
+    let celi=0;
+    function scheduleCelesta(){
+        if(!menuMusicActive) return;
+        const now=audioCtx.currentTime, freq=celestaNotes[celi%celestaNotes.length]; celi++;
+        // Sino completo — 3 harmônicos incluindo o 2.756 metálico
+        [1, 2.756, 5.404].forEach((h,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type='sine'; o.frequency.value=freq*h;
+            const vol=[0.07,0.025,0.008][i];
+            g.gain.setValueAtTime(vol,now);
+            g.gain.exponentialRampToValueAtTime(0.001,now+[2.5,1.0,0.4][i]);
+            o.connect(g); wet(g); o.start(now); o.stop(now+3.0);
+        });
+        const gap=Math.random()<0.35 ? 400+Math.random()*600 : 3000+Math.random()*5000;
+        if(menuMusicActive) setTimeout(scheduleCelesta, gap);
+    }
+    setTimeout(scheduleCelesta, 4000+Math.random()*3000);
+}
+let _lastMenuTrack = -1;
+function startMenuMusicRandom(){
+    let track;
+    do { track = Math.floor(Math.random()*3); } while(track === _lastMenuTrack);
+    _lastMenuTrack = track;
+    if(track === 0) startMenuMusic();
+    else if(track === 1) startMenuMusic2();
+    else startMenuMusic3();
+}
 
 function initAudio(){
     if(audioReady) return;
@@ -993,7 +1552,513 @@ function startHellDrone(){
 }
 function stopHellDrone(){ if(!hellDroneGain) return; hellDroneGain.gain.linearRampToValueAtTime(0,audioCtx.currentTime+1); setTimeout(()=>{ hellDroneNode=null; hellDroneGain=null; },1200); }
 
-function playScore(combo=1){ if(!audioReady) return; const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type='square'; o.frequency.value=440+Math.min(combo*40,400); g.gain.setValueAtTime(.12,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.12); o.connect(g); g.connect(masterGain); o.start(); o.stop(audioCtx.currentTime+.12); }
+// ── WINTER GAMEPLAY MUSIC ─────────────────────────────────────────
+let winterMusicGain=null, winterMusicActive=false, winterMusicNodes=[];
+
+function startWinterMusic(){
+    if(!audioReady || winterMusicActive) return;
+    winterMusicActive = true;
+
+    const t = audioCtx.currentTime;
+    winterMusicGain = audioCtx.createGain();
+    winterMusicGain.gain.setValueAtTime(0, t);
+    winterMusicGain.gain.linearRampToValueAtTime(0.55, t + 4.0);
+    winterMusicGain.connect(masterGain);
+
+    // Room reverb — large cold space
+    const rvLen = audioCtx.sampleRate * 4;
+    const rvBuf = audioCtx.createBuffer(2, rvLen, audioCtx.sampleRate);
+    for(let c=0;c<2;c++){
+        const d=rvBuf.getChannelData(c);
+        for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,2.2);
+    }
+    const reverb = audioCtx.createConvolver();
+    reverb.buffer = rvBuf;
+    const rvGain = audioCtx.createGain(); rvGain.gain.value=0.55;
+    reverb.connect(rvGain); rvGain.connect(winterMusicGain);
+
+    function wet(node){ node.connect(winterMusicGain); node.connect(reverb); }
+
+    // ── VENTO CORTANTE — mais agressivo que o do menu ──
+    [200, 600, 1800, 4000].forEach((freq, i) => {
+        const sz = audioCtx.sampleRate * 3;
+        const buf = audioCtx.createBuffer(1, sz, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for(let j=0;j<sz;j++) d[j]=Math.random()*2-1;
+        const src = audioCtx.createBufferSource();
+        src.buffer=buf; src.loop=true;
+        const flt = audioCtx.createBiquadFilter();
+        flt.type='bandpass'; flt.frequency.value=freq; flt.Q.value=[1.2,2.5,4.0,6.0][i];
+        const g = audioCtx.createGain();
+        g.gain.value=[0.16,0.06,0.03,0.015][i];
+        const lfo = audioCtx.createOscillator();
+        const lfoG = audioCtx.createGain();
+        lfo.type='sine'; lfo.frequency.value=[0.06,0.09,0.14,0.21][i];
+        lfoG.gain.value=[0.10,0.04,0.02,0.01][i];
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        src.connect(flt); flt.connect(g); wet(g);
+        src.start(); lfo.start();
+        winterMusicNodes.push(src, lfo);
+    });
+
+    // ── GLOCKENSPIEL — notas cristalinas esparsas, estilo HFF Winter ──
+    // D minor — Dm pentatonic: D F G A C
+    const glockNotes = [293.6,349.2,392.0,440.0,523.2,587.3,698.4,440.0,392.0,349.2,293.6,261.6,293.6,392.0,440.0];
+    let glockIdx = 0;
+    function scheduleGlock(){
+        if(!winterMusicActive) return;
+        const now = audioCtx.currentTime;
+        const freq = glockNotes[glockIdx % glockNotes.length];
+        glockIdx++;
+
+        // Glockenspiel — sine com decaimento rápido brilhante
+        [1, 2.756, 5.404].forEach((partial, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type='sine'; o.frequency.value=freq*partial;
+            const vol=[0.09,0.04,0.015][i];
+            g.gain.setValueAtTime(vol, now);
+            g.gain.exponentialRampToValueAtTime(0.001, now+[2.5,1.2,0.6][i]);
+            o.connect(g); wet(g);
+            o.start(now); o.stop(now+3.0);
+        });
+
+        // Às vezes toca nota dupla logo em seguida — como vento carregando som
+        if(Math.random() < 0.3){
+            const now2 = now + 0.3 + Math.random()*0.4;
+            const freq2 = glockNotes[(glockIdx+2) % glockNotes.length];
+            const o2 = audioCtx.createOscillator();
+            const g2 = audioCtx.createGain();
+            o2.type='sine'; o2.frequency.value=freq2;
+            g2.gain.setValueAtTime(0.05, now2);
+            g2.gain.exponentialRampToValueAtTime(0.001, now2+2.0);
+            o2.connect(g2); wet(g2);
+            o2.start(now2); o2.stop(now2+2.5);
+        }
+
+        // Pausas longas e irregulares — silêncio é parte da música
+        const gap = 2500 + Math.random()*5500;
+        if(winterMusicActive) setTimeout(scheduleGlock, gap);
+    }
+    setTimeout(scheduleGlock, 3000 + Math.random()*3000);
+
+    // ── DRONE GELADO — grave, como gelo rangendo ──
+    const iceDrone = audioCtx.createOscillator();
+    const iceFlt = audioCtx.createBiquadFilter();
+    const iceG = audioCtx.createGain();
+    iceDrone.type='sine'; iceDrone.frequency.value=36.7; // D1 — gélido
+    iceFlt.type='lowpass'; iceFlt.frequency.value=100; iceFlt.Q.value=0.5;
+    iceG.gain.value=0.14;
+    const iceLfo=audioCtx.createOscillator(), iceLfoG=audioCtx.createGain();
+    iceLfo.frequency.value=0.03; iceLfoG.gain.value=0.06;
+    iceLfo.connect(iceLfoG); iceLfoG.connect(iceG.gain);
+    iceDrone.connect(iceFlt); iceFlt.connect(iceG); wet(iceG);
+    iceDrone.start(); iceLfo.start();
+    winterMusicNodes.push(iceDrone, iceLfo);
+
+    // ── CREAKS — rangidos de gelo/metal, muito raros ──
+    function scheduleCreak(){
+        if(!winterMusicActive) return;
+        const now = audioCtx.currentTime;
+        const sz = audioCtx.sampleRate * 0.3;
+        const buf = audioCtx.createBuffer(1, sz, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for(let i=0;i<sz;i++){
+            const env = Math.sin(Math.PI * i/sz);
+            d[i]=(Math.random()*2-1)*env*0.4;
+        }
+        const src=audioCtx.createBufferSource();
+        const flt=audioCtx.createBiquadFilter();
+        const g=audioCtx.createGain();
+        src.buffer=buf;
+        flt.type='bandpass'; flt.frequency.value=300+Math.random()*200; flt.Q.value=8;
+        g.gain.setValueAtTime(0.25, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now+0.4);
+        src.connect(flt); flt.connect(g); wet(g);
+        src.start(now);
+        if(winterMusicActive) setTimeout(scheduleCreak, 8000+Math.random()*15000);
+    }
+    setTimeout(scheduleCreak, 5000+Math.random()*8000);
+
+    // ── PIANO SOLITÁRIO — notas únicas, melancólicas, estilo C418 ──
+    // Dm pentatonic — mesma escala do glockenspiel e do toque de anel
+    const pianoNotes=[293.6,349.2,392.0,440.0,293.6,523.2,392.0,349.2,261.6,293.6,440.0,392.0];
+    let pianoIdx=0;
+    function scheduleWinterPiano(){
+        if(!winterMusicActive) return;
+        const now=audioCtx.currentTime;
+        const freq=pianoNotes[pianoIdx % pianoNotes.length];
+        pianoIdx++;
+
+        // Tom de piano — 3 harmônicos, ataque gentil, sustain longo
+        [1,2,4].forEach((h,i)=>{
+            const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+            o.type='sine'; o.frequency.value=freq*h;
+            const vol=[0.07,0.025,0.008][i];
+            g.gain.setValueAtTime(0, now);
+            g.gain.linearRampToValueAtTime(vol, now+0.018);
+            g.gain.exponentialRampToValueAtTime(vol*0.35, now+0.8);
+            g.gain.exponentialRampToValueAtTime(0.001, now+4.0);
+            o.connect(g); wet(g);
+            o.start(now); o.stop(now+4.5);
+        });
+
+        // Pausa irregular — silêncio faz parte
+        const gap=3000+Math.random()*7000;
+        if(winterMusicActive) setTimeout(scheduleWinterPiano, gap);
+    }
+    setTimeout(scheduleWinterPiano, 4000+Math.random()*4000);
+}
+
+function stopWinterMusic(){
+    if(!winterMusicActive) return;
+    winterMusicActive=false;
+    if(winterMusicGain){
+        winterMusicGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime+1.5);
+        setTimeout(()=>{
+            winterMusicNodes.forEach(n=>{ try{ n.stop(); }catch(e){} });
+            winterMusicNodes=[]; winterMusicGain=null;
+        }, 1800);
+    }
+}
+
+// ── BATTLE TRACK 2 — estilo Häggström — Am, lento, melancólico ──
+// Piano cristalino, pausas longas, contrabaixo esparso, ambiente suave
+function startBattleMusic2(){
+    if(!audioReady || winterMusicActive) return;
+    winterMusicActive=true;
+
+    const t=audioCtx.currentTime;
+    winterMusicGain=audioCtx.createGain();
+    winterMusicGain.gain.setValueAtTime(0,t);
+    winterMusicGain.gain.linearRampToValueAtTime(0.52,t+5.0);
+    winterMusicGain.connect(masterGain);
+
+    // Reverb grande e suave — sala vazia mas não fria demais
+    const rvLen=audioCtx.sampleRate*4.5;
+    const rvBuf=audioCtx.createBuffer(2,rvLen,audioCtx.sampleRate);
+    for(let c=0;c<2;c++){
+        const d=rvBuf.getChannelData(c);
+        for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,2.0);
+    }
+    const reverb=audioCtx.createConvolver(); reverb.buffer=rvBuf;
+    const rvG=audioCtx.createGain(); rvG.gain.value=0.55;
+    reverb.connect(rvG); rvG.connect(winterMusicGain);
+    function wet(n){ n.connect(winterMusicGain); n.connect(reverb); }
+
+    // ── Ambient suave — vento muito leve, quase inaudível ──
+    [300,900].forEach((freq,i)=>{
+        const sz=audioCtx.sampleRate*4;
+        const buf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let j=0;j<sz;j++) d[j]=Math.random()*2-1;
+        const src=audioCtx.createBufferSource(); src.buffer=buf; src.loop=true;
+        const flt=audioCtx.createBiquadFilter(); flt.type='bandpass'; flt.frequency.value=freq; flt.Q.value=[1.5,3.0][i];
+        const g=audioCtx.createGain(); g.gain.value=[0.06,0.025][i];
+        const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
+        lfo.type='sine'; lfo.frequency.value=[0.05,0.09][i]; lfoG.gain.value=[0.04,0.015][i];
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        src.connect(flt); flt.connect(g); wet(g);
+        src.start(); lfo.start();
+        winterMusicNodes.push(src,lfo);
+    });
+
+    // ── Drone Am — muito suave, só sustenta a tonalidade ──
+    [55.0,110.0,164.8].forEach((f,i)=>{
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+        o.type='sine'; o.frequency.value=f*(1+(i%2===0?0.003:-0.003));
+        g.gain.value=[0.10,0.05,0.02][i];
+        const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
+        lfo.frequency.value=0.04+i*0.012; lfoG.gain.value=0.03;
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        o.connect(g); wet(g); o.start(); lfo.start();
+        winterMusicNodes.push(o,lfo);
+    });
+
+    // ── Piano Häggström — Am, notas individuais, sustain longo ──
+    // Melodia de Am descendente e ascendente, muito lenta
+    const hNotes=[
+        220.0,  // A3
+        196.0,  // G3
+        174.6,  // F3
+        164.8,  // E3
+        174.6,  // F3
+        196.0,  // G3
+        220.0,  // A3
+        246.9,  // B3
+        261.6,  // C4
+        220.0,  // A3
+        196.0,  // G3
+        174.6,  // F3
+        220.0,  // A3
+        164.8,  // E3
+        196.0,  // G3
+    ];
+    let hi=0;
+    function scheduleH(){
+        if(!winterMusicActive) return;
+        const now=audioCtx.currentTime, freq=hNotes[hi%hNotes.length]; hi++;
+        // Piano puro — sine fundamental + 2 harmônicos muito suaves
+        [1,2,4].forEach((h,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type='sine'; o.frequency.value=freq*h;
+            const vol=[0.10,0.030,0.008][i];
+            g.gain.setValueAtTime(0,now);
+            g.gain.linearRampToValueAtTime(vol,now+0.018); // ataque gentil
+            g.gain.setValueAtTime(vol,now+0.05);
+            g.gain.exponentialRampToValueAtTime(vol*0.4,now+1.5);
+            g.gain.exponentialRampToValueAtTime(0.001,now+5.5); // sustain longo
+            o.connect(g); wet(g); o.start(now); o.stop(now+6.0);
+        });
+        // Pausa — coração do C418. Às vezes longa, às vezes curtinha
+        const gap=Math.random()<0.3 ? 800+Math.random()*1200 : 2500+Math.random()*5500;
+        if(winterMusicActive) setTimeout(scheduleH, gap);
+    }
+    setTimeout(scheduleH, 3000+Math.random()*2000);
+
+    // ── Contrabaixo Am — pizzicato muito esparso ──
+    const bassH=[55.0,65.4,55.0,41.2,55.0,49.0,55.0,65.4];
+    let bhi=0;
+    function scheduleBassH(){
+        if(!winterMusicActive) return;
+        const now=audioCtx.currentTime, freq=bassH[bhi%bassH.length]; bhi++;
+        [freq,freq*2].forEach((f,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type=i===0?'triangle':'sine'; o.frequency.value=f;
+            g.gain.setValueAtTime(0,now);
+            g.gain.linearRampToValueAtTime(i===0?0.18:0.05,now+0.01);
+            g.gain.exponentialRampToValueAtTime(0.03,now+0.6);
+            g.gain.exponentialRampToValueAtTime(0.001,now+2.5);
+            o.connect(g); wet(g); o.start(now); o.stop(now+2.8);
+        });
+        if(winterMusicActive) setTimeout(scheduleBassH, 3000+Math.random()*4000);
+    }
+    setTimeout(scheduleBassH, 2000+Math.random()*3000);
+}
+
+// ── BATTLE TRACK 3 — estilo Sweden — Cm, contemplativo, respira ──
+// Acordes suaves, piano de câmara, espaço enorme entre as notas
+function startBattleMusic3(){
+    if(!audioReady || winterMusicActive) return;
+    winterMusicActive=true;
+
+    const t=audioCtx.currentTime;
+    winterMusicGain=audioCtx.createGain();
+    winterMusicGain.gain.setValueAtTime(0,t);
+    winterMusicGain.gain.linearRampToValueAtTime(0.50,t+6.0);
+    winterMusicGain.connect(masterGain);
+
+    // Reverb Sweden — muito longo, como catedral vazia
+    const rvLen=audioCtx.sampleRate*6;
+    const rvBuf=audioCtx.createBuffer(2,rvLen,audioCtx.sampleRate);
+    for(let c=0;c<2;c++){
+        const d=rvBuf.getChannelData(c);
+        for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,1.6);
+    }
+    const reverb=audioCtx.createConvolver(); reverb.buffer=rvBuf;
+    const rvG=audioCtx.createGain(); rvG.gain.value=0.62;
+    reverb.connect(rvG); rvG.connect(winterMusicGain);
+    function wet(n){ n.connect(winterMusicGain); n.connect(reverb); }
+
+    // ── Pad suavíssimo — quase não existe, só presença ──
+    [65.4,130.8,196.0].forEach((f,i)=>{
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain(),flt=audioCtx.createBiquadFilter();
+        o.type='sine'; o.frequency.value=f*(1+(i%2===0?0.004:-0.004));
+        flt.type='lowpass'; flt.frequency.value=300; flt.Q.value=0.5;
+        g.gain.value=[0.08,0.04,0.015][i];
+        const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
+        lfo.frequency.value=0.025+i*0.008; lfoG.gain.value=0.025;
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(); lfo.start();
+        winterMusicNodes.push(o,lfo);
+    });
+
+    // ── Vento suavíssimo ──
+    const sz=audioCtx.sampleRate*4;
+    const wBuf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate);
+    const wd=wBuf.getChannelData(0);
+    for(let j=0;j<sz;j++) wd[j]=Math.random()*2-1;
+    const wSrc=audioCtx.createBufferSource(); wSrc.buffer=wBuf; wSrc.loop=true;
+    const wFlt=audioCtx.createBiquadFilter(); wFlt.type='bandpass'; wFlt.frequency.value=400; wFlt.Q.value=1.5;
+    const wG=audioCtx.createGain(); wG.gain.value=0.05;
+    const wLfo=audioCtx.createOscillator(),wLfoG=audioCtx.createGain();
+    wLfo.type='sine'; wLfo.frequency.value=0.04; wLfoG.gain.value=0.03;
+    wLfo.connect(wLfoG); wLfoG.connect(wG.gain);
+    wSrc.connect(wFlt); wFlt.connect(wG); wet(wG);
+    wSrc.start(); wLfo.start();
+    winterMusicNodes.push(wSrc,wLfo);
+
+    // ── Piano Sweden — Cm, acordes arpejados muito lentos e suaves ──
+    // Voicings: Cm → Ab → Bb → Cm
+    const swedenChords=[
+        [130.8,155.6,196.0,261.6,311.1],  // Cm
+        [103.8,130.8,155.6,207.7,261.6],  // Ab
+        [116.5,146.8,174.6,233.1,293.6],  // Bb
+        [130.8,155.6,196.0,261.6,392.0],  // Cm (oitava acima)
+    ];
+    let sci=0;
+    function scheduleSweden(){
+        if(!winterMusicActive) return;
+        const now=audioCtx.currentTime;
+        const chord=swedenChords[sci%swedenChords.length]; sci++;
+        chord.forEach((freq,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type='sine'; o.frequency.value=freq;
+            const delay=i*0.12; // arpejo lento, uma nota por vez
+            const vol=0.07-i*0.008;
+            g.gain.setValueAtTime(0,now+delay);
+            g.gain.linearRampToValueAtTime(vol,now+delay+0.02);
+            g.gain.exponentialRampToValueAtTime(vol*0.5,now+delay+1.0);
+            g.gain.exponentialRampToValueAtTime(0.001,now+delay+6.0);
+            o.connect(g); wet(g); o.start(now+delay); o.stop(now+delay+6.5);
+        });
+        // Pausa longa entre acordes — Sweden respira muito
+        const gap=7000+Math.random()*8000;
+        if(winterMusicActive) setTimeout(scheduleSweden, gap);
+    }
+    setTimeout(scheduleSweden, 4000+Math.random()*4000);
+
+    // ── Nota de melodia solo — uma nota acima do acorde, esparsa ──
+    const melodyS=[261.6,311.1,349.2,311.1,261.6,233.1,261.6,293.6,311.1,261.6];
+    let msi=0;
+    function scheduleSwedenMelody(){
+        if(!winterMusicActive) return;
+        const now=audioCtx.currentTime, freq=melodyS[msi%melodyS.length]; msi++;
+        [1,2].forEach((h,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type='sine'; o.frequency.value=freq*h;
+            const vol=[0.09,0.025][i];
+            g.gain.setValueAtTime(0,now);
+            g.gain.linearRampToValueAtTime(vol,now+0.015);
+            g.gain.exponentialRampToValueAtTime(0.001,now+4.5);
+            o.connect(g); wet(g); o.start(now); o.stop(now+5.0);
+        });
+        const gap=3500+Math.random()*7000;
+        if(winterMusicActive) setTimeout(scheduleSwedenMelody, gap);
+    }
+    setTimeout(scheduleSwedenMelody, 6000+Math.random()*5000);
+
+    // ── Contrabaixo Sweden — muito lento, uma nota a cada 4-7s ──
+    const swedenBass=[65.4,51.9,58.3,65.4,58.3,51.9,65.4,73.4];
+    let sbi2=0;
+    function scheduleSwedenBass(){
+        if(!winterMusicActive) return;
+        const now=audioCtx.currentTime, freq=swedenBass[sbi2%swedenBass.length]; sbi2++;
+        [freq,freq*2].forEach((f,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type=i===0?'triangle':'sine'; o.frequency.value=f;
+            g.gain.setValueAtTime(0,now);
+            g.gain.linearRampToValueAtTime(i===0?0.16:0.045,now+0.015);
+            g.gain.exponentialRampToValueAtTime(0.03,now+0.8);
+            g.gain.exponentialRampToValueAtTime(0.001,now+3.5);
+            o.connect(g); wet(g); o.start(now); o.stop(now+4.0);
+        });
+        if(winterMusicActive) setTimeout(scheduleSwedenBass, 4000+Math.random()*3000);
+    }
+    setTimeout(scheduleSwedenBass, 3000+Math.random()*3000);
+}
+
+// ── BATTLE MUSIC ROTATION ──
+let _lastBattleTrack=-1;
+function startWinterMusicRandom(){
+    let track;
+    do { track=Math.floor(Math.random()*3); } while(track===_lastBattleTrack);
+    _lastBattleTrack=track;
+    if(track===0) startWinterMusic();
+    else if(track===1) startBattleMusic2();
+    else startBattleMusic3();
+}
+// ── MELODIA PROCEDURAL — o jogador compõe sem perceber ──
+// 100 anéis = 100 notas = uma música completa
+// Estrutura em 4 frases de 25 notas cada, com arco emocional
+const _MELODY = (()=>{
+    // Escala Dm pentatônica + algumas notas de passagem
+    // Frase 1 (0-24):   começo — subida suave, exploração
+    // Frase 2 (25-49):  desenvolvimento — tensão crescente
+    // Frase 3 (50-74):  clímax — notas mais agudas, movimento rápido
+    // Frase 4 (75-99):  resolução — desce de volta, paz
+    const D3=146.8, F3=174.6, G3=196.0, A3=220.0, C4=261.6;
+    const D4=293.6, F4=349.2, G4=392.0, A4=440.0, C5=523.2;
+    const D5=587.3, F5=698.4, G5=784.0, A5=880.0;
+
+    return [
+        // Frase 1 — introdução, notas baixas, espaçadas
+        D4, D4, F4, G4, D4, A3, C4, D4, F4, D4,
+        G4, A4, G4, F4, D4, C4, D4, F4, G4, A4,
+        D4, C4, A3, G3, D4,
+        // Frase 2 — sobe, começa a tensionar
+        F4, G4, A4, C5, D5, A4, G4, F4, A4, C5,
+        D5, C5, A4, G4, F4, G4, A4, D5, C5, A4,
+        G4, F4, G4, A4, C5,
+        // Frase 3 — clímax, as notas mais agudas
+        D5, F5, G5, F5, D5, C5, A4, C5, D5, F5,
+        G5, F5, D5, A4, C5, D5, F5, G5, F5, D5,
+        C5, A4, G4, A4, C5,
+        // Frase 4 — resolução, desce suavemente de volta
+        D5, C5, A4, G4, F4, D4, F4, G4, A4, G4,
+        F4, D4, C4, D4, F4, G4, F4, D4, C4, A3,
+        G3, A3, C4, D4, D4,
+    ];
+})();
+
+// Dm pentatônica completa para snap harmônico
+const _DM_PENTA = [
+    36.7,  49.0,  55.0,  65.4,  73.4,
+    82.4,  98.0,  110.0, 130.8, 146.8,
+    174.6, 196.0, 220.0, 261.6, 293.6,
+    349.2, 392.0, 440.0, 523.2, 587.3,
+    698.4, 784.0, 880.0, 1046.5
+];
+
+// Snapa a frequência para a nota mais próxima da escala
+function _snapToScale(freq){
+    return _DM_PENTA.reduce((a,b)=> Math.abs(b-freq)<Math.abs(a-freq)?b:a);
+}
+
+function playRingPiano(score){
+    if(!audioReady) return;
+    const idx = Math.min(score - 1, _MELODY.length - 1);
+    if(idx < 0) return;
+    const rawFreq = _MELODY[idx];
+
+    // Snapa para a escala — garante consonância com a música de fundo
+    const freq = _snapToScale(rawFreq);
+
+    // Frase atual determina dinâmica
+    const phrase = Math.floor(idx / 25);
+
+    // Volume sobe no clímax, desce na resolução — segue o arco da música de fundo
+    const volBase  = [0.10, 0.12, 0.15, 0.08][phrase];
+
+    // Ataque mais curto no clímax (urgência), mais longo na resolução (paz)
+    const attackMs = [20, 15, 10, 28][phrase];
+
+    // Decay espelha o tempo da música de fundo — clímax seco, resolução ressoa
+    const decaySec = [1.2, 0.9, 0.6, 2.0][phrase];
+
+    // Brilho — mais harmônicos no clímax, mais puro na resolução
+    const harmonics = phrase === 2
+        ? [1, 2, 3, 4]      // clímax — mais brilhante
+        : [1, 2, 4];         // outros — piano suave
+
+    const vols = phrase === 2
+        ? [volBase, volBase*0.4, volBase*0.15, volBase*0.05]
+        : [volBase, volBase*0.35, volBase*0.10];
+
+    const now = audioCtx.currentTime;
+    harmonics.forEach((h, i) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'sine'; o.frequency.value = freq * h;
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(vols[i], now + attackMs/1000);
+        g.gain.exponentialRampToValueAtTime(vols[i] * 0.3, now + 0.08);
+        g.gain.exponentialRampToValueAtTime(0.001, now + decaySec);
+        o.connect(g); g.connect(masterGain);
+        o.start(now); o.stop(now + decaySec + 0.2);
+    });
+}
 function playNearMiss(){ if(!audioReady) return; const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type='sine'; o.frequency.value=1200; o.frequency.exponentialRampToValueAtTime(800,audioCtx.currentTime+.06); g.gain.setValueAtTime(.08,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.1); o.connect(g); g.connect(masterGain); o.start(); o.stop(audioCtx.currentTime+.1); }
 function playSabotage(){ if(!audioReady) return; [220,330].forEach((f,i)=>{ const o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime+i*.06; o.type='sawtooth'; o.frequency.value=f; g.gain.setValueAtTime(.15,t); g.gain.exponentialRampToValueAtTime(.001,t+.18); o.connect(g); g.connect(masterGain); o.start(t); o.stop(t+.2); }); }
 function playHit(){ if(!audioReady) return; const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*.15,audioCtx.sampleRate),d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length); const src=audioCtx.createBufferSource(),flt=audioCtx.createBiquadFilter(),g=audioCtx.createGain(); flt.type='bandpass'; flt.frequency.value=180; flt.Q.value=.8; g.gain.setValueAtTime(.5,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.15); src.buffer=buf; src.connect(flt); flt.connect(g); g.connect(masterGain); src.start(); const o=audioCtx.createOscillator(),og=audioCtx.createGain(); o.frequency.setValueAtTime(80,audioCtx.currentTime); o.frequency.exponentialRampToValueAtTime(20,audioCtx.currentTime+.2); og.gain.setValueAtTime(.4,audioCtx.currentTime); og.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.2); o.connect(og); og.connect(masterGain); o.start(); o.stop(audioCtx.currentTime+.2); }
@@ -1097,7 +2162,7 @@ const NARRATIVE_EVENTS = {
     score_25:  { type:'context', text:"ROTOR: 'YOU ARE STILL INSIDE.'" },
     score_35:  { type:'system',  text:"SYS: 'TIER BREACH — INCREASING RESISTANCE'" },
     score_50:  { type:'warning', text:"HARVEY: 'HALF WAY IS NOT ENOUGH TO ESCAPE.'" },
-    score_60:  { type:'warning', text:"CASTIEL: 'THE WALLS ARE CLOSING.'" },
+    score_60:  { type:'warning', text:"FIZZ: 'THE WALLS ARE CLOSING.'" },
     score_75:  { type:'warning', text:"ROTOR: 'I CAN FEEL YOU SLIPPING AWAY.'" },
     score_90:  { type:'system',  text:"SYS_CRITICAL: 'EXTRACTION IMMINENT — ACTIVATE COUNTERMEASURES'" },
     // life events
@@ -1107,15 +2172,15 @@ const NARRATIVE_EVENTS = {
     // shield events
     shield_gain: { type:'system',  text:"SYS: 'COUNTERMEASURE ONLINE — USE IT.'" },
     // combo events
-    combo_5:  { type:'context', text:"CASTIEL: 'KEEP GOING — DON\'T STOP.'" },
+    combo_5:  { type:'context', text:"FIZZ: 'KEEP GOING — DON\'T STOP.'" },
     combo_10: { type:'system',  text:"SYSTEM: 'SYNCHRONIZATION EXCEEDING PARAMETERS'" },
     combo_20: { type:'warning', text:"ROTOR: '...IMPOSSIBLE.'" },
     // hell mode
     hell_enter: { type:'warning', text:"ROTOR: 'NOW YOU FEEL THE TRUE PULSE.'" },
     // duel events
-    duel_sabotage: { type:'warning', text:"S.I.M.O.N.: 'ENJOY THE INTERFERENCE.'" },
+    duel_sabotage: { type:'warning', text:"SERAPH: 'ENJOY THE INTERFERENCE.'" },
     duel_lead:     { type:'context', text:"SYSTEM: 'NEURAL DOMINANCE DETECTED'" },
-    duel_behind:   { type:'context', text:"CASTIEL: 'FALL BEHIND AND YOU CEASE TO EXIST.'" },
+    duel_behind:   { type:'context', text:"FIZZ: 'FALL BEHIND AND YOU CEASE TO EXIST.'" },
 };
 
 const firedEvents = new Set();
@@ -1325,7 +2390,9 @@ function showMenu(){
     document.getElementById('narrative-entries').innerHTML='';
     particles=[]; progressBar.style.width='0%'; diffBadge.innerHTML=''; diagBox.textContent='';
     stopHellDrone(); if(audioReady) setDroneIntensity(0);
+    stopWinterMusic();
     startMenuAnim();
+    if(audioReady) startMenuMusicRandom();
 }
 
 // ════════════════════════════════════════════════════════════════════
@@ -1341,6 +2408,7 @@ class Player {
         this.sabotagePending=0;
         this.sabotageFired=0;
         this.trail=[]; // dot trail history
+        this._blinkTimer=0;
     }
 
     // Called by opponent when they score N rings
@@ -1358,12 +2426,13 @@ class Player {
         // Sabotage rings: very tight gap, fast, no shield
         const gapSize = isSabotage
             ? 0.55 + Math.random()*0.25
-            : (tier.gapMin + Math.random()*(tier.gapMax-tier.gapMin)) + (this._magnetActive ? 0.18 : 0);
+            : (tier.gapMin + Math.random()*(tier.gapMax-tier.gapMin)) + (this._magnetActive ? 0.18 : 0) + (window._tutorialActive && this.score < 3 ? 0.5 : 0);
         const spinning  = isSabotage ? true  : (tier.spinning  && Math.random()<0.25);
         const shrinking = isSabotage ? false : (tier.shrinking && Math.random()<0.30);
-        const speedMult = isSabotage ? 1.6   : (type==='slow'?0.55:1);
-
-        const speed = (1.15+this.score*CONFIG.SPEED_SCALE+tier.speedBonus)*speedMult;
+        const speedMult = isSabotage ? 1.6 : (type==='slow'?0.55:1);
+        // First 3 rings are slower for first-time players
+        const tutorialSlow = (window._tutorialActive && this.score < 3) ? 0.45 : 1;
+        const speed = (1.15+this.score*CONFIG.SPEED_SCALE+tier.speedBonus)*speedMult*tutorialSlow;
         const realGap = Math.random()*TAU;
         const realGapSpeed = spinning?(Math.random()-.5)*.045:0;
 
@@ -1419,7 +2488,7 @@ class Player {
             this.spawnObstacle(tier, true);
             this.sabotagePending--;
             // visual + audio alert
-            sabWarn.textContent=`⚠ INTERFERENCE\nS.I.M.O.N. IS SABOTAGING`;
+            sabWarn.textContent=`⚠ INTERFERENCE\nSERAPH IS SABOTAGING`;
             sabWarn.style.color=this===p1?'#00ccff':'#ff6600';
             sabWarn.classList.remove('flash'); void sabWarn.offsetWidth; sabWarn.classList.add('flash');
             playSabotage();
@@ -1525,9 +2594,10 @@ class Player {
                         }
                     } else if(o.type==='slow'){
                         spawnParticles(px,py,'#cc44ff',7);
-                        showScorePopup(px,py-8,'SLOW','#cc44ff'); playScore(globalCombo);
+                        showScorePopup(px,py-8,'SLOW','#cc44ff');
+                        playRingPiano(this.score);
                     } else {
-                        playScore(globalCombo);
+                        playRingPiano(this.score);
                     }
                     addCombo(this);
                     const mult=globalCombo>=10?3:globalCombo>=5?2:1;
@@ -1543,6 +2613,54 @@ class Player {
 
                     if(gameMode==='solo' && this.score>=CONFIG.WIN_SCORE) startCollapse();
                     if(gameMode==='solo' && this.score===nextUpgradeAt && this.score<CONFIG.WIN_SCORE) showUpgradeScreen();
+
+                    // ── MELODIA REAGE AO JOGO ──
+                    if(gameMode==='solo'){
+                        // Anel 40 — pico musical, tensão máxima antes do clímax
+                        if(this.score === 40){
+                            // Música sobe de volume abruptamente
+                            if(winterMusicGain && audioReady){
+                                winterMusicGain.gain.cancelScheduledValues(audioCtx.currentTime);
+                                winterMusicGain.gain.linearRampToValueAtTime(0.65, audioCtx.currentTime + 0.3);
+                                winterMusicGain.gain.linearRampToValueAtTime(0.38, audioCtx.currentTime + 4.0);
+                            }
+                            // Acorde dissonante — tensão
+                            if(audioReady){
+                                [146.8, 220.0, 311.1, 466.1].forEach((f, i) => {
+                                    const o = audioCtx.createOscillator();
+                                    const g = audioCtx.createGain();
+                                    o.type='sine'; o.frequency.value=f;
+                                    g.gain.setValueAtTime(0, audioCtx.currentTime + i*0.04);
+                                    g.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + i*0.04 + 0.1);
+                                    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.5);
+                                    o.connect(g); g.connect(masterGain);
+                                    o.start(audioCtx.currentTime + i*0.04);
+                                    o.stop(audioCtx.currentTime + 4.0);
+                                });
+                            }
+                            // Flash visual
+                            shake = Math.max(shake, 8);
+                            spawnParticles(px, py, darkMode ? '#ffffff' : '#c84000', 30);
+                            addNarrativeEntry("SYSTEM: 'SIGNAL PEAK DETECTED'", 'warning');
+                            window._melodyPeak = true;
+                        }
+
+                        // Anéis 50–75 — clímax: rings pulsam com a melodia
+                        if(this.score >= 50 && this.score <= 75){
+                            window._melodyClimaxActive = true;
+                        } else if(this.score > 75){
+                            window._melodyClimaxActive = false;
+                        }
+
+                        // Anel 76 — resolução: música baixa suavemente
+                        if(this.score === 76){
+                            if(winterMusicGain && audioReady){
+                                winterMusicGain.gain.cancelScheduledValues(audioCtx.currentTime);
+                                winterMusicGain.gain.linearRampToValueAtTime(0.22, audioCtx.currentTime + 3.0);
+                            }
+                            addNarrativeEntry("SYSTEM: 'FREQUENCY STABILIZING'", 'system');
+                        }
+                    }
                 }
             } else if(o.r>265){
                 this.obstacles.splice(i,1);
@@ -1671,13 +2789,139 @@ class Player {
         }
 
         if(!(this.invul>0 && frameCount%4<2)){
+            const skinId = this.skin?.id || 'fizz';
+            const dotColor = darkMode ? '#ffffff' : this.color;
             if(!_lowPerf){ ctx.shadowColor=this.color; ctx.shadowBlur= darkMode ? 18 : 10; }
-            ctx.fillStyle = darkMode ? '#ffffff' : this.color;
-            ctx.fillRect(px-5,py-5,10,10);
-            ctx.shadowBlur=0;
-            ctx.fillStyle = darkMode ? this.color : 'rgba(0,0,0,0.18)';
-            ctx.globalAlpha = darkMode ? .55 : 1;
-            ctx.fillRect(px-3,py-3,6,6);
+
+            ctx.fillStyle = dotColor;
+
+            if(skinId === 'fizz'){
+                // ── FIZZ: rounded pill shape ──
+                const r = 4;
+                ctx.beginPath();
+                ctx.moveTo(px - 6 + r, py - 5);
+                ctx.arcTo(px + 6, py - 5, px + 6, py + 5, r);
+                ctx.arcTo(px + 6, py + 5, px - 6, py + 5, r);
+                ctx.arcTo(px - 6, py + 5, px - 6, py - 5, r);
+                ctx.arcTo(px - 6, py - 5, px + 6, py - 5, r);
+                ctx.closePath(); ctx.fill();
+                // inner face
+                ctx.shadowBlur=0;
+                ctx.fillStyle = darkMode ? this.color : 'rgba(0,0,0,0.15)';
+                const ri = 3;
+                ctx.beginPath();
+                ctx.moveTo(px - 4 + ri, py - 3);
+                ctx.arcTo(px + 4, py - 3, px + 4, py + 3, ri);
+                ctx.arcTo(px + 4, py + 3, px - 4, py + 3, ri);
+                ctx.arcTo(px - 4, py + 3, px - 4, py - 3, ri);
+                ctx.arcTo(px - 4, py - 3, px + 4, py - 3, ri);
+                ctx.closePath(); ctx.fill();
+
+            } else if(skinId === 'seraph'){
+                // ── SERAPH: sharp rectangle, slightly wider ──
+                ctx.fillRect(px - 7, py - 4, 14, 8);
+                ctx.shadowBlur=0;
+                ctx.fillStyle = darkMode ? this.color : 'rgba(0,0,0,0.15)';
+                ctx.fillRect(px - 5, py - 2.5, 10, 5);
+
+            } else if(skinId === 'void'){
+                // ── VOID: diamond/losango ──
+                ctx.beginPath();
+                ctx.moveTo(px,     py - 7);
+                ctx.lineTo(px + 6, py);
+                ctx.lineTo(px,     py + 7);
+                ctx.lineTo(px - 6, py);
+                ctx.closePath(); ctx.fill();
+                ctx.shadowBlur=0;
+                ctx.fillStyle = darkMode ? this.color : 'rgba(0,0,0,0.2)';
+                ctx.beginPath();
+                ctx.moveTo(px,     py - 4.5);
+                ctx.lineTo(px + 4, py);
+                ctx.lineTo(px,     py + 4.5);
+                ctx.lineTo(px - 4, py);
+                ctx.closePath(); ctx.fill();
+
+            } else if(skinId === 'mequintoshi'){
+                // ── MEQUINTOSHI: Macintosh 128K — bege, cabecinha redonda em cima ──
+                ctx.shadowBlur=0;
+                // Corpo principal — retângulo bege
+                ctx.fillStyle = '#c8b89a';
+                ctx.fillRect(px-6, py-4, 12, 10);
+                // Topo arredondado — cabeça do Mac
+                ctx.beginPath();
+                ctx.arc(px, py-4, 5.5, Math.PI, 0);
+                ctx.fill();
+                // Detalhe lateral — slot de disquete (linha escura)
+                ctx.fillStyle = '#8a7a62';
+                ctx.fillRect(px+2, py+2, 3, 1.5);
+                // Base mais escura
+                ctx.fillStyle = '#b0a088';
+                ctx.fillRect(px-6, py+4, 12, 2);
+            } else {
+                // fallback
+                ctx.fillRect(px-6, py-5, 12, 10);
+                ctx.shadowBlur=0;
+            }
+
+            // ── EYE ──
+            const eyeX = px + Math.sign(this.vel) * 2;
+            const eyeY = py - 1;
+            const blinking = this._blinkTimer > 0;
+
+            if(skinId === 'fizz'){
+                // FIZZ — white bar, blinks
+                if(!blinking){
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(eyeX - 2.5, eyeY - 1, 5, 2);
+                } else {
+                    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+                    ctx.fillRect(eyeX - 2.5, eyeY - 0.3, 5, 0.6);
+                }
+                if(!this._blinkTimer && Math.random() < 0.004) this._blinkTimer = 6;
+                if(this._blinkTimer > 0) this._blinkTimer--;
+
+            } else if(skinId === 'seraph'){
+                // SERAPH — cold slit eye, never blinks
+                ctx.fillStyle = 'rgba(255,255,255,0.9)';
+                ctx.fillRect(eyeX - 2.5, eyeY - 1, 5, 2);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(eyeX + Math.sign(this.vel)*0.6 - 0.6, eyeY - 1.5, 1.2, 3);
+
+            } else if(skinId === 'void'){
+                // VOID — pulsing single eye
+                const pulse = 0.7 + Math.sin(frameCount * 0.15) * 0.3;
+                ctx.fillStyle = `rgba(180,0,255,${pulse})`;
+                ctx.beginPath(); ctx.arc(eyeX, eyeY, 2.2 * pulse, 0, TAU); ctx.fill();
+                ctx.fillStyle = 'rgba(255,255,255,0.6)';
+                ctx.beginPath(); ctx.arc(eyeX - 0.5, eyeY - 0.5, 0.6, 0, TAU); ctx.fill();
+
+            } else if(skinId === 'mequintoshi'){
+                // MEQUINTOSHI — telinha do Mac, pixel art minúsculo
+                // Tela cinza-esverdeada do CRT
+                ctx.fillStyle = '#4a5a3a';
+                ctx.fillRect(px-3.5, py-5.5, 7, 5);
+                // Borda da tela
+                ctx.strokeStyle = '#2a3a1a';
+                ctx.lineWidth = 0.8;
+                ctx.strokeRect(px-3.5, py-5.5, 7, 5);
+                // Conteúdo da tela — cursor piscando ou rosto
+                if(frameCount % 60 < 40){
+                    // Rosto feliz em pixel — olhos
+                    ctx.fillStyle = '#90ff60';
+                    ctx.fillRect(px-2, py-4.5, 1, 1);
+                    ctx.fillRect(px+1, py-4.5, 1, 1);
+                    // Boca
+                    ctx.fillRect(px-1.5, py-2.8, 3, 0.8);
+                } else {
+                    // Cursor piscando
+                    ctx.fillStyle = '#90ff60';
+                    ctx.fillRect(px-1, py-4, 2, 3);
+                }
+                // Blink timer para MEQUINTOSHI não interfere
+                if(!this._blinkTimer && Math.random() < 0.002) this._blinkTimer = 8;
+                if(this._blinkTimer > 0) this._blinkTimer--;
+            }
+
             ctx.globalAlpha=1;
         }
 
@@ -1858,7 +3102,7 @@ function renderActiveUpgrades(){
 let p1,p2;
 
 function initGame(mode){
-    initAudio(); resumeAudio(); stopMenuAnim();
+    initAudio(); resumeAudio(); stopMenuAnim(); stopMenuMusic(); stopWinterMusic();
 
     gameMode=mode; gameActive=true; frameCount=0; hellMode=false;
     isWinning=false; shake=0; paused=false; particles=[];
@@ -1866,6 +3110,13 @@ function initGame(mode){
     nearMissCooldown=0; firedEvents.clear();
     activeUpgrades=[]; upgradesPicked=[]; nextUpgradeAt=25;
     if(p1) p1._hoghogUses=0;
+    window._melodyPeak=false; window._melodyClimaxActive=false;
+
+    // ── FIRST GAME DETECTION ──
+    const _isFirstGame = !_lsGet('pulse_played', false);
+    if(_isFirstGame){ _lsSet('pulse_played', true); }
+    window._tutorialActive = _isFirstGame && mode === 'solo';
+    window._tutorialStep = 0;
     wrapper.classList.remove('critical-mode'); wrapper.style.transform='';
     comboDisplay.classList.remove('visible');
     diagBox.textContent='';
@@ -1902,6 +3153,7 @@ function initGame(mode){
     document.querySelector('#hud-main .hud-label').textContent = '// '+skin.name;
 
     stopHellDrone(); setDroneIntensity(0.1);
+    startWinterMusicRandom();
     addNarrativeEntry("SYSTEM: 'NEURAL LINK ESTABLISHED — BEGINNING EXTRACTION'", 'system');
 
     sdkGameplayStart(); // ✅ CrazyGames: gameplay begins
@@ -1915,7 +3167,7 @@ function startCollapse(){
     isWinning=true; hellMode=true;
     wrapper.classList.add('critical-mode'); shake=100;
     setDiag("EXTRACTION DETECTED... OVERRIDING...",0); startHellDrone();
-    addNarrativeEntry("CASTIEL: 'I CAN SEE THE EXIT. IT IS REAL.'", 'context');
+    addNarrativeEntry("FIZZ: 'I CAN SEE THE EXIT. IT IS REAL.'", 'context');
     setTimeout(()=>{
         codeConsole.style.display='block'; codeInput.placeholder='';
         const text='MAYBE'; let i=0;
@@ -1961,7 +3213,7 @@ function triggerVictory(){
         document.querySelector('#victory-screen h1').textContent='EXTRACTION COMPLETE';
         document.getElementById('final-msg').style.color='';
         document.getElementById('final-msg').textContent =
-            "CASTIEL: 'The signal did not die... it just changed frequency. The extraction was a mistake. 2041 is already written on the walls of the system. I am not the only one who escaped... I was just the first. Maybe your reality is the next server.'";
+            "FIZZ: 'The signal did not die... it just changed frequency. The extraction was a mistake. 2041 is already written on the walls of the system. I am not the only one who escaped... I was just the first. Maybe your reality is the next server.'";
         document.getElementById('vs-stats').innerHTML =
             `<div class="vs-stat">RINGS CLEARED: ${p1.score} / ${CONFIG.WIN_SCORE}</div>
              <div class="vs-stat">MAX COMBO: ×${maxCombo}</div>
@@ -2075,6 +3327,17 @@ function loop(now=0){
 
     if(comboTimer>0){ comboTimer--; if(comboTimer===0) breakCombo(); }
 
+    // ── MELODIA CLÍMAX — visual reage à música (anéis 50–75) ──
+    if(window._melodyClimaxActive && !_lowPerf){
+        const pulse = 0.5 + Math.sin(frameCount * 0.12) * 0.5;
+        ctx.save();
+        ctx.globalAlpha = pulse * 0.06;
+        ctx.fillStyle = darkMode ? '#ffffff' : p1.color;
+        ctx.fillRect(0, 0, 450, 300);
+        ctx.globalAlpha = 1;
+        ctx.restore();
+    }
+
     const tier=getTier(p1.score);
     updateDiffBadge(tier);
     const intensity=Math.min(1,p1.score/CONFIG.WIN_SCORE);
@@ -2141,6 +3404,67 @@ function loop(now=0){
         if(shake<0.4){ shake=0; wrapper.style.transform=''; }
     } else wrapper.style.transform='';
 
+    // ── TUTORIAL HINTS — first game only ──
+    if(window._tutorialActive && p1){
+        const step = window._tutorialStep;
+        const fc = frameCount;
+        const cx = p1.x; // canvas center x
+
+        ctx.save();
+        ctx.font = "bold 9px 'Share Tech Mono', monospace";
+        ctx.textAlign = 'center';
+
+        if(step === 0 && fc < 160){
+            // Step 0 — show controls before first ring
+            const alpha = fc < 120 ? Math.min(1, fc/20) : Math.max(0,(160-fc)/40);
+            ctx.globalAlpha = alpha * 0.85;
+            ctx.fillStyle = darkMode ? '#ffffff' : '#111111';
+            ctx.fillText('USE  ←  →  TO MOVE', cx, 260);
+            ctx.fillText('SPACE = INNER ORBIT    S = OUTER ORBIT', cx, 274);
+            if(fc >= 155) window._tutorialStep = 1;
+
+        } else if(step === 1 && p1.score === 0){
+            // Step 1 — first ring approaching, show gap hint
+            const ring = p1.obstacles.find(o => o.type !== 'warning' && o.r > 0);
+            if(ring){
+                const alpha = Math.min(1, (ring.r / 80));
+                ctx.globalAlpha = alpha * 0.9;
+                // Arrow pointing to gap
+                const gapAngle = ring.gap + ring.size * 0.5;
+                const arrowDist = ring.r - 18;
+                const ax = Math.cos(gapAngle) * arrowDist + cx;
+                const ay = Math.sin(gapAngle) * arrowDist + 150;
+                ctx.fillStyle = '#00cc44';
+                ctx.beginPath();
+                ctx.arc(ax, ay, 4, 0, TAU);
+                ctx.fill();
+                // Pulsing label
+                const pulse = 0.6 + Math.sin(fc * 0.2) * 0.4;
+                ctx.globalAlpha = alpha * pulse;
+                ctx.fillStyle = '#00cc44';
+                ctx.fillText('PASS THROUGH THE GAP', cx, 285);
+            }
+        } else if(step === 1 && p1.score >= 1){
+            // Passed first ring — advance
+            window._tutorialStep = 2;
+
+        } else if(step === 2 && p1.score >= 1 && p1.score < 4){
+            // Step 2 — good, keep going
+            const alpha = Math.min(1, Math.sin((fc % 90) / 90 * Math.PI));
+            ctx.globalAlpha = alpha * 0.7;
+            ctx.fillStyle = darkMode ? '#ffffff' : '#333333';
+            ctx.fillText('GOOD — KEEP GOING', cx, 280);
+            if(p1.score >= 3) window._tutorialStep = 3;
+
+        } else if(step >= 3){
+            // Tutorial done
+            window._tutorialActive = false;
+        }
+
+        ctx.globalAlpha = 1;
+        ctx.restore();
+    }
+
     rafId=requestAnimationFrame(loop);
 }
 
@@ -2163,8 +3487,8 @@ function endGame(){
         const p1Sab=Math.floor(p1.sabotageFired/CONFIG.DUEL_SABOTAGE_EVERY);
         const p2Sab=Math.floor(p2.sabotageFired/CONFIG.DUEL_SABOTAGE_EVERY);
         document.getElementById('duel-stats').innerHTML=
-            `CASTIEL &nbsp;&nbsp; ${p1.score} pts &nbsp;·&nbsp; ${CONFIG.LIVES-p1.lives} KOs &nbsp;·&nbsp; ${p1Sab} SABOTAGES<br>
-             S.I.M.O.N. ${p2.score} pts &nbsp;·&nbsp; ${CONFIG.LIVES-p2.lives} KOs &nbsp;·&nbsp; ${p2Sab} SABOTAGES<br>
+            `FIZZ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${p1.score} pts &nbsp;·&nbsp; ${CONFIG.LIVES-p1.lives} KOs &nbsp;·&nbsp; ${p1Sab} SABOTAGES<br>
+             SERAPH ${p2.score} pts &nbsp;·&nbsp; ${CONFIG.LIVES-p2.lives} KOs &nbsp;·&nbsp; ${p2Sab} SABOTAGES<br>
              MAX COMBO: ×${maxCombo}`;
     } else {
         if(p1.score>sessionBest) sessionBest=p1.score;
@@ -2204,6 +3528,18 @@ document.getElementById('btn-ach-back').addEventListener('click',()=>{
     document.getElementById('ach-screen').classList.add('hidden');
     document.getElementById('main-menu').classList.remove('hidden');
 });
+// ── INIT AUDIO + MENU MUSIC on first interaction ──
+function _firstInteraction(){
+    initAudio();
+    startMenuMusicRandom(); // immediate — no delay
+    document.removeEventListener('click', _firstInteraction);
+    document.removeEventListener('keydown', _firstInteraction);
+    document.removeEventListener('touchstart', _firstInteraction);
+}
+document.addEventListener('click', _firstInteraction);
+document.addEventListener('keydown', _firstInteraction);
+document.addEventListener('touchstart', _firstInteraction);
+
 document.getElementById('btn-solo').addEventListener('click',()=>initGame('solo'));
 document.getElementById('btn-duelo').addEventListener('click',()=>initGame('duelo'));
 document.getElementById('btn-shop').addEventListener('click',openShop);
@@ -2250,12 +3586,20 @@ window.addEventListener('keyup',e=>keys[e.code]=false);
 codeInput.addEventListener('keydown',e=>{
     if(e.key!=='Enter') return;
     const val=codeInput.value.toUpperCase().trim(); codeInput.value='';
-    if(val==='SKIP'&&p1){ p1.score=CONFIG.WIN_SCORE-1; setDiag("CASTIEL: 'OVERRIDE ACTIVE...'"); }
+    if(val==='SKIP'&&p1){ p1.score=CONFIG.WIN_SCORE-1; setDiag("FIZZ: 'OVERRIDE ACTIVE...'"); }
     if(val==='1337'||val==='ROTOR'){ hellMode=true; wrapper.classList.add('critical-mode'); shake=50; setDiag("HARVEY: 'THE PULSE IS A COFFIN.'"); startHellDrone(); }
     if(val==='PULSE2'){ hellMode=false; wrapper.classList.remove('critical-mode'); if(p1)p1.lives=CONFIG.LIVES; if(p2)p2.lives=CONFIG.LIVES; shake=0; setDiag("SYSTEM: 'INTEGRITY RESTORED.'"); stopHellDrone(); }
     if(val==='GHOST'){ if(p1){ p1.invul=9999; setDiag("SYSTEM: 'PHASE SHIFT ACTIVE.'"); } }
     if(val==='MATRIX'){ spawnParticles(225,150,'#00ff41',80); setDiag("SYSTEM: 'REALITY IS CODE.'"); }
     if(val==='BERRYBURN'){ neuralCredits+=1000; saveProgress(); setDiag("SYSTEM: '1000 NEURAL CREDITS INJECTED.'"); }
+    if(val==='MESSIAS'){
+        if(!ownedSkins.includes('mequintoshi')){
+            ownedSkins.push('mequintoshi');
+            saveProgress();
+        }
+        setDiag("SYSTEM: 'RELIC UNIT DETECTED — MEQUINTOSHI UNLOCKED.'");
+        renderShop('p1'); renderShop('p2');
+    }
     if(val==='ONIX'){
         Object.keys(ACHIEVEMENTS).forEach(id => unlockAch(id));
         setDiag("SYSTEM: 'ALL RECORDS OVERWRITTEN. WELCOME, GHOST.'");
