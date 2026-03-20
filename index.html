@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>PULSE</title>
+    <title>ECHOTRON</title>
     <script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
@@ -20,6 +20,174 @@
             font-family:'Share Tech Mono','Courier New',monospace; color:var(--ink);
         }
         #scale-root{ position:relative; width:900px; height:600px; transform-origin:center center; }
+
+        /* ── ZOOM-OUT ENDING ── */
+        #zoomout-overlay{
+            position:fixed; inset:0; z-index:9999;
+            background:#000;
+            display:flex; align-items:center; justify-content:center;
+            opacity:0; pointer-events:none;
+        }
+        #zoomout-overlay.active{ pointer-events:all; }
+
+        /* ── SCENE 1: LAB ROOM ── */
+        #zoomout-scene1{
+            position:absolute; inset:0;
+            opacity:1; transition:opacity 1.5s ease;
+            pointer-events:none;
+        }
+        #zoomout-scene1.fade-out{ opacity:0; }
+
+        #zoomout-desk{
+            position:absolute; bottom:0; left:0; right:0; height:38%;
+            background:linear-gradient(180deg,#1a1208 0%,#0d0a05 100%);
+            border-top:2px solid #2a1e0e;
+        }
+        #zoomout-wall{
+            position:absolute; inset:0; bottom:38%;
+            background:linear-gradient(180deg,#06080a 0%,#0e1214 100%);
+        }
+        /* OPI branding on wall */
+        #zoomout-opi-wall-logo{
+            position:absolute; top:12%; left:50%;
+            transform:translateX(-50%);
+            font-family:'Orbitron',monospace; font-size:11px;
+            letter-spacing:6px; color:rgba(200,160,60,0.12);
+        }
+        #zoomout-computer{
+            position:absolute; bottom:38%; left:50%;
+            transform:translateX(-50%) translateY(100%);
+            width:160px;
+            display:flex; flex-direction:column; align-items:center;
+            transition:transform 1.2s cubic-bezier(0.22,1,0.36,1);
+        }
+        #zoomout-computer.visible{ transform:translateX(-50%) translateY(0%); }
+        /* OPI computer — sleek, dark, industrial */
+        #zoomout-mac-body{
+            width:130px; height:100px;
+            background:linear-gradient(180deg,#1a1e24 0%,#0e1218 100%);
+            border-radius:4px 4px 2px 2px; position:relative;
+            border:1px solid #2a3040;
+            box-shadow:0 4px 24px rgba(0,0,0,0.9), 0 0 40px rgba(200,160,60,0.04);
+        }
+        #zoomout-mac-screen{
+            position:absolute; top:8px; left:8px; right:8px;
+            height:62px; border-radius:2px;
+            background:#000; overflow:hidden;
+            border:1px solid #3a4050;
+        }
+        #zoomout-game-preview{
+            width:100%; height:100%; image-rendering:pixelated;
+        }
+        /* OPI logo on computer */
+        #zoomout-opi-logo{
+            position:absolute; bottom:6px; left:50%;
+            transform:translateX(-50%);
+            font-family:'Orbitron',monospace; font-size:6px;
+            letter-spacing:2px; color:rgba(200,160,60,0.5);
+        }
+        #zoomout-mac-base{
+            width:110px; height:10px;
+            background:linear-gradient(180deg,#1e2430 0%,#141820 100%);
+            border-radius:0 0 3px 3px; border:1px solid #1e2838; border-top:none;
+        }
+        #zoomout-keyboard{
+            position:absolute; bottom:38%; left:50%;
+            transform:translateX(-50%);
+            width:160px; height:16px;
+            background:linear-gradient(180deg,#1c2028 0%,#141820 100%);
+            border-radius:2px; border:1px solid #252c38;
+            box-shadow:0 2px 8px rgba(0,0,0,0.8);
+        }
+        #zoomout-glow{
+            position:absolute; bottom:38%; left:50%; transform:translateX(-50%);
+            width:200px; height:180px;
+            background:radial-gradient(ellipse at 50% 80%, rgba(200,160,60,0.08) 0%, transparent 70%);
+            pointer-events:none;
+        }
+        #zoomout-robot-container{
+            position:absolute; bottom:38%; left:50%;
+            transform:translateX(-160px);
+            opacity:0; transition:opacity 2s ease;
+        }
+        #zoomout-robot-container.visible{ opacity:1; }
+        #zoomout-robot-canvas{ display:block; }
+        #zoomout-label{
+            position:absolute; bottom:8px; left:50%;
+            transform:translateX(-50%);
+            font-family:'Share Tech Mono',monospace;
+            font-size:7px; letter-spacing:4px;
+            color:rgba(255,255,255,0.10); white-space:nowrap;
+        }
+        #zoomout-text{
+            position:absolute; top:14%; left:50%;
+            transform:translateX(-50%);
+            font-family:'Share Tech Mono',monospace;
+            font-size:7px; letter-spacing:5px;
+            color:rgba(255,255,255,0); text-align:center; white-space:nowrap;
+            transition:color 3s ease; text-transform:uppercase;
+            pointer-events:none; user-select:none;
+        }
+        #zoomout-text.visible{ color:rgba(255,255,255,0.15); }
+
+        /* ── SCENE 2: OPI APARTMENT ZOOM ── */
+        #zoomout-scene2{
+            position:absolute; inset:0; opacity:0;
+            transition:opacity 2s ease;
+            background:#06080c;
+        }
+        #zoomout-scene2.visible{ opacity:1; }
+        #zoomout-apartment-canvas{
+            position:absolute; inset:0; width:100%; height:100%;
+        }
+
+        /* ── SCENE 3: PHILOSOPHICAL QUOTE ── */
+        #zoomout-scene3{
+            position:absolute; inset:0; opacity:0;
+            transition:opacity 2.5s ease;
+            background:#000;
+            display:flex; align-items:center; justify-content:center;
+            flex-direction:column; gap:20px;
+            pointer-events:none;
+        }
+        #zoomout-scene3.visible{ opacity:1; pointer-events:all; }
+        #zoomout-quote{
+            font-family:'Share Tech Mono',monospace;
+            font-size:11px; letter-spacing:3px;
+            color:rgba(255,255,255,0.55); text-align:center;
+            line-height:2.2; max-width:480px;
+            padding:0 40px;
+            pointer-events:none; user-select:none;
+        }
+        #zoomout-quote-author{
+            font-family:'Share Tech Mono',monospace;
+            font-size:7px; letter-spacing:5px;
+            color:rgba(200,160,60,0.35); text-align:center;
+            pointer-events:none; user-select:none;
+        }
+
+        /* ── PIXEL ESCAPE GAME ── */
+        #pixel-escape-overlay{
+            position:fixed; inset:0; z-index:10000;
+            background:#000; opacity:0;
+            pointer-events:none;
+            transition:opacity 1s ease;
+            display:flex; flex-direction:column;
+            align-items:center; justify-content:center;
+            gap:12px;
+        }
+        #pixel-escape-overlay.active{
+            opacity:1; pointer-events:all;
+        }
+        #pixel-escape-canvas{
+            image-rendering:pixelated;
+            border:2px solid rgba(255,255,255,0.08);
+        }
+        #pixel-escape-hint{
+            font-family:'Share Tech Mono',monospace;
+            font-size:7px; letter-spacing:3px;
+            color:rgba(255,255,255,0.2);
+        }
         #game-wrapper{
             width:900px; height:600px; position:relative;
             border:1px solid var(--border); background:var(--bg); overflow:hidden;
@@ -204,9 +372,186 @@
             display:flex; flex-direction:column; align-items:center;
             justify-content:center; z-index:100;
         }
-        #main-menu{ background:rgba(245,245,240,.88); }
+        #main-menu{
+            background: #000 !important;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 0;
+        }
 
-        /* ── PORTAL-STYLE BUTTONS ── */
+        /* ── CS 1.6 BACKGROUND ── */
+        #cs-menu-bg{
+            position:absolute; inset:0;
+            background: linear-gradient(180deg, #080c10 0%, #050810 50%, #020508 100%);
+            z-index:0;
+        }
+        /* Scanlines — CS 1.6 CRT feel */
+        #cs-menu-bg::before{
+            content:''; position:absolute; inset:0; pointer-events:none;
+            background: repeating-linear-gradient(
+                0deg, transparent, transparent 1px,
+                rgba(0,0,0,0.25) 1px, rgba(0,0,0,0.25) 2px
+            );
+            z-index:2;
+        }
+        /* Right side vignette */
+        #cs-menu-bg::after{
+            content:''; position:absolute;
+            right:0; top:0; bottom:0; width:50%;
+            background: radial-gradient(ellipse at 85% 45%,
+                rgba(60,80,40,0.07) 0%,
+                rgba(30,50,20,0.04) 40%,
+                transparent 70%);
+            z-index:1;
+        }
+
+        /* ── LAYOUT ── */
+        #cs-menu-inner{
+            position:relative; z-index:3;
+            display:flex; flex-direction:row;
+            align-items:center;
+            height:100%; width:100%;
+            padding: 0;
+        }
+        #cs-left{
+            display:flex; flex-direction:column;
+            justify-content:center;
+            height:100%; width:50%;
+            padding: 0 0 0 48px;
+            flex-shrink:0;
+        }
+        #cs-right{
+            display:flex; flex-direction:column;
+            align-items:center; justify-content:center;
+            height:100%; width:50%;
+            position:relative;
+        }
+        #menu-preview-canvas{
+            width:340px; height:340px;
+            opacity:0.92;
+        }
+        #cs-right-label{
+            font-family:'Share Tech Mono',monospace;
+            font-size:6px; letter-spacing:3px;
+            color:#2a3820; margin-top:8px;
+            text-transform:uppercase;
+        }
+        .dark-mode #cs-right-label{ color:#1e2e14; }
+
+        /* ── LOGO — CS style: game name big, tagline small ── */
+        #cs-logo-area{ margin-bottom:22px; }
+        #cs-title{
+            font-family:'Orbitron',monospace; font-weight:900;
+            font-size:54px; letter-spacing:16px;
+            color:#c8a840;
+            animation: none;
+            text-shadow:
+                0 0 10px rgba(200,168,64,0.8),
+                0 0 30px rgba(180,140,40,0.4),
+                0 0 60px rgba(160,120,20,0.15);
+            margin:0; line-height:1;
+        }
+        /* Horizontal rule under title — classic CS */
+        #cs-title-rule{
+            width:220px; height:1px;
+            background: linear-gradient(90deg, #c8a840, transparent);
+            margin: 8px 0 6px;
+            opacity:0.5;
+        }
+        #cs-subtitle{
+            font-family:'Share Tech Mono',monospace;
+            font-size:7px; letter-spacing:5px;
+            color:#3d5030; margin-top:2px;
+            text-transform:uppercase;
+        }
+        #cs-version{
+            font-family:'Share Tech Mono',monospace;
+            font-size:6px; letter-spacing:2px;
+            color:#202a1c; margin-top:3px;
+        }
+
+        /* ── BUTTONS — exactly like CS 1.6 list ── */
+        #cs-nav{ display:flex; flex-direction:column; gap:0px; }
+        .cs-btn{
+            background:transparent; border:none; outline:none;
+            font-family:'Share Tech Mono',monospace;
+            font-size:11px; letter-spacing:2px;
+            color:#748060; cursor:pointer;
+            padding:6px 0; text-align:left;
+            text-transform:uppercase;
+            transition:color .06s, text-shadow .06s;
+            width:300px; display:flex; align-items:center; gap:10px;
+            position:relative;
+        }
+        .cs-arrow{
+            font-size:7px; opacity:0;
+            transition:opacity .06s;
+            color:#c8a840; margin-right:2px;
+        }
+        /* Hover glow — CS 1.6 style highlight */
+        .cs-btn:hover{
+            color:#e8e0b0;
+            text-shadow: 0 0 8px rgba(200,168,64,0.5);
+        }
+        .cs-btn:hover .cs-arrow{ opacity:1; }
+        /* CS 1.6 hover left bar */
+        .cs-btn::before{
+            content:''; position:absolute;
+            left:-10px; top:50%; transform:translateY(-50%);
+            width:3px; height:0;
+            background:#c8a840;
+            transition:height .08s;
+        }
+        .cs-btn:hover::before{ height:70%; }
+
+        .cs-btn-blue{ color:#4a6878; }
+        .cs-btn-blue:hover{ color:#90c8e8; text-shadow:0 0 8px rgba(100,180,220,0.4); }
+        .cs-btn-blue:hover .cs-arrow{ color:#90c8e8; }
+        .cs-btn-blue::before{ background:#5090b8; }
+
+        .cs-btn-gold{ color:#7a5c20; }
+        .cs-btn-gold:hover{ color:#e8c870; text-shadow:0 0 8px rgba(220,190,80,0.5); }
+        .cs-btn-gold:hover .cs-arrow{ color:#e8c870; }
+        .cs-btn-gold::before{ background:#c8a840; }
+
+        .cs-btn-dim{ color:#384830; }
+        .cs-btn-dim:hover{ color:#90a878; text-shadow:0 0 6px rgba(130,160,100,0.3); }
+        .cs-btn-dim:hover .cs-arrow{ color:#90a878; }
+        .cs-btn-dim::before{ background:#608050; }
+
+        /* ── CONTROLS HINT — bottom left like CS ── */
+        #cs-controls{
+            margin-top:22px;
+            font-family:'Share Tech Mono',monospace;
+            font-size:6px; letter-spacing:1.5px;
+            color:#1e2a1a; line-height:2.4;
+            border-top:1px solid #1a2018;
+            padding-top:10px;
+            width:320px;
+        }
+        #cs-controls span{ color:#385030; }
+
+        /* Dark mode overrides */
+        .dark-mode #main-menu{ background:#000 !important; }
+        .dark-mode #cs-title{
+            color:#ffffff !important;
+            text-shadow: 0 0 14px rgba(255,120,40,0.7),
+                         0 0 40px rgba(200,60,0,0.3) !important;
+            animation: none !important;
+        }
+        .dark-mode #cs-title-rule{ background:linear-gradient(90deg,#ff6020,transparent); }
+        .dark-mode #cs-subtitle{ color:#284018; }
+        .dark-mode .cs-btn{ color:#405030; }
+        .dark-mode .cs-btn:hover{ color:#c0e090; text-shadow:0 0 8px rgba(160,220,100,0.4); }
+        .dark-mode .cs-btn::before{ background:#80c040; }
+        .dark-mode .cs-btn-blue{ color:#253540; }
+        .dark-mode .cs-btn-blue:hover{ color:#70b0d0; }
+        .dark-mode .cs-btn-gold{ color:#402c10; }
+        .dark-mode .cs-btn-gold:hover{ color:#c09040; }
+        .dark-mode #cs-controls{ color:#151e12; border-color:#111808; }
+        .dark-mode #cs-controls span{ color:#2a4020; }
+
+        /* ── PORTAL-STYLE BUTTONS — used in shop, achievements, overlays ── */
         .btn{
             background:#fff; border:1px solid var(--border); color:var(--ink2);
             padding:12px 28px; cursor:pointer; margin:5px; width:320px;
@@ -405,7 +750,7 @@
             55% { opacity:1;  text-shadow: 0 0 22px rgba(255,140,40,.9), 0 0 55px rgba(255,100,0,.5), 0 0 100px rgba(220,60,0,.25); transform: scale(1.04); letter-spacing:22px; }
             100%{ opacity:.8; text-shadow: 0 0 10px rgba(255,120,30,.4), 0 0 30px rgba(255,100,0,.15); transform: scale(1); letter-spacing:20px; }
         }
-        .dark-mode #main-menu h1{ color:#ffffff !important; animation: pulseGlowDark 1.8s ease-in-out infinite !important; }
+        .dark-mode #main-menu h1{ color:#ffffff !important; }
 
         /* ── SHOP TABS ── */
         .shop-tabs{ display:flex; gap:0; margin-bottom:20px; border:1px solid var(--border); }
@@ -421,6 +766,50 @@
     </style>
 </head>
 <body>
+    <!-- PIXEL ESCAPE EASTER EGG -->
+    <div id="pixel-escape-overlay">
+        <canvas id="pixel-escape-canvas" width="400" height="240"></canvas>
+        <div id="pixel-escape-hint">ARROW KEYS TO WALK</div>
+    </div>
+
+    <!-- ZOOM-OUT COMPUTER ENDING -->
+    <div id="zoomout-overlay">
+        <!-- SCENE 1: LAB ROOM -->
+        <div id="zoomout-scene1">
+            <div id="zoomout-wall"></div>
+            <div id="zoomout-opi-wall-logo">O.P.I · ORBITAL PULSE INDUSTRIES</div>
+            <div id="zoomout-glow"></div>
+            <div id="zoomout-text">// it was just a simulation</div>
+            <div id="zoomout-computer">
+                <div id="zoomout-mac-body">
+                    <div id="zoomout-mac-screen">
+                        <canvas id="zoomout-game-preview" width="96" height="64"></canvas>
+                    </div>
+                    <div id="zoomout-opi-logo">O.P.I</div>
+                </div>
+                <div id="zoomout-mac-base"></div>
+            </div>
+            <div id="zoomout-robot-container">
+                <canvas id="zoomout-robot-canvas" width="60" height="80"></canvas>
+            </div>
+            <div id="zoomout-keyboard"></div>
+            <div id="zoomout-desk"></div>
+            <div id="zoomout-label">O.P.I · TEST LAB · SECTOR 7 · 2041</div>
+        </div>
+        <!-- SCENE 2: OPI APARTMENT ZOOM -->
+        <div id="zoomout-scene2">
+            <canvas id="zoomout-apartment-canvas"></canvas>
+        </div>
+        <!-- SCENE 3: PHILOSOPHICAL QUOTE -->
+        <div id="zoomout-scene3">
+            <div id="zoomout-quote">
+                "Freedom is not the absence of walls.<br>
+                It is the distance between you<br>
+                and the one who built them."
+            </div>
+            <div id="zoomout-quote-author">— O.P.I INTERNAL MEMO · 2041</div>
+        </div>
+    </div>
 <div id="scale-root">
 <div id="game-wrapper">
 
@@ -456,7 +845,7 @@
     </div>
 
     <div id="code-console">
-        <div style="color:var(--code);font-size:9px;letter-spacing:3px;">NEURAL_LINK_TERMINAL v2.041</div>
+        <div style="color:var(--code);font-size:9px;letter-spacing:3px;">O.P.I TERMINAL v2.041</div>
         <input type="text" id="code-input" autocomplete="off" placeholder="ENTER PROTOCOL...">
         <div class="console-hint">
             SKIP — score override &nbsp;·&nbsp; PULSE2 — restore integrity<br>
@@ -491,21 +880,44 @@
 
     <!-- MAIN MENU -->
     <div id="main-menu" class="ui-layer">
-        <h1 style="letter-spacing:20px;font-size:74px;color:#111;font-family:'Orbitron',monospace;font-weight:900;animation:pulseGlow 1.8s ease-in-out infinite;">PULSE</h1>
-        <div class="menu-subtitle">NEURAL EXTRACTION PROTOCOL · 2041</div>
-        <button class="btn" id="btn-solo">SOLO EXTRACTION</button>
-        <button class="btn" id="btn-duelo" style="color:var(--p2);border-color:#1a1a1a;">NEURAL DUEL (1 VS 1)</button>
-        <button class="btn" id="btn-shop" style="color:var(--gold);border-color:#1a1a1a;">NEURAL STORE</button>
-        <button class="btn" id="btn-ach" style="color:var(--ink3);font-size:9px;">ACHIEVEMENTS</button>
-        <div class="menu-controls">
-            P1 MOVE: <span>A / D</span> &nbsp;·&nbsp; ORBIT IN: <span>SPACE</span> &nbsp;·&nbsp; ORBIT OUT: <span>S</span> &nbsp;·&nbsp; PAUSE: <span>ESC</span><br>
-            P2 MOVE: <span>← / →</span> &nbsp;·&nbsp; P2 IN: <span>SHIFT</span> &nbsp;·&nbsp; P2 OUT: <span>↓</span> &nbsp;·&nbsp; MUTE: <span>M</span>
+        <div id="cs-menu-bg"></div>
+        <div id="cs-menu-inner">
+            <div id="cs-left">
+                <div id="cs-logo-area">
+                    <h1 id="cs-title">ECHOTRON</h1>
+                    <div id="cs-title-rule"></div>
+                    <div id="cs-subtitle">ORBITAL PULSE INDUSTRIES · 2041</div>
+                    <div id="cs-version">v4.0 · by Marzio</div>
+                </div>
+                <nav id="cs-nav">
+                    <button class="cs-btn" id="btn-solo">
+                        <span class="cs-arrow">▶</span> SOLO EXTRACTION
+                    </button>
+                    <button class="cs-btn cs-btn-blue" id="btn-duelo">
+                        <span class="cs-arrow">▶</span> DUEL (1 VS 1)
+                    </button>
+                    <button class="cs-btn cs-btn-gold" id="btn-shop">
+                        <span class="cs-arrow">▶</span> O.P.I STORE
+                    </button>
+                    <button class="cs-btn cs-btn-dim" id="btn-ach">
+                        <span class="cs-arrow">▶</span> ACHIEVEMENTS
+                    </button>
+                </nav>
+                <div id="cs-controls">
+                    P1: <span>A/D</span> MOVE &nbsp;·&nbsp; <span>SPACE</span> INNER &nbsp;·&nbsp; <span>S</span> OUTER &nbsp;·&nbsp; <span>ESC</span> PAUSE<br>
+                    P2: <span>←/→</span> MOVE &nbsp;·&nbsp; <span>SHIFT</span> INNER &nbsp;·&nbsp; <span>↓</span> OUTER &nbsp;·&nbsp; <span>M</span> MUTE
+                </div>
+            </div>
+            <div id="cs-right">
+                <canvas id="menu-preview-canvas" width="340" height="340"></canvas>
+                <div id="cs-right-label">O.P.I · ORBITAL PULSE INDUSTRIES</div>
+            </div>
         </div>
     </div>
 
     <!-- SHOP -->
     <div id="shop-screen">
-        <h2>NEURAL STORE</h2>
+        <h2>O.P.I STORE</h2>
         <div class="shop-subtitle">EQUIP YOUR OPERATOR</div>
         <div class="shop-credits">⬡ <span id="shop-credits-display">0</span> CREDITS</div>
 
@@ -619,8 +1031,8 @@
         <h1>EXTRACTION COMPLETE</h1>
         <p id="final-msg" class="vs-msg"></p>
         <div id="vs-stats"></div>
-        <button class="btn" id="btn-victory-restart" style="border-color:#000;color:#000;margin-top:18px;">CLOSE NEURAL LINK</button>
-        <div style="font-size:8px;margin-top:18px;color:#aaa;letter-spacing:3px;">[ PULSE_2_DETECTED_IN_2041 ]</div>
+        <button class="btn" id="btn-victory-restart" style="border-color:#000;color:#000;margin-top:18px;">CLOSE SESSION</button>
+        <div style="font-size:8px;margin-top:18px;color:#aaa;letter-spacing:3px;">[ ECHOTRON_2_DETECTED_IN_2041 ]</div>
     </div>
 
     <!-- UPGRADES -->
@@ -1000,228 +1412,105 @@ let menuMusicNodes=[], menuMusicGain=null, menuMusicActive=false;
 
 // ── MENU MUSIC ──────────────────────────────────────────────────────
 function startMenuMusic(){
+    // ── ARIA MATH — etéreo, flutuante, pad lento, piano do vazio ──
     if(!audioReady || menuMusicActive) return;
     menuMusicActive = true;
-
     const t = audioCtx.currentTime;
     menuMusicGain = audioCtx.createGain();
     menuMusicGain.gain.setValueAtTime(0, t);
-    menuMusicGain.gain.linearRampToValueAtTime(0.26, t + 1.5);
+    menuMusicGain.gain.linearRampToValueAtTime(0.28, t + 2.0);
     menuMusicGain.connect(masterGain);
 
-    // ── REVERB CONVOLVER — makes everything sound like a large empty room ──
-    function makeReverb(decaySecs){
-        const len = audioCtx.sampleRate * decaySecs;
-        const buf = audioCtx.createBuffer(2, len, audioCtx.sampleRate);
-        for(let c = 0; c < 2; c++){
-            const d = buf.getChannelData(c);
-            for(let i = 0; i < len; i++)
-                d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 2.5);
-        }
-        const conv = audioCtx.createConvolver();
-        conv.buffer = buf;
-        return conv;
+    // Reverb enorme — espaço infinito
+    const rvLen = audioCtx.sampleRate * 6;
+    const rvBuf = audioCtx.createBuffer(2, rvLen, audioCtx.sampleRate);
+    for(let c=0;c<2;c++){
+        const d=rvBuf.getChannelData(c);
+        for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,1.4);
     }
-    const reverb = makeReverb(3.5);
-    const reverbGain = audioCtx.createGain();
-    reverbGain.gain.value = 0.45;
-    reverb.connect(reverbGain); reverbGain.connect(menuMusicGain);
+    const reverb = audioCtx.createConvolver(); reverb.buffer = rvBuf;
+    const rvG = audioCtx.createGain(); rvG.gain.value = 0.70;
+    reverb.connect(rvG); rvG.connect(menuMusicGain);
+    function wet(n){ n.connect(menuMusicGain); n.connect(reverb); }
 
-    function connectWithReverb(node){
-        node.connect(menuMusicGain);
-        node.connect(reverb);
-    }
-
-    // ── WIND — filtered noise, hollow & breathing ──
-    function makeWind(freq, q, vol, lfoRate, lfoAmt){
-        const sz = audioCtx.sampleRate * 4;
-        const buf = audioCtx.createBuffer(1, sz, audioCtx.sampleRate);
-        const d = buf.getChannelData(0);
-        for(let i=0;i<sz;i++) d[i]=Math.random()*2-1;
-        const src = audioCtx.createBufferSource();
-        src.buffer = buf; src.loop = true;
+    // ── PAD ETÉREO — Fm, detuned, como o pad do Aria Math ──
+    // Fm: F Ab C Eb — escala modal suave
+    [174.6, 207.7, 261.6, 311.1, 349.2].forEach((f, i) => {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
         const flt = audioCtx.createBiquadFilter();
-        flt.type='bandpass'; flt.frequency.value=freq; flt.Q.value=q;
-        const g = audioCtx.createGain(); g.gain.value=vol;
-        const lfo = audioCtx.createOscillator();
-        const lfoG = audioCtx.createGain();
-        lfo.type='sine'; lfo.frequency.value=lfoRate; lfoG.gain.value=lfoAmt;
+        o.type = 'sine';
+        o.frequency.value = f * (1 + (i%2===0 ? 0.006 : -0.006));
+        flt.type = 'lowpass'; flt.frequency.value = 800; flt.Q.value = 0.5;
+        g.gain.value = [0.08, 0.06, 0.05, 0.04, 0.03][i];
+        // Swell lento
+        const lfo = audioCtx.createOscillator(), lfoG = audioCtx.createGain();
+        lfo.type = 'sine'; lfo.frequency.value = 0.04 + i*0.007;
+        lfoG.gain.value = 0.025;
         lfo.connect(lfoG); lfoG.connect(g.gain);
-        src.connect(flt); flt.connect(g);
-        connectWithReverb(g);
-        src.start(); lfo.start();
-        menuMusicNodes.push(src, lfo);
-    }
-    makeWind(280,  1.5, 0.14, 0.07, 0.08); // deep hollow
-    makeWind(780,  2.5, 0.05, 0.11, 0.03); // mid whistle
-    makeWind(2600, 6.0, 0.02, 0.17, 0.015);// high hiss
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(); lfo.start();
+        menuMusicNodes.push(o, lfo);
+    });
 
-    // ── PIANO — C418 style, very sparse, long silences ──
-    const melodyNotes = [261.6, 311.1, 349.2, 392.0, 466.1, 392.0, 349.2, 311.1, 261.6, 233.1, 261.6, 349.2];
-    let melIdx = 0;
-    function scheduleMelody(){
+    // ── PIANO ARIA MATH — notas únicas, surgem do silêncio ──
+    // Fm pentatônica — F Ab Bb C Eb
+    const ariaNotes = [174.6, 207.7, 233.1, 261.6, 311.1, 349.2, 415.3, 349.2, 311.1, 261.6, 233.1, 207.7, 174.6, 233.1, 311.1];
+    let ai = 0;
+    function scheduleAria(){
         if(!menuMusicActive) return;
         const now = audioCtx.currentTime;
-        const freq = melodyNotes[melIdx % melodyNotes.length];
-        melIdx++;
-
-        [1, 2, 3].forEach((harmonic, i) => {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.type = 'sine';
-            o.frequency.value = freq * harmonic;
-            const vol = [0.10, 0.04, 0.015][i];
-            g.gain.setValueAtTime(0, now);
-            g.gain.linearRampToValueAtTime(vol, now + 0.015);
-            g.gain.exponentialRampToValueAtTime(vol * 0.3, now + 0.5);
-            g.gain.exponentialRampToValueAtTime(0.001, now + 3.0);
-            o.connect(g); connectWithReverb(g);
-            o.start(now); o.stop(now + 3.5);
-        });
-
-        // C418 soul — silêncio muito longo entre notas
-        const gap = Math.random() < 0.4
-            ? 800 + Math.random() * 1200   // às vezes toca logo
-            : 5000 + Math.random() * 9000; // mas geralmente fica em silêncio
-        if(menuMusicActive) setTimeout(scheduleMelody, gap);
-    }
-    setTimeout(scheduleMelody, 2000 + Math.random() * 3000);
-
-    // ── CONTRABAIXO — pizzicato esparso, só aparece de vez em quando ──
-    const bassLine = [65.4, 73.4, 82.4, 65.4, 87.3, 73.4, 82.4, 65.4];
-    let bassIdx = 0;
-    function scheduleBass(){
-        if(!menuMusicActive) return;
-        const now = audioCtx.currentTime;
-        const freq = bassLine[bassIdx % bassLine.length];
-        bassIdx++;
-        [freq, freq*2].forEach((f, i) => {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.type = i===0 ? 'triangle' : 'sine';
-            o.frequency.value = f;
-            g.gain.setValueAtTime(0, now);
-            g.gain.linearRampToValueAtTime(i===0 ? 0.18 : 0.05, now + 0.008);
-            g.gain.exponentialRampToValueAtTime(0.03, now + 0.6);
-            g.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
-            o.connect(g); connectWithReverb(g);
-            o.start(now); o.stop(now + 2.0);
-        });
-        // Baixo esparso — 4 a 8 segundos entre notas
-        const gap = 4000 + Math.random() * 4000;
-        if(menuMusicActive) setTimeout(scheduleBass, gap);
-    }
-    setTimeout(scheduleBass, 3000 + Math.random() * 2000);
-
-    // ── PORTAL PING — metallic resonant tones, like test chamber machinery ──
-    function schedulePing(){
-        if(!menuMusicActive) return;
-        const now = audioCtx.currentTime;
-        const freqs = [523.2, 622.2, 466.1, 587.3, 698.4];
-        const freq = freqs[Math.floor(Math.random()*freqs.length)];
-        [freq, freq*1.5].forEach((f, i) => {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.type='sine'; o.frequency.value=f;
-            g.gain.setValueAtTime(i===0?0.07:0.03, now);
-            g.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
-            o.connect(g); connectWithReverb(g);
-            o.start(now); o.stop(now + 2.8);
-        });
-        if(menuMusicActive) setTimeout(schedulePing, 5000 + Math.random()*8000);
-    }
-    setTimeout(schedulePing, 4000 + Math.random()*3000);
-
-    // ── HUMAN FALL FLAT — distant hollow knock / footstep echo ──
-    function scheduleKnock(){
-        if(!menuMusicActive) return;
-        const now = audioCtx.currentTime;
-        const buf = audioCtx.createBuffer(1, audioCtx.sampleRate*0.1, audioCtx.sampleRate);
-        const d = buf.getChannelData(0);
-        for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3);
-        const src = audioCtx.createBufferSource();
-        const flt = audioCtx.createBiquadFilter();
-        const g = audioCtx.createGain();
-        src.buffer=buf;
-        flt.type='lowpass'; flt.frequency.value=200; flt.Q.value=2;
-        g.gain.setValueAtTime(0.35, now);
-        g.gain.exponentialRampToValueAtTime(0.001, now+0.12);
-        src.connect(flt); flt.connect(g); connectWithReverb(g);
-        src.start(now);
-        if(menuMusicActive) setTimeout(scheduleKnock, 7000 + Math.random()*12000);
-    }
-    setTimeout(scheduleKnock, 6000 + Math.random()*5000);
-
-    // ── C418 STYLE — minecraft ambient piano, minimalista ──
-    // Notas simples, pausas longas, melodia quase acidental
-    // Escala: C major pentatonic — C D E G A — simples e contemplativa
-    const c418Notes = [
-        261.6,  // C4
-        293.6,  // D4
-        329.6,  // E4
-        392.0,  // G4
-        440.0,  // A4
-        523.2,  // C5
-        392.0,  // G4
-        329.6,  // E4
-        261.6,  // C4
-        196.0,  // G3
-        220.0,  // A3
-        261.6,  // C4
-        293.6,  // D4
-        261.6,  // C4
-    ];
-    let c418Idx = 0;
-    function scheduleC418(){
-        if(!menuMusicActive) return;
-        const now = audioCtx.currentTime;
-        const freq = c418Notes[c418Idx % c418Notes.length];
-        c418Idx++;
-
-        // Tom de piano suave — sine puro com harmônicos sutis
-        [1, 2, 4].forEach((harmonic, i) => {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.type = 'sine';
-            o.frequency.value = freq * harmonic;
-            const vol = [0.08, 0.025, 0.008][i];
-            // Ataque gentil, sustain longo, fade suave — exatamente como C418
+        const freq = ariaNotes[ai % ariaNotes.length]; ai++;
+        [1, 2, 4].forEach((h, i) => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = 'sine'; o.frequency.value = freq * h;
+            const vol = [0.09, 0.030, 0.008][i];
             g.gain.setValueAtTime(0, now);
             g.gain.linearRampToValueAtTime(vol, now + 0.02);
-            g.gain.setValueAtTime(vol, now + 0.1);
-            g.gain.exponentialRampToValueAtTime(vol * 0.4, now + 1.5);
-            g.gain.exponentialRampToValueAtTime(0.001, now + 4.5);
-            o.connect(g); connectWithReverb(g);
-            o.start(now); o.stop(now + 5.0);
+            g.gain.exponentialRampToValueAtTime(vol * 0.4, now + 1.2);
+            g.gain.exponentialRampToValueAtTime(0.001, now + 5.5);
+            o.connect(g); wet(g); o.start(now); o.stop(now + 6.0);
         });
-
-        // Pausa longa e irregular — alma do C418
-        // Às vezes toca logo, às vezes fica em silêncio por 8 segundos
-        const gap = 1500 + Math.random() * 6500;
-        if(menuMusicActive) setTimeout(scheduleC418, gap);
+        // Aria Math — silêncio é o instrumento principal
+        const gap = Math.random() < 0.25 ? 600 + Math.random()*800 : 6000 + Math.random()*10000;
+        if(menuMusicActive) setTimeout(scheduleAria, gap);
     }
-    // Começa depois de tudo já estar tocando — entra suavemente
-    setTimeout(scheduleC418, 5000 + Math.random() * 4000);
+    setTimeout(scheduleAria, 2000 + Math.random()*3000);
 
-    // ── SINO + NOTAS CRISTALINAS — Cm em oitava alta, brilhante ──
-    const bellNotes1=[523.2,622.2,523.2,466.1,392.0,466.1,523.2,587.3,622.2,523.2,392.0,466.1];
-    let bni1=0;
-    function scheduleBell1(){
+    // ── SINO CRISTALINO — Fm alta, muito esparso ──
+    const bellA = [698.4, 830.6, 932.3, 1046.5, 830.6, 698.4, 932.3];
+    let bi = 0;
+    function scheduleBellA(){
         if(!menuMusicActive) return;
-        const now=audioCtx.currentTime, freq=bellNotes1[bni1%bellNotes1.length]; bni1++;
-        // Sino — fundamental + harmônico 2.756 (tom metálico)
+        const now = audioCtx.currentTime, freq = bellA[bi%bellA.length]; bi++;
         [1, 2.756, 5.404].forEach((h,i)=>{
             const o=audioCtx.createOscillator(),g=audioCtx.createGain();
             o.type='sine'; o.frequency.value=freq*h;
-            const vol=[0.07,0.025,0.008][i];
-            g.gain.setValueAtTime(vol,now);
-            g.gain.exponentialRampToValueAtTime(0.001,now+[2.5,1.0,0.4][i]);
-            o.connect(g); connectWithReverb(g); o.start(now); o.stop(now+3.0);
+            const vol=[0.06,0.020,0.006][i];
+            g.gain.setValueAtTime(vol, now);
+            g.gain.exponentialRampToValueAtTime(0.001, now+[3.0,1.2,0.5][i]);
+            o.connect(g); wet(g); o.start(now); o.stop(now+3.5);
         });
-        const gap=Math.random()<0.3 ? 500+Math.random()*700 : 4000+Math.random()*7000;
-        if(menuMusicActive) setTimeout(scheduleBell1, gap);
+        const gap = 5000 + Math.random()*12000;
+        if(menuMusicActive) setTimeout(scheduleBellA, gap);
     }
-    setTimeout(scheduleBell1, 3000+Math.random()*3000);
+    setTimeout(scheduleBellA, 4000 + Math.random()*4000);
+
+    // ── VENTO SUAVE — quase imperceptível ──
+    [300, 1200].forEach((freq, i) => {
+        const sz = audioCtx.sampleRate * 4;
+        const buf = audioCtx.createBuffer(1, sz, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for(let j=0;j<sz;j++) d[j]=Math.random()*2-1;
+        const src = audioCtx.createBufferSource(); src.buffer=buf; src.loop=true;
+        const flt = audioCtx.createBiquadFilter(); flt.type='bandpass'; flt.frequency.value=freq; flt.Q.value=[1.5,4.0][i];
+        const g = audioCtx.createGain(); g.gain.value=[0.04,0.015][i];
+        const lfo = audioCtx.createOscillator(), lfoG = audioCtx.createGain();
+        lfo.type='sine'; lfo.frequency.value=[0.05,0.09][i]; lfoG.gain.value=[0.025,0.010][i];
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        src.connect(flt); flt.connect(g); wet(g);
+        src.start(); lfo.start();
+        menuMusicNodes.push(src, lfo);
+    });
 }
 
 function stopMenuMusic(){
@@ -1237,273 +1526,243 @@ function stopMenuMusic(){
     }
 }
 
-function stopMenuMusic(){
-    if(!menuMusicActive) return;
-    menuMusicActive = false;
-    if(menuMusicGain){
-        menuMusicGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.8);
-        setTimeout(()=>{
-            menuMusicNodes.forEach(n=>{ try{ n.stop(); }catch(e){} });
-            menuMusicNodes = [];
-            menuMusicGain = null;
-        }, 900);
-    }
-}
-
-// ── MENU TRACK 2 — Corredor vazio, ecos distantes, piano de câmara ──
 function startMenuMusic2(){
+    // ── ARIA MATH + MOOG CITY HYBRID — pad etéreo com baixo pulsante ──
     if(!audioReady || menuMusicActive) return;
     menuMusicActive = true;
-
     const t = audioCtx.currentTime;
     menuMusicGain = audioCtx.createGain();
     menuMusicGain.gain.setValueAtTime(0, t);
-    menuMusicGain.gain.linearRampToValueAtTime(0.24, t + 1.5);
+    menuMusicGain.gain.linearRampToValueAtTime(0.26, t + 2.0);
     menuMusicGain.connect(masterGain);
 
-    // Large hall reverb
     const rvLen = audioCtx.sampleRate * 5;
     const rvBuf = audioCtx.createBuffer(2, rvLen, audioCtx.sampleRate);
     for(let c=0;c<2;c++){
         const d=rvBuf.getChannelData(c);
         for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,1.8);
     }
-    const reverb=audioCtx.createConvolver(); reverb.buffer=rvBuf;
-    const rvG=audioCtx.createGain(); rvG.gain.value=0.6;
+    const reverb = audioCtx.createConvolver(); reverb.buffer = rvBuf;
+    const rvG = audioCtx.createGain(); rvG.gain.value = 0.60;
     reverb.connect(rvG); rvG.connect(menuMusicGain);
     function wet(n){ n.connect(menuMusicGain); n.connect(reverb); }
 
-    // ── Vento suave de corredor ──
-    [180, 500, 1400].forEach((freq,i)=>{
-        const sz=audioCtx.sampleRate*4;
-        const buf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate);
-        const d=buf.getChannelData(0);
-        for(let j=0;j<sz;j++) d[j]=Math.random()*2-1;
-        const src=audioCtx.createBufferSource(); src.buffer=buf; src.loop=true;
-        const flt=audioCtx.createBiquadFilter(); flt.type='bandpass'; flt.frequency.value=freq; flt.Q.value=[1.0,2.0,5.0][i];
-        const g=audioCtx.createGain(); g.gain.value=[0.12,0.04,0.018][i];
-        const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
-        lfo.type='sine'; lfo.frequency.value=[0.05,0.08,0.13][i]; lfoG.gain.value=[0.07,0.03,0.012][i];
+    // ── PAD MOOG — Cm, levemente mais quente que Aria Math ──
+    [65.4, 130.8, 155.6, 196.0, 261.6].forEach((f, i) => {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        const flt = audioCtx.createBiquadFilter();
+        o.type = i < 2 ? 'sawtooth' : 'sine'; // sawtooth nos graves = moog
+        o.frequency.value = f * (1 + (i%2===0 ? 0.004 : -0.004));
+        flt.type = 'lowpass'; flt.frequency.value = i < 2 ? 300 : 900; flt.Q.value = 1.2;
+        g.gain.value = [0.10, 0.07, 0.05, 0.04, 0.025][i];
+        const lfo = audioCtx.createOscillator(), lfoG = audioCtx.createGain();
+        lfo.type = 'sine'; lfo.frequency.value = 0.05 + i*0.009;
+        lfoG.gain.value = 0.03;
         lfo.connect(lfoG); lfoG.connect(g.gain);
-        src.connect(flt); flt.connect(g); wet(g);
-        src.start(); lfo.start();
-        menuMusicNodes.push(src,lfo);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(); lfo.start();
+        menuMusicNodes.push(o, lfo);
     });
 
-    // ── Piano câmara — acordes Cm arpejados muito lentos ──
-    const chords=[
-        [130.8,155.6,196.0,261.6], // Cm
-        [116.5,138.6,174.6,233.1], // Bbm
-        [146.8,174.6,220.0,293.6], // Dm7b5
-        [130.8,155.6,185.0,261.6], // Cm/G
-    ];
-    let ci=0;
-    function scheduleChamberPiano(){
+    // ── BAIXO MOOG CITY — pizzicato com vibrato suave, esparso ──
+    // Cm walking: C Eb F G Bb
+    const moogBass = [65.4, 77.8, 87.3, 98.0, 116.5, 98.0, 87.3, 77.8, 65.4, 73.4];
+    let mi = 0;
+    function scheduleMoogBass(){
         if(!menuMusicActive) return;
-        const now=audioCtx.currentTime;
-        const chord=chords[ci%chords.length]; ci++;
-        chord.forEach((freq,i)=>{
-            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-            o.type='sine'; o.frequency.value=freq;
-            const delay=i*0.08;
-            g.gain.setValueAtTime(0,now+delay);
-            g.gain.linearRampToValueAtTime(0.06-i*0.01,now+delay+0.02);
-            g.gain.exponentialRampToValueAtTime(0.02,now+delay+1.5);
-            g.gain.exponentialRampToValueAtTime(0.001,now+delay+5.0);
-            o.connect(g); wet(g);
-            o.start(now+delay); o.stop(now+delay+5.5);
+        const now = audioCtx.currentTime, freq = moogBass[mi%moogBass.length]; mi++;
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        const flt = audioCtx.createBiquadFilter();
+        o.type = 'sawtooth'; o.frequency.value = freq;
+        // Vibrato leve — característica do Moog City
+        const vib = audioCtx.createOscillator(), vibG = audioCtx.createGain();
+        vib.type = 'sine'; vib.frequency.value = 5.5; vibG.gain.value = freq * 0.012;
+        vib.connect(vibG); vibG.connect(o.frequency);
+        flt.type = 'lowpass'; flt.frequency.value = 400; flt.Q.value = 1.5;
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(0.22, now + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.04, now + 0.5);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(now); vib.start(now); o.stop(now+2.2); vib.stop(now+2.2);
+        const gap = 1800 + Math.random()*2500;
+        if(menuMusicActive) setTimeout(scheduleMoogBass, gap);
+    }
+    setTimeout(scheduleMoogBass, 1500 + Math.random()*2000);
+
+    // ── MELODIA ARIA — notas de piano etéreo por cima ──
+    const hybrid = [261.6, 311.1, 349.2, 311.1, 261.6, 233.1, 261.6, 293.6, 349.2, 261.6, 233.1, 261.6];
+    let hi = 0;
+    function scheduleHybridMelody(){
+        if(!menuMusicActive) return;
+        const now = audioCtx.currentTime, freq = hybrid[hi%hybrid.length]; hi++;
+        [1, 2, 4].forEach((h, i) => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = 'sine'; o.frequency.value = freq * h;
+            const vol = [0.08, 0.025, 0.007][i];
+            g.gain.setValueAtTime(0, now);
+            g.gain.linearRampToValueAtTime(vol, now + 0.018);
+            g.gain.exponentialRampToValueAtTime(0.001, now + 4.5);
+            o.connect(g); wet(g); o.start(now); o.stop(now+5.0);
         });
-        if(menuMusicActive) setTimeout(scheduleChamberPiano, 6000+Math.random()*6000);
+        const gap = 3000 + Math.random()*6000;
+        if(menuMusicActive) setTimeout(scheduleHybridMelody, gap);
     }
-    setTimeout(scheduleChamberPiano, 3000+Math.random()*3000);
+    setTimeout(scheduleHybridMelody, 3000 + Math.random()*2500);
 
-    // ── Contrabaixo pizzicato Cm ──
-    const bassC=[65.4,77.8,82.4,65.4,87.3,77.8,98.0,65.4];
-    let bi=0;
-    function scheduleBassC(){
+    // ── SINO — Cm alta ──
+    const bellH = [783.9, 932.3, 1046.5, 932.3, 783.9, 698.4, 783.9];
+    let bhi = 0;
+    function scheduleBellH(){
         if(!menuMusicActive) return;
-        const now=audioCtx.currentTime, freq=bassC[bi%bassC.length]; bi++;
-        [freq,freq*2].forEach((f,i)=>{
-            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-            o.type=i===0?'triangle':'sine'; o.frequency.value=f;
-            g.gain.setValueAtTime(i===0?0.20:0.05,now);
-            g.gain.exponentialRampToValueAtTime(0.03,now+0.5);
-            g.gain.exponentialRampToValueAtTime(0.001,now+1.6);
-            o.connect(g); wet(g);
-            o.start(now); o.stop(now+1.8);
-        });
-        if(menuMusicActive) setTimeout(scheduleBassC, 2200+Math.random()*2000);
-    }
-    setTimeout(scheduleBassC, 2000+Math.random()*2000);
-
-    // ── Pings metálicos ──
-    function schedulePingC(){
-        if(!menuMusicActive) return;
-        const now=audioCtx.currentTime;
-        const notes=[261.6,311.1,349.2,415.3,466.1];
-        const f=notes[Math.floor(Math.random()*notes.length)];
-        const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-        o.type='sine'; o.frequency.value=f;
-        g.gain.setValueAtTime(0.06,now);
-        g.gain.exponentialRampToValueAtTime(0.001,now+3.0);
-        o.connect(g); wet(g);
-        o.start(now); o.stop(now+3.5);
-        if(menuMusicActive) setTimeout(schedulePingC, 6000+Math.random()*9000);
-    }
-    setTimeout(schedulePingC, 5000+Math.random()*4000);
-
-    // ── RITMO LEVE — batida suave a 70bpm, distingue da trilha 1 ──
-    let beatN=0;
-    function scheduleBeat2(){
-        if(!menuMusicActive) return;
-        const now=audioCtx.currentTime;
-        // Kick suave apenas nos beats 1 e 3
-        if(beatN%4===0 || beatN%4===2){
-            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-            o.type='sine'; o.frequency.setValueAtTime(90,now);
-            o.frequency.exponentialRampToValueAtTime(35,now+0.15);
-            g.gain.setValueAtTime(0.18,now);
-            g.gain.exponentialRampToValueAtTime(0.001,now+0.22);
-            o.connect(g); g.connect(menuMusicGain);
-            o.start(now); o.stop(now+0.25);
-        }
-        beatN++;
-        if(menuMusicActive) setTimeout(scheduleBeat2, 857); // 70bpm
-    }
-    setTimeout(scheduleBeat2, 6000+Math.random()*3000);
-
-    // ── SINO CRISTALINO — Bbm oitava alta ──
-    const bellNotes2=[622.2,739.9,622.2,554.4,493.9,554.4,622.2,659.3,739.9,622.2,493.9,554.4];
-    let bni2=0;
-    function scheduleBell2(){
-        if(!menuMusicActive) return;
-        const now=audioCtx.currentTime, freq=bellNotes2[bni2%bellNotes2.length]; bni2++;
+        const now = audioCtx.currentTime, freq = bellH[bhi%bellH.length]; bhi++;
         [1, 2.756, 5.404].forEach((h,i)=>{
             const o=audioCtx.createOscillator(),g=audioCtx.createGain();
             o.type='sine'; o.frequency.value=freq*h;
-            const vol=[0.06,0.02,0.006][i];
-            g.gain.setValueAtTime(vol,now);
-            g.gain.exponentialRampToValueAtTime(0.001,now+[2.2,0.9,0.35][i]);
-            o.connect(g); wet(g); o.start(now); o.stop(now+2.5);
+            const vol=[0.06,0.020,0.006][i];
+            g.gain.setValueAtTime(vol, now);
+            g.gain.exponentialRampToValueAtTime(0.001, now+[2.8,1.1,0.45][i]);
+            o.connect(g); wet(g); o.start(now); o.stop(now+3.2);
         });
-        const gap=Math.random()<0.3 ? 400+Math.random()*600 : 3500+Math.random()*6000;
-        if(menuMusicActive) setTimeout(scheduleBell2, gap);
+        const gap = 4000 + Math.random()*9000;
+        if(menuMusicActive) setTimeout(scheduleBellH, gap);
     }
-    setTimeout(scheduleBell2, 2500+Math.random()*2500);
+    setTimeout(scheduleBellH, 3500 + Math.random()*3000);
+
+    // ── VENTO ──
+    const sz2 = audioCtx.sampleRate * 4;
+    const wBuf = audioCtx.createBuffer(1, sz2, audioCtx.sampleRate);
+    const wd = wBuf.getChannelData(0);
+    for(let j=0;j<sz2;j++) wd[j]=Math.random()*2-1;
+    const wSrc = audioCtx.createBufferSource(); wSrc.buffer=wBuf; wSrc.loop=true;
+    const wFlt = audioCtx.createBiquadFilter(); wFlt.type='bandpass'; wFlt.frequency.value=500; wFlt.Q.value=2.0;
+    const wG = audioCtx.createGain(); wG.gain.value=0.045;
+    wSrc.connect(wFlt); wFlt.connect(wG); wet(wG); wSrc.start();
+    menuMusicNodes.push(wSrc);
 }
 
 function startMenuMusic3(){
+    // ── MOOG CITY — baixo sintetizado com vibrato, ritmo suave, Am ──
     if(!audioReady || menuMusicActive) return;
     menuMusicActive = true;
-
     const t = audioCtx.currentTime;
     menuMusicGain = audioCtx.createGain();
     menuMusicGain.gain.setValueAtTime(0, t);
     menuMusicGain.gain.linearRampToValueAtTime(0.26, t + 1.5);
     menuMusicGain.connect(masterGain);
 
-    // Shorter reverb — tighter space
-    const rvLen=audioCtx.sampleRate*2.5;
-    const rvBuf=audioCtx.createBuffer(2,rvLen,audioCtx.sampleRate);
+    const rvLen = audioCtx.sampleRate * 3.5;
+    const rvBuf = audioCtx.createBuffer(2, rvLen, audioCtx.sampleRate);
     for(let c=0;c<2;c++){
         const d=rvBuf.getChannelData(c);
-        for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,3.0);
+        for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,2.2);
     }
-    const reverb=audioCtx.createConvolver(); reverb.buffer=rvBuf;
-    const rvG=audioCtx.createGain(); rvG.gain.value=0.4;
+    const reverb = audioCtx.createConvolver(); reverb.buffer = rvBuf;
+    const rvG = audioCtx.createGain(); rvG.gain.value = 0.50;
     reverb.connect(rvG); rvG.connect(menuMusicGain);
     function wet(n){ n.connect(menuMusicGain); n.connect(reverb); }
 
-    // ── Vento de ventilador ── mais agudo que os outros
-    [600,1200,3000].forEach((freq,i)=>{
-        const sz=audioCtx.sampleRate*3;
-        const buf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate);
-        const d=buf.getChannelData(0);
-        for(let j=0;j<sz;j++) d[j]=Math.random()*2-1;
-        const src=audioCtx.createBufferSource(); src.buffer=buf; src.loop=true;
-        const flt=audioCtx.createBiquadFilter(); flt.type='bandpass'; flt.frequency.value=freq; flt.Q.value=[2,4,8][i];
-        const g=audioCtx.createGain(); g.gain.value=[0.08,0.035,0.012][i];
-        const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
-        lfo.type='sine'; lfo.frequency.value=[0.15,0.22,0.31][i]; lfoG.gain.value=[0.05,0.02,0.008][i];
+    // ── PAD MOOG QUENTE — Am, sawtooth filtrado, corpus mais cheio ──
+    [55.0, 110.0, 164.8, 220.0, 293.6].forEach((f, i) => {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        const flt = audioCtx.createBiquadFilter();
+        o.type = i < 3 ? 'sawtooth' : 'sine';
+        o.frequency.value = f * (1 + (i%2===0 ? 0.005 : -0.005));
+        flt.type = 'lowpass'; flt.frequency.value = i < 3 ? 400 : 1200; flt.Q.value = 1.5;
+        g.gain.value = [0.12, 0.08, 0.05, 0.035, 0.020][i];
+        const lfo = audioCtx.createOscillator(), lfoG = audioCtx.createGain();
+        lfo.type = 'sine'; lfo.frequency.value = 0.06 + i*0.01;
+        lfoG.gain.value = 0.035;
         lfo.connect(lfoG); lfoG.connect(g.gain);
-        src.connect(flt); flt.connect(g); wet(g);
-        src.start(); lfo.start();
-        menuMusicNodes.push(src,lfo);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(); lfo.start();
+        menuMusicNodes.push(o, lfo);
     });
 
-    // ── Pulso elétrico — click periódico de relé ──
-    function scheduleClick(){
+    // ── BAIXO MOOG CITY — walking bass Am com vibrato pronunciado ──
+    // Am: A C D E G
+    const moogBass3 = [55.0, 65.4, 73.4, 82.4, 98.0, 82.4, 73.4, 65.4, 55.0, 61.7, 73.4, 55.0];
+    let m3i = 0;
+    function scheduleMoog3Bass(){
         if(!menuMusicActive) return;
-        const now=audioCtx.currentTime;
-        const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*0.05,audioCtx.sampleRate);
-        const d=buf.getChannelData(0);
-        for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,4);
-        const src=audioCtx.createBufferSource(),flt=audioCtx.createBiquadFilter(),g=audioCtx.createGain();
-        src.buffer=buf; flt.type='highpass'; flt.frequency.value=800;
-        g.gain.setValueAtTime(0.22,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.06);
-        src.connect(flt); flt.connect(g); wet(g); src.start(now);
-        if(menuMusicActive) setTimeout(scheduleClick, 3000+Math.random()*5000);
-    }
-    setTimeout(scheduleClick, 2000+Math.random()*3000);
-
-    // ── Piano Am — mais esparso, notas mais agudas ──
-    const amNotes=[220,261.6,329.6,220,293.6,261.6,349.2,293.6,220,196.0,220,261.6];
-    let ai=0;
-    function scheduleAmPiano(){
-        if(!menuMusicActive) return;
-        const now=audioCtx.currentTime, freq=amNotes[ai%amNotes.length]; ai++;
-        [1,2,3].forEach((h,i)=>{
-            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-            o.type='sine'; o.frequency.value=freq*h;
-            const vol=[0.09,0.03,0.009][i];
-            g.gain.setValueAtTime(vol,now);
-            g.gain.exponentialRampToValueAtTime(vol*0.25,now+0.1);
-            g.gain.exponentialRampToValueAtTime(0.001,now+3.5);
-            o.connect(g); wet(g); o.start(now); o.stop(now+4.0);
-        });
-        if(menuMusicActive) setTimeout(scheduleAmPiano, 2800+Math.random()*5200);
-    }
-    setTimeout(scheduleAmPiano, 4000+Math.random()*3000);
-
-    // ── Contrabaixo Am ──
-    const bassA=[55,65.4,55,73.4,82.4,65.4,55,61.7];
-    let abi=0;
-    function scheduleBassA(){
-        if(!menuMusicActive) return;
-        const now=audioCtx.currentTime, freq=bassA[abi%bassA.length]; abi++;
-        const o=audioCtx.createOscillator(),g=audioCtx.createGain(),flt=audioCtx.createBiquadFilter();
-        o.type='triangle'; o.frequency.value=freq;
-        flt.type='lowpass'; flt.frequency.value=400; flt.Q.value=1.2;
-        g.gain.setValueAtTime(0,now);
-        g.gain.linearRampToValueAtTime(0.24,now+0.01);
-        g.gain.exponentialRampToValueAtTime(0.05,now+0.6);
-        g.gain.exponentialRampToValueAtTime(0.001,now+1.8);
+        const now = audioCtx.currentTime, freq = moogBass3[m3i%moogBass3.length]; m3i++;
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        const flt = audioCtx.createBiquadFilter();
+        o.type = 'sawtooth'; o.frequency.value = freq;
+        // Vibrato mais pronunciado — clássico Moog City
+        const vib = audioCtx.createOscillator(), vibG = audioCtx.createGain();
+        vib.type = 'sine'; vib.frequency.value = 5.0; vibG.gain.value = freq * 0.018;
+        vib.connect(vibG); vibG.connect(o.frequency);
+        flt.type = 'lowpass'; flt.frequency.value = 380; flt.Q.value = 2.0;
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(0.26, now + 0.012);
+        g.gain.exponentialRampToValueAtTime(0.05, now + 0.6);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 2.2);
         o.connect(flt); flt.connect(g); wet(g);
-        o.start(now); o.stop(now+2.0);
-        if(menuMusicActive) setTimeout(scheduleBassA, 1800+Math.random()*2400);
+        o.start(now); vib.start(now); o.stop(now+2.5); vib.stop(now+2.5);
+        // Moog City tem ritmo — intervalo mais regular
+        const gap = 1200 + Math.random()*1800;
+        if(menuMusicActive) setTimeout(scheduleMoog3Bass, gap);
     }
-    setTimeout(scheduleBassA, 1500+Math.random()*2000);
+    setTimeout(scheduleMoog3Bass, 1000 + Math.random()*1500);
 
-    // ── CELESTA + SINO — Am oitava alta, cristalino ──
-    const celestaNotes=[880,1046.5,880,783.9,698.4,783.9,880,987.8,1046.5,880,698.4,783.9];
-    let celi=0;
-    function scheduleCelesta(){
+    // ── MELODIA MOOG — Am, synth lead com vibrato ──
+    const moogMelody = [440.0, 523.2, 440.0, 392.0, 349.2, 392.0, 440.0, 493.9, 523.2, 440.0, 349.2, 392.0, 440.0, 392.0, 349.2];
+    let mmi = 0;
+    function scheduleMoogMelody(){
         if(!menuMusicActive) return;
-        const now=audioCtx.currentTime, freq=celestaNotes[celi%celestaNotes.length]; celi++;
-        // Sino completo — 3 harmônicos incluindo o 2.756 metálico
+        const now = audioCtx.currentTime, freq = moogMelody[mmi%moogMelody.length]; mmi++;
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        const flt = audioCtx.createBiquadFilter();
+        o.type = 'sawtooth'; o.frequency.value = freq;
+        // Vibrato na melodia — essência do Moog City
+        const vib = audioCtx.createOscillator(), vibG = audioCtx.createGain();
+        vib.type = 'sine'; vib.frequency.value = 5.8; vibG.gain.value = freq * 0.015;
+        vib.connect(vibG); vibG.connect(o.frequency);
+        flt.type = 'lowpass'; flt.frequency.value = 1800; flt.Q.value = 0.8;
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(0.09, now + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.04, now + 0.8);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(now); vib.start(now); o.stop(now+3.0); vib.stop(now+3.0);
+        // Moog City — notas mais frequentes que Aria Math mas ainda com pausas
+        const gap = 1500 + Math.random()*4000;
+        if(menuMusicActive) setTimeout(scheduleMoogMelody, gap);
+    }
+    setTimeout(scheduleMoogMelody, 2500 + Math.random()*2000);
+
+    // ── SINO — Am alta ──
+    const bellM = [880.0, 1046.5, 880.0, 783.9, 659.3, 783.9, 880.0, 987.8];
+    let bmi = 0;
+    function scheduleBellM(){
+        if(!menuMusicActive) return;
+        const now = audioCtx.currentTime, freq = bellM[bmi%bellM.length]; bmi++;
         [1, 2.756, 5.404].forEach((h,i)=>{
             const o=audioCtx.createOscillator(),g=audioCtx.createGain();
             o.type='sine'; o.frequency.value=freq*h;
-            const vol=[0.07,0.025,0.008][i];
-            g.gain.setValueAtTime(vol,now);
-            g.gain.exponentialRampToValueAtTime(0.001,now+[2.5,1.0,0.4][i]);
+            const vol=[0.06,0.020,0.006][i];
+            g.gain.setValueAtTime(vol, now);
+            g.gain.exponentialRampToValueAtTime(0.001, now+[2.5,1.0,0.4][i]);
             o.connect(g); wet(g); o.start(now); o.stop(now+3.0);
         });
-        const gap=Math.random()<0.35 ? 400+Math.random()*600 : 3000+Math.random()*5000;
-        if(menuMusicActive) setTimeout(scheduleCelesta, gap);
+        const gap = 4000 + Math.random()*8000;
+        if(menuMusicActive) setTimeout(scheduleBellM, gap);
     }
-    setTimeout(scheduleCelesta, 4000+Math.random()*3000);
+    setTimeout(scheduleBellM, 3000 + Math.random()*3000);
+
+    // ── VENTO — suave ──
+    const sz3 = audioCtx.sampleRate * 3;
+    const wBuf3 = audioCtx.createBuffer(1, sz3, audioCtx.sampleRate);
+    const wd3 = wBuf3.getChannelData(0);
+    for(let j=0;j<sz3;j++) wd3[j]=Math.random()*2-1;
+    const wSrc3 = audioCtx.createBufferSource(); wSrc3.buffer=wBuf3; wSrc3.loop=true;
+    const wFlt3 = audioCtx.createBiquadFilter(); wFlt3.type='bandpass'; wFlt3.frequency.value=400; wFlt3.Q.value=1.8;
+    const wG3 = audioCtx.createGain(); wG3.gain.value=0.04;
+    wSrc3.connect(wFlt3); wFlt3.connect(wG3); wet(wG3); wSrc3.start();
+    menuMusicNodes.push(wSrc3);
 }
+
 let _lastMenuTrack = -1;
 function startMenuMusicRandom(){
     let track;
@@ -1725,238 +1984,229 @@ function stopWinterMusic(){
 // ── BATTLE TRACK 2 — estilo Häggström — Am, lento, melancólico ──
 // Piano cristalino, pausas longas, contrabaixo esparso, ambiente suave
 function startBattleMusic2(){
+    // ── HÄGGSTRÖM — Am, piano solitário, notas longas, baixo moog esparso ──
     if(!audioReady || winterMusicActive) return;
     winterMusicActive=true;
-
     const t=audioCtx.currentTime;
     winterMusicGain=audioCtx.createGain();
     winterMusicGain.gain.setValueAtTime(0,t);
-    winterMusicGain.gain.linearRampToValueAtTime(0.52,t+5.0);
+    winterMusicGain.gain.linearRampToValueAtTime(0.52,t+4.0);
     winterMusicGain.connect(masterGain);
 
-    // Reverb grande e suave — sala vazia mas não fria demais
-    const rvLen=audioCtx.sampleRate*4.5;
+    // Reverb grande e suave
+    const rvLen=audioCtx.sampleRate*5;
     const rvBuf=audioCtx.createBuffer(2,rvLen,audioCtx.sampleRate);
     for(let c=0;c<2;c++){
         const d=rvBuf.getChannelData(c);
         for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,2.0);
     }
     const reverb=audioCtx.createConvolver(); reverb.buffer=rvBuf;
-    const rvG=audioCtx.createGain(); rvG.gain.value=0.55;
+    const rvG=audioCtx.createGain(); rvG.gain.value=0.58;
     reverb.connect(rvG); rvG.connect(winterMusicGain);
     function wet(n){ n.connect(winterMusicGain); n.connect(reverb); }
 
-    // ── Ambient suave — vento muito leve, quase inaudível ──
-    [300,900].forEach((freq,i)=>{
-        const sz=audioCtx.sampleRate*4;
-        const buf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate);
-        const d=buf.getChannelData(0);
-        for(let j=0;j<sz;j++) d[j]=Math.random()*2-1;
-        const src=audioCtx.createBufferSource(); src.buffer=buf; src.loop=true;
-        const flt=audioCtx.createBiquadFilter(); flt.type='bandpass'; flt.frequency.value=freq; flt.Q.value=[1.5,3.0][i];
-        const g=audioCtx.createGain(); g.gain.value=[0.06,0.025][i];
-        const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
-        lfo.type='sine'; lfo.frequency.value=[0.05,0.09][i]; lfoG.gain.value=[0.04,0.015][i];
-        lfo.connect(lfoG); lfoG.connect(g.gain);
-        src.connect(flt); flt.connect(g); wet(g);
-        src.start(); lfo.start();
-        winterMusicNodes.push(src,lfo);
-    });
-
-    // ── Drone Am — muito suave, só sustenta a tonalidade ──
-    [55.0,110.0,164.8].forEach((f,i)=>{
-        const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    // ── PAD Am suave — sustenta a tonalidade sem dominar ──
+    [55.0, 110.0, 164.8, 220.0].forEach((f,i)=>{
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain(),flt=audioCtx.createBiquadFilter();
         o.type='sine'; o.frequency.value=f*(1+(i%2===0?0.003:-0.003));
-        g.gain.value=[0.10,0.05,0.02][i];
+        flt.type='lowpass'; flt.frequency.value=600; flt.Q.value=0.5;
+        g.gain.value=[0.08,0.05,0.03,0.018][i];
         const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
-        lfo.frequency.value=0.04+i*0.012; lfoG.gain.value=0.03;
+        lfo.type='sine'; lfo.frequency.value=0.035+i*0.008; lfoG.gain.value=0.020;
         lfo.connect(lfoG); lfoG.connect(g.gain);
-        o.connect(g); wet(g); o.start(); lfo.start();
-        winterMusicNodes.push(o,lfo);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(); lfo.start(); winterMusicNodes.push(o,lfo);
     });
 
-    // ── Piano Häggström — Am, notas individuais, sustain longo ──
-    // Melodia de Am descendente e ascendente, muito lenta
-    const hNotes=[
-        220.0,  // A3
-        196.0,  // G3
-        174.6,  // F3
-        164.8,  // E3
-        174.6,  // F3
-        196.0,  // G3
-        220.0,  // A3
-        246.9,  // B3
-        261.6,  // C4
-        220.0,  // A3
-        196.0,  // G3
-        174.6,  // F3
-        220.0,  // A3
-        164.8,  // E3
-        196.0,  // G3
-    ];
+    // ── PIANO HÄGGSTRÖM — Am, notas individuais com sustain longo ──
+    // Melodia: A G F E F G A B C A G F A E G
+    const hNotes=[220.0,196.0,174.6,164.8,174.6,196.0,220.0,246.9,261.6,220.0,196.0,174.6,220.0,164.8,196.0];
     let hi=0;
-    function scheduleH(){
+    function scheduleHagg(){
         if(!winterMusicActive) return;
         const now=audioCtx.currentTime, freq=hNotes[hi%hNotes.length]; hi++;
-        // Piano puro — sine fundamental + 2 harmônicos muito suaves
         [1,2,4].forEach((h,i)=>{
             const o=audioCtx.createOscillator(),g=audioCtx.createGain();
             o.type='sine'; o.frequency.value=freq*h;
-            const vol=[0.10,0.030,0.008][i];
+            const vol=[0.11,0.035,0.009][i];
             g.gain.setValueAtTime(0,now);
-            g.gain.linearRampToValueAtTime(vol,now+0.018); // ataque gentil
-            g.gain.setValueAtTime(vol,now+0.05);
+            g.gain.linearRampToValueAtTime(vol,now+0.018);
+            g.gain.setValueAtTime(vol,now+0.06);
             g.gain.exponentialRampToValueAtTime(vol*0.4,now+1.5);
-            g.gain.exponentialRampToValueAtTime(0.001,now+5.5); // sustain longo
-            o.connect(g); wet(g); o.start(now); o.stop(now+6.0);
+            g.gain.exponentialRampToValueAtTime(0.001,now+6.0);
+            o.connect(g); wet(g); o.start(now); o.stop(now+6.5);
         });
-        // Pausa — coração do C418. Às vezes longa, às vezes curtinha
-        const gap=Math.random()<0.3 ? 800+Math.random()*1200 : 2500+Math.random()*5500;
-        if(winterMusicActive) setTimeout(scheduleH, gap);
+        // Häggström — pausa humana, às vezes rápida, às vezes longa
+        const gap=Math.random()<0.3 ? 700+Math.random()*900 : 3000+Math.random()*6000;
+        if(winterMusicActive) setTimeout(scheduleHagg, gap);
     }
-    setTimeout(scheduleH, 3000+Math.random()*2000);
+    setTimeout(scheduleHagg, 2500+Math.random()*2000);
 
-    // ── Contrabaixo Am — pizzicato muito esparso ──
-    const bassH=[55.0,65.4,55.0,41.2,55.0,49.0,55.0,65.4];
-    let bhi=0;
-    function scheduleBassH(){
+    // ── BAIXO MOOG com vibrato — pizzicato Am ──
+    const bassH2=[55.0,65.4,55.0,41.2,49.0,55.0,65.4,49.0];
+    let bh=0;
+    function scheduleBassH2(){
         if(!winterMusicActive) return;
-        const now=audioCtx.currentTime, freq=bassH[bhi%bassH.length]; bhi++;
-        [freq,freq*2].forEach((f,i)=>{
-            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-            o.type=i===0?'triangle':'sine'; o.frequency.value=f;
-            g.gain.setValueAtTime(0,now);
-            g.gain.linearRampToValueAtTime(i===0?0.18:0.05,now+0.01);
-            g.gain.exponentialRampToValueAtTime(0.03,now+0.6);
-            g.gain.exponentialRampToValueAtTime(0.001,now+2.5);
-            o.connect(g); wet(g); o.start(now); o.stop(now+2.8);
-        });
-        if(winterMusicActive) setTimeout(scheduleBassH, 3000+Math.random()*4000);
-    }
-    setTimeout(scheduleBassH, 2000+Math.random()*3000);
-}
-
-// ── BATTLE TRACK 3 — estilo Sweden — Cm, contemplativo, respira ──
-// Acordes suaves, piano de câmara, espaço enorme entre as notas
-function startBattleMusic3(){
-    if(!audioReady || winterMusicActive) return;
-    winterMusicActive=true;
-
-    const t=audioCtx.currentTime;
-    winterMusicGain=audioCtx.createGain();
-    winterMusicGain.gain.setValueAtTime(0,t);
-    winterMusicGain.gain.linearRampToValueAtTime(0.50,t+6.0);
-    winterMusicGain.connect(masterGain);
-
-    // Reverb Sweden — muito longo, como catedral vazia
-    const rvLen=audioCtx.sampleRate*6;
-    const rvBuf=audioCtx.createBuffer(2,rvLen,audioCtx.sampleRate);
-    for(let c=0;c<2;c++){
-        const d=rvBuf.getChannelData(c);
-        for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,1.6);
-    }
-    const reverb=audioCtx.createConvolver(); reverb.buffer=rvBuf;
-    const rvG=audioCtx.createGain(); rvG.gain.value=0.62;
-    reverb.connect(rvG); rvG.connect(winterMusicGain);
-    function wet(n){ n.connect(winterMusicGain); n.connect(reverb); }
-
-    // ── Pad suavíssimo — quase não existe, só presença ──
-    [65.4,130.8,196.0].forEach((f,i)=>{
+        const now=audioCtx.currentTime, freq=bassH2[bh%bassH2.length]; bh++;
         const o=audioCtx.createOscillator(),g=audioCtx.createGain(),flt=audioCtx.createBiquadFilter();
-        o.type='sine'; o.frequency.value=f*(1+(i%2===0?0.004:-0.004));
-        flt.type='lowpass'; flt.frequency.value=300; flt.Q.value=0.5;
-        g.gain.value=[0.08,0.04,0.015][i];
-        const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
-        lfo.frequency.value=0.025+i*0.008; lfoG.gain.value=0.025;
-        lfo.connect(lfoG); lfoG.connect(g.gain);
+        o.type='sawtooth'; o.frequency.value=freq;
+        const vib=audioCtx.createOscillator(),vibG=audioCtx.createGain();
+        vib.type='sine'; vib.frequency.value=5.2; vibG.gain.value=freq*0.014;
+        vib.connect(vibG); vibG.connect(o.frequency);
+        flt.type='lowpass'; flt.frequency.value=350; flt.Q.value=1.8;
+        g.gain.setValueAtTime(0,now);
+        g.gain.linearRampToValueAtTime(0.22,now+0.012);
+        g.gain.exponentialRampToValueAtTime(0.04,now+0.6);
+        g.gain.exponentialRampToValueAtTime(0.001,now+2.5);
         o.connect(flt); flt.connect(g); wet(g);
-        o.start(); lfo.start();
-        winterMusicNodes.push(o,lfo);
-    });
+        o.start(now); vib.start(now); o.stop(now+2.8); vib.stop(now+2.8);
+        if(winterMusicActive) setTimeout(scheduleBassH2, 3500+Math.random()*4000);
+    }
+    setTimeout(scheduleBassH2, 2000+Math.random()*2500);
 
-    // ── Vento suavíssimo ──
+    // ── SINO Am ──
+    const bellH2=[440.0,523.2,440.0,392.0,349.2,392.0,440.0,493.9];
+    let sbh=0;
+    function scheduleBellH2(){
+        if(!winterMusicActive) return;
+        const now=audioCtx.currentTime, freq=bellH2[sbh%bellH2.length]; sbh++;
+        [1,2.756,5.404].forEach((h,i)=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type='sine'; o.frequency.value=freq*h;
+            g.gain.setValueAtTime([0.07,0.025,0.007][i],now);
+            g.gain.exponentialRampToValueAtTime(0.001,now+[2.5,1.0,0.4][i]);
+            o.connect(g); wet(g); o.start(now); o.stop(now+3.0);
+        });
+        if(winterMusicActive) setTimeout(scheduleBellH2, 5000+Math.random()*10000);
+    }
+    setTimeout(scheduleBellH2, 4000+Math.random()*4000);
+
+    // ── VENTO SUAVE ──
     const sz=audioCtx.sampleRate*4;
     const wBuf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate);
     const wd=wBuf.getChannelData(0);
     for(let j=0;j<sz;j++) wd[j]=Math.random()*2-1;
     const wSrc=audioCtx.createBufferSource(); wSrc.buffer=wBuf; wSrc.loop=true;
-    const wFlt=audioCtx.createBiquadFilter(); wFlt.type='bandpass'; wFlt.frequency.value=400; wFlt.Q.value=1.5;
+    const wFlt=audioCtx.createBiquadFilter(); wFlt.type='bandpass'; wFlt.frequency.value=350; wFlt.Q.value=1.5;
     const wG=audioCtx.createGain(); wG.gain.value=0.05;
-    const wLfo=audioCtx.createOscillator(),wLfoG=audioCtx.createGain();
-    wLfo.type='sine'; wLfo.frequency.value=0.04; wLfoG.gain.value=0.03;
-    wLfo.connect(wLfoG); wLfoG.connect(wG.gain);
-    wSrc.connect(wFlt); wFlt.connect(wG); wet(wG);
-    wSrc.start(); wLfo.start();
-    winterMusicNodes.push(wSrc,wLfo);
+    wSrc.connect(wFlt); wFlt.connect(wG); wet(wG); wSrc.start();
+    winterMusicNodes.push(wSrc);
+}
 
-    // ── Piano Sweden — Cm, acordes arpejados muito lentos e suaves ──
-    // Voicings: Cm → Ab → Bb → Cm
-    const swedenChords=[
-        [130.8,155.6,196.0,261.6,311.1],  // Cm
-        [103.8,130.8,155.6,207.7,261.6],  // Ab
-        [116.5,146.8,174.6,233.1,293.6],  // Bb
-        [130.8,155.6,196.0,261.6,392.0],  // Cm (oitava acima)
-    ];
-    let sci=0;
-    function scheduleSweden(){
-        if(!winterMusicActive) return;
-        const now=audioCtx.currentTime;
-        const chord=swedenChords[sci%swedenChords.length]; sci++;
-        chord.forEach((freq,i)=>{
-            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-            o.type='sine'; o.frequency.value=freq;
-            const delay=i*0.12; // arpejo lento, uma nota por vez
-            const vol=0.07-i*0.008;
-            g.gain.setValueAtTime(0,now+delay);
-            g.gain.linearRampToValueAtTime(vol,now+delay+0.02);
-            g.gain.exponentialRampToValueAtTime(vol*0.5,now+delay+1.0);
-            g.gain.exponentialRampToValueAtTime(0.001,now+delay+6.0);
-            o.connect(g); wet(g); o.start(now+delay); o.stop(now+delay+6.5);
-        });
-        // Pausa longa entre acordes — Sweden respira muito
-        const gap=7000+Math.random()*8000;
-        if(winterMusicActive) setTimeout(scheduleSweden, gap);
+function startBattleMusic3(){
+    // ── MOOG CITY BATTLE — Am, baixo moog rítmico, lead synth, sombrio ──
+    if(!audioReady || winterMusicActive) return;
+    winterMusicActive=true;
+    const t=audioCtx.currentTime;
+    winterMusicGain=audioCtx.createGain();
+    winterMusicGain.gain.setValueAtTime(0,t);
+    winterMusicGain.gain.linearRampToValueAtTime(0.55,t+3.5);
+    winterMusicGain.connect(masterGain);
+
+    const rvLen=audioCtx.sampleRate*3.5;
+    const rvBuf=audioCtx.createBuffer(2,rvLen,audioCtx.sampleRate);
+    for(let c=0;c<2;c++){
+        const d=rvBuf.getChannelData(c);
+        for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,2.2);
     }
-    setTimeout(scheduleSweden, 4000+Math.random()*4000);
+    const reverb=audioCtx.createConvolver(); reverb.buffer=rvBuf;
+    const rvG=audioCtx.createGain(); rvG.gain.value=0.48;
+    reverb.connect(rvG); rvG.connect(winterMusicGain);
+    function wet(n){ n.connect(winterMusicGain); n.connect(reverb); }
 
-    // ── Nota de melodia solo — uma nota acima do acorde, esparsa ──
-    const melodyS=[261.6,311.1,349.2,311.1,261.6,233.1,261.6,293.6,311.1,261.6];
-    let msi=0;
-    function scheduleSwedenMelody(){
+    // ── PAD MOOG Am — sawtooth filtrado, corpo quente ──
+    [55.0,110.0,164.8,220.0,293.6].forEach((f,i)=>{
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain(),flt=audioCtx.createBiquadFilter();
+        o.type=i<3?'sawtooth':'sine'; o.frequency.value=f*(1+(i%2===0?0.005:-0.005));
+        flt.type='lowpass'; flt.frequency.value=i<3?380:1000; flt.Q.value=1.5;
+        g.gain.value=[0.10,0.07,0.045,0.030,0.018][i];
+        const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
+        lfo.type='sine'; lfo.frequency.value=0.055+i*0.010; lfoG.gain.value=0.030;
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(); lfo.start(); winterMusicNodes.push(o,lfo);
+    });
+
+    // ── BAIXO MOOG CITY rítmico — Am walking, vibrato pronunciado ──
+    const moogB=[55.0,65.4,73.4,82.4,73.4,65.4,55.0,61.7,55.0,73.4,82.4,65.4];
+    let mbi=0;
+    function scheduleMoogBattle(){
         if(!winterMusicActive) return;
-        const now=audioCtx.currentTime, freq=melodyS[msi%melodyS.length]; msi++;
-        [1,2].forEach((h,i)=>{
+        const now=audioCtx.currentTime, freq=moogB[mbi%moogB.length]; mbi++;
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain(),flt=audioCtx.createBiquadFilter();
+        o.type='sawtooth'; o.frequency.value=freq;
+        const vib=audioCtx.createOscillator(),vibG=audioCtx.createGain();
+        vib.type='sine'; vib.frequency.value=5.5; vibG.gain.value=freq*0.018;
+        vib.connect(vibG); vibG.connect(o.frequency);
+        flt.type='lowpass'; flt.frequency.value=400; flt.Q.value=2.0;
+        g.gain.setValueAtTime(0,now);
+        g.gain.linearRampToValueAtTime(0.28,now+0.010);
+        g.gain.exponentialRampToValueAtTime(0.05,now+0.5);
+        g.gain.exponentialRampToValueAtTime(0.001,now+2.0);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(now); vib.start(now); o.stop(now+2.2); vib.stop(now+2.2);
+        // Moog City — mais rítmico que Häggström
+        const gap=1000+Math.random()*1600;
+        if(winterMusicActive) setTimeout(scheduleMoogBattle, gap);
+    }
+    setTimeout(scheduleMoogBattle, 1000+Math.random()*1200);
+
+    // ── LEAD SYNTH MOOG — melodia Am com vibrato, sombria ──
+    const lead=[220.0,261.6,220.0,196.0,174.6,196.0,220.0,246.9,261.6,220.0,174.6,196.0,220.0,196.0,174.6,164.8];
+    let li=0;
+    function scheduleLead(){
+        if(!winterMusicActive) return;
+        const now=audioCtx.currentTime, freq=lead[li%lead.length]; li++;
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain(),flt=audioCtx.createBiquadFilter();
+        o.type='sawtooth'; o.frequency.value=freq;
+        const vib=audioCtx.createOscillator(),vibG=audioCtx.createGain();
+        vib.type='sine'; vib.frequency.value=5.8; vibG.gain.value=freq*0.015;
+        vib.connect(vibG); vibG.connect(o.frequency);
+        flt.type='lowpass'; flt.frequency.value=2000; flt.Q.value=0.8;
+        g.gain.setValueAtTime(0,now);
+        g.gain.linearRampToValueAtTime(0.10,now+0.02);
+        g.gain.exponentialRampToValueAtTime(0.04,now+0.9);
+        g.gain.exponentialRampToValueAtTime(0.001,now+3.0);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(now); vib.start(now); o.stop(now+3.5); vib.stop(now+3.5);
+        const gap=1800+Math.random()*3500;
+        if(winterMusicActive) setTimeout(scheduleLead, gap);
+    }
+    setTimeout(scheduleLead, 2000+Math.random()*2000);
+
+    // ── SINO Am — esparso ──
+    const bellM3=[440.0,523.2,587.3,440.0,392.0,440.0,523.2,493.9];
+    let sbm=0;
+    function scheduleBellM3(){
+        if(!winterMusicActive) return;
+        const now=audioCtx.currentTime, freq=bellM3[sbm%bellM3.length]; sbm++;
+        [1,2.756,5.404].forEach((h,i)=>{
             const o=audioCtx.createOscillator(),g=audioCtx.createGain();
             o.type='sine'; o.frequency.value=freq*h;
-            const vol=[0.09,0.025][i];
-            g.gain.setValueAtTime(0,now);
-            g.gain.linearRampToValueAtTime(vol,now+0.015);
-            g.gain.exponentialRampToValueAtTime(0.001,now+4.5);
-            o.connect(g); wet(g); o.start(now); o.stop(now+5.0);
+            g.gain.setValueAtTime([0.07,0.025,0.007][i],now);
+            g.gain.exponentialRampToValueAtTime(0.001,now+[2.5,1.0,0.4][i]);
+            o.connect(g); wet(g); o.start(now); o.stop(now+3.0);
         });
-        const gap=3500+Math.random()*7000;
-        if(winterMusicActive) setTimeout(scheduleSwedenMelody, gap);
+        if(winterMusicActive) setTimeout(scheduleBellM3, 5000+Math.random()*9000);
     }
-    setTimeout(scheduleSwedenMelody, 6000+Math.random()*5000);
+    setTimeout(scheduleBellM3, 3500+Math.random()*3500);
 
-    // ── Contrabaixo Sweden — muito lento, uma nota a cada 4-7s ──
-    const swedenBass=[65.4,51.9,58.3,65.4,58.3,51.9,65.4,73.4];
-    let sbi2=0;
-    function scheduleSwedenBass(){
-        if(!winterMusicActive) return;
-        const now=audioCtx.currentTime, freq=swedenBass[sbi2%swedenBass.length]; sbi2++;
-        [freq,freq*2].forEach((f,i)=>{
-            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-            o.type=i===0?'triangle':'sine'; o.frequency.value=f;
-            g.gain.setValueAtTime(0,now);
-            g.gain.linearRampToValueAtTime(i===0?0.16:0.045,now+0.015);
-            g.gain.exponentialRampToValueAtTime(0.03,now+0.8);
-            g.gain.exponentialRampToValueAtTime(0.001,now+3.5);
-            o.connect(g); wet(g); o.start(now); o.stop(now+4.0);
-        });
-        if(winterMusicActive) setTimeout(scheduleSwedenBass, 4000+Math.random()*3000);
-    }
-    setTimeout(scheduleSwedenBass, 3000+Math.random()*3000);
+    // ── VENTO CORTANTE ──
+    [280,900,2500].forEach((freq,i)=>{
+        const sz=audioCtx.sampleRate*3;
+        const buf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let j=0;j<sz;j++) d[j]=Math.random()*2-1;
+        const src=audioCtx.createBufferSource(); src.buffer=buf; src.loop=true;
+        const flt=audioCtx.createBiquadFilter(); flt.type='bandpass'; flt.frequency.value=freq; flt.Q.value=[1.5,3.0,6.0][i];
+        const g=audioCtx.createGain(); g.gain.value=[0.08,0.035,0.015][i];
+        const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
+        lfo.type='sine'; lfo.frequency.value=[0.06,0.10,0.16][i]; lfoG.gain.value=[0.05,0.022,0.009][i];
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        src.connect(flt); flt.connect(g); wet(g);
+        src.start(); lfo.start();
+        winterMusicNodes.push(src,lfo);
+    });
 }
 
 // ── BATTLE MUSIC ROTATION ──
@@ -2062,9 +2312,92 @@ function playRingPiano(score){
 function playNearMiss(){ if(!audioReady) return; const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type='sine'; o.frequency.value=1200; o.frequency.exponentialRampToValueAtTime(800,audioCtx.currentTime+.06); g.gain.setValueAtTime(.08,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.1); o.connect(g); g.connect(masterGain); o.start(); o.stop(audioCtx.currentTime+.1); }
 function playSabotage(){ if(!audioReady) return; [220,330].forEach((f,i)=>{ const o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime+i*.06; o.type='sawtooth'; o.frequency.value=f; g.gain.setValueAtTime(.15,t); g.gain.exponentialRampToValueAtTime(.001,t+.18); o.connect(g); g.connect(masterGain); o.start(t); o.stop(t+.2); }); }
 function playHit(){ if(!audioReady) return; const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*.15,audioCtx.sampleRate),d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length); const src=audioCtx.createBufferSource(),flt=audioCtx.createBiquadFilter(),g=audioCtx.createGain(); flt.type='bandpass'; flt.frequency.value=180; flt.Q.value=.8; g.gain.setValueAtTime(.5,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.15); src.buffer=buf; src.connect(flt); flt.connect(g); g.connect(masterGain); src.start(); const o=audioCtx.createOscillator(),og=audioCtx.createGain(); o.frequency.setValueAtTime(80,audioCtx.currentTime); o.frequency.exponentialRampToValueAtTime(20,audioCtx.currentTime+.2); og.gain.setValueAtTime(.4,audioCtx.currentTime); og.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.2); o.connect(og); og.connect(masterGain); o.start(); o.stop(audioCtx.currentTime+.2); }
-function playShield(){ if(!audioReady) return; const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type='sine'; o.frequency.value=880; o.frequency.linearRampToValueAtTime(1320,audioCtx.currentTime+.15); g.gain.setValueAtTime(.15,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.3); o.connect(g); g.connect(masterGain); o.start(); o.stop(audioCtx.currentTime+.3); }
+function playShield(){ playRingPiano(p1 ? p1.score : 1); }
 function playDeath(){ if(!audioReady) return; for(let i=0;i<3;i++){ const o=audioCtx.createOscillator(),g=audioCtx.createGain(),delay=i*.08; o.type='sawtooth'; o.frequency.setValueAtTime(120-i*30,audioCtx.currentTime+delay); o.frequency.exponentialRampToValueAtTime(20,audioCtx.currentTime+delay+.4); g.gain.setValueAtTime(.3,audioCtx.currentTime+delay); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+delay+.4); o.connect(g); g.connect(masterGain); o.start(audioCtx.currentTime+delay); o.stop(audioCtx.currentTime+delay+.4); } }
 function playVictory(){ if(!audioReady) return; [523,659,784,1047,784,1047,1319].forEach((f,i)=>{ const o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime+i*.12; o.type='square'; o.frequency.value=f; g.gain.setValueAtTime(.12,t); g.gain.exponentialRampToValueAtTime(.001,t+.18); o.connect(g); g.connect(masterGain); o.start(t); o.stop(t+.2); }); }
+
+function playEndingMusic(){
+    if(!audioReady) return;
+    stopWinterMusic();
+
+    // Reverb enorme
+    const rvLen = audioCtx.sampleRate * 7;
+    const rvBuf = audioCtx.createBuffer(2, rvLen, audioCtx.sampleRate);
+    for(let c=0;c<2;c++){
+        const d=rvBuf.getChannelData(c);
+        for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,1.3);
+    }
+    const reverb = audioCtx.createConvolver(); reverb.buffer=rvBuf;
+    const rvG = audioCtx.createGain(); rvG.gain.value=0.70;
+    reverb.connect(rvG); rvG.connect(masterGain);
+    function wet(n){ n.connect(masterGain); n.connect(reverb); }
+
+    const now = audioCtx.currentTime;
+
+    // ── PAD — nota única por acorde, sem harmônicos simultâneos ──
+    // Uma nota grave que desce a cada 6s — sem buzz
+    const padNotes = [55.0, 43.7, 32.7, 24.5]; // A1 F1 C1 G0
+    padNotes.forEach((freq, ci) => {
+        const start = now + ci * 6.0;
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        const flt = audioCtx.createBiquadFilter();
+        o.type = 'sine'; o.frequency.value = freq;
+        flt.type = 'lowpass'; flt.frequency.value = 200; flt.Q.value = 0.5;
+        g.gain.setValueAtTime(0, start);
+        g.gain.linearRampToValueAtTime(0.12, start+2.0);
+        g.gain.linearRampToValueAtTime(0.07, start+5.0);
+        g.gain.linearRampToValueAtTime(0, start+7.5);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(start); o.stop(start+8.0);
+    });
+
+    // ── PIANO — 5 notas únicas descendo, uma de cada vez ──
+    const pianoMoments = [
+        { time: 3.0,  freq: 220.0 }, // A3
+        { time: 7.5,  freq: 196.0 }, // G3
+        { time: 12.0, freq: 174.6 }, // F3
+        { time: 16.5, freq: 164.8 }, // E3
+        { time: 21.0, freq: 130.8 }, // C3
+    ];
+    pianoMoments.forEach(({ time, freq }) => {
+        // Apenas fundamental + 1 harmônico suave — sem batimento
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = 'sine'; o.frequency.value = freq;
+        g.gain.setValueAtTime(0, now+time);
+        g.gain.linearRampToValueAtTime(0.13, now+time+0.018);
+        g.gain.exponentialRampToValueAtTime(0.04, now+time+1.2);
+        g.gain.exponentialRampToValueAtTime(0.001, now+time+6.0);
+        o.connect(g); wet(g);
+        o.start(now+time); o.stop(now+time+6.5);
+    });
+
+    // ── SINO — quando o robô aparece (~13s) — uma nota só ──
+    setTimeout(()=>{
+        if(!audioReady) return;
+        const t2 = audioCtx.currentTime;
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = 'sine'; o.frequency.value = 523.2; // C5
+        g.gain.setValueAtTime(0.07, t2);
+        g.gain.exponentialRampToValueAtTime(0.001, t2+7.0);
+        o.connect(g); wet(g);
+        o.start(t2); o.stop(t2+7.5);
+    }, 13000);
+
+    // ── NOTA FINAL — D1 grave, porta fechando ──
+    setTimeout(()=>{
+        if(!audioReady) return;
+        const t3 = audioCtx.currentTime;
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        const flt = audioCtx.createBiquadFilter();
+        o.type = 'sine'; o.frequency.value = 36.7;
+        flt.type = 'lowpass'; flt.frequency.value = 100; flt.Q.value = 0.4;
+        g.gain.setValueAtTime(0, t3);
+        g.gain.linearRampToValueAtTime(0.20, t3+0.5);
+        g.gain.exponentialRampToValueAtTime(0.001, t3+9.0);
+        o.connect(flt); flt.connect(g); wet(g);
+        o.start(t3); o.stop(t3+10.0);
+    }, 20000);
+}
 function playComboMilestone(c){ if(!audioReady) return; const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type='triangle'; o.frequency.value=330+c*20; o.frequency.linearRampToValueAtTime(660+c*20,audioCtx.currentTime+.2); g.gain.setValueAtTime(.2,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.35); o.connect(g); g.connect(masterGain); o.start(); o.stop(audioCtx.currentTime+.35); }
 function toggleMute(){ audioMuted=!audioMuted; if(audioReady) masterGain.gain.value=audioMuted?0:.7; const b=document.getElementById('btn-mute'); b.textContent=audioMuted?'[ ♪ OFF ]':'[ ♪ ON ]'; b.classList.toggle('muted',audioMuted); }
 
@@ -2152,6 +2485,249 @@ function menuLoop(now=0){
 function startMenuAnim(){ menuActive=true; if(menuRafId) cancelAnimationFrame(menuRafId); menuLoop(); }
 function stopMenuAnim(){ menuActive=false; if(menuRafId) cancelAnimationFrame(menuRafId); mctx.clearRect(0,0,900,600); }
 
+// ── MENU PREVIEW CANVAS — robots and rings on the right ──
+const previewCanvas = document.getElementById('menu-preview-canvas');
+const pctx = previewCanvas ? previewCanvas.getContext('2d') : null;
+let previewRafId = null;
+let previewActive = false;
+let previewFrame = 0;
+
+const PREVIEW_ROBOTS = [
+    { angle: 0,      vel: 0.018,  radius: 90,  color: '#c84000', skinId: 'fizz',   blinkTimer: 0 },
+    { angle: Math.PI,vel: -0.012, radius: 110, color: '#0070aa', skinId: 'seraph', blinkTimer: 0 },
+    { angle: Math.PI/2, vel: 0.022, radius: 70, color: '#660099', skinId: 'void',  blinkTimer: 0 },
+];
+
+const PREVIEW_RINGS = [];
+let previewRingTimer = 0;
+
+function spawnPreviewRing(){
+    PREVIEW_RINGS.push({
+        r: 0,
+        gap: Math.random() * Math.PI * 2,
+        gapSize: 0.9 + Math.random()*0.5,
+        speed: 0.8 + Math.random()*0.5,
+        color: ['#c84000','#0070aa','#660099'][Math.floor(Math.random()*3)],
+        alpha: 0,
+    });
+}
+
+function drawPreviewRobot(cx, cy, robot){
+    const px = Math.cos(robot.angle) * robot.radius + cx;
+    const py = Math.sin(robot.angle) * robot.radius + cy;
+    const skinId = robot.skinId;
+    const dotColor = darkMode ? '#ffffff' : robot.color;
+
+    pctx.save();
+    if(!_lowPerf){ pctx.shadowColor=robot.color; pctx.shadowBlur=darkMode?14:8; }
+    pctx.fillStyle = dotColor;
+
+    if(skinId==='fizz'){
+        // Rounded pill
+        const r=3.5;
+        pctx.beginPath();
+        pctx.moveTo(px-5+r,py-4);
+        pctx.arcTo(px+5,py-4,px+5,py+4,r);
+        pctx.arcTo(px+5,py+4,px-5,py+4,r);
+        pctx.arcTo(px-5,py+4,px-5,py-4,r);
+        pctx.arcTo(px-5,py-4,px+5,py-4,r);
+        pctx.closePath(); pctx.fill();
+        pctx.shadowBlur=0;
+        pctx.fillStyle=darkMode?robot.color:'rgba(0,0,0,0.15)';
+        pctx.beginPath();
+        pctx.moveTo(px-3+r,py-2.5);
+        pctx.arcTo(px+3,py-2.5,px+3,py+2.5,r);
+        pctx.arcTo(px+3,py+2.5,px-3,py+2.5,r);
+        pctx.arcTo(px-3,py+2.5,px-3,py-2.5,r);
+        pctx.arcTo(px-3,py-2.5,px+3,py-2.5,r);
+        pctx.closePath(); pctx.fill();
+        // Eye
+        const blinking = robot.blinkTimer > 0;
+        if(!blinking){
+            pctx.fillStyle='#ffffff';
+            pctx.fillRect(px-2,py-1,4,1.8);
+        } else {
+            pctx.fillStyle='rgba(255,255,255,0.4)';
+            pctx.fillRect(px-2,py-0.3,4,0.7);
+        }
+        if(!robot.blinkTimer && Math.random()<0.003) robot.blinkTimer=6;
+        if(robot.blinkTimer>0) robot.blinkTimer--;
+
+    } else if(skinId==='seraph'){
+        pctx.fillRect(px-6,py-3.5,12,7);
+        pctx.shadowBlur=0;
+        pctx.fillStyle=darkMode?robot.color:'rgba(0,0,0,0.15)';
+        pctx.fillRect(px-4,py-2,8,4);
+        pctx.fillStyle='rgba(255,255,255,0.9)';
+        pctx.fillRect(px-2.2,py-0.8,4.4,1.6);
+        pctx.fillStyle=robot.color;
+        pctx.fillRect(px-0.5,py-1.3,1.0,2.6);
+
+    } else if(skinId==='void'){
+        pctx.beginPath();
+        pctx.moveTo(px,py-6);
+        pctx.lineTo(px+5,py);
+        pctx.lineTo(px,py+6);
+        pctx.lineTo(px-5,py);
+        pctx.closePath(); pctx.fill();
+        pctx.shadowBlur=0;
+        pctx.fillStyle=darkMode?robot.color:'rgba(0,0,0,0.2)';
+        pctx.beginPath();
+        pctx.moveTo(px,py-3.5);
+        pctx.lineTo(px+3,py);
+        pctx.lineTo(px,py+3.5);
+        pctx.lineTo(px-3,py);
+        pctx.closePath(); pctx.fill();
+        const p2=0.7+Math.sin(previewFrame*0.15)*0.3;
+        pctx.fillStyle=`rgba(180,0,255,${p2})`;
+        pctx.beginPath(); pctx.arc(px,py,1.8*p2,0,Math.PI*2); pctx.fill();
+    }
+    pctx.restore();
+}
+
+function previewLoop(){
+    if(!previewActive || !pctx) return;
+    previewFrame++;
+
+    const W=340, H=340, cx=W/2, cy=H/2;
+    pctx.clearRect(0,0,W,H);
+
+    // Background — night sky
+    pctx.fillStyle = '#04060c';
+    pctx.fillRect(0,0,W,H);
+
+    // ── O.P.I BUILDING — silhouette in the background ──
+    // Main tower — tall and imposing
+    pctx.fillStyle = '#0a0e14';
+    pctx.fillRect(120, 60, 100, 230); // main body
+
+    // Tower top — antenna spire
+    pctx.fillStyle = '#0c1018';
+    pctx.fillRect(158, 20, 24, 45);   // spire base
+    pctx.fillRect(168, 8,  4,  16);   // antenna tip
+
+    // Side wings
+    pctx.fillStyle = '#090d12';
+    pctx.fillRect(80,  110, 42, 180); // left wing
+    pctx.fillRect(218, 110, 42, 180); // right wing
+
+    // Windows — lit up randomly, warm yellow glow
+    const windowSeed = Math.floor(previewFrame/120); // change pattern every 2s
+    for(let row=0; row<12; row++){
+        for(let col=0; col<4; col++){
+            const wx = 128 + col*22;
+            const wy = 75 + row*15;
+            // Pseudo-random based on position and seed
+            const rand = ((row*7+col*13+windowSeed*3) % 17);
+            if(rand > 6){
+                // Lit window
+                const flicker = Math.sin(previewFrame*0.08 + row*0.5 + col*0.3) > -0.9;
+                if(flicker){
+                    pctx.fillStyle = `rgba(200,160,60,${0.15+rand*0.02})`;
+                    pctx.fillRect(wx, wy, 8, 6);
+                }
+            } else {
+                // Dark window
+                pctx.fillStyle = 'rgba(20,30,40,0.8)';
+                pctx.fillRect(wx, wy, 8, 6);
+            }
+        }
+    }
+
+    // Side wing windows
+    [[84,120,2,8],[222,120,2,8]].forEach(([sx,sy,cols,rows])=>{
+        for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+            const rand2=((r*5+c*11+(windowSeed+1)*7)%13);
+            if(rand2>4){
+                pctx.fillStyle=`rgba(180,140,50,${0.10+rand2*0.015})`;
+                pctx.fillRect(sx+c*16, sy+r*15, 7, 6);
+            }
+        }
+    });
+
+    // OPI logo on building — faint
+    pctx.fillStyle = 'rgba(200,160,60,0.08)';
+    pctx.font = 'bold 8px monospace';
+    pctx.textAlign='center';
+    pctx.fillText('O.P.I', 170, 50);
+
+    // Blinking antenna light
+    const blink = Math.floor(previewFrame/30) % 2 === 0;
+    if(blink){
+        pctx.fillStyle = 'rgba(255,80,80,0.9)';
+        pctx.beginPath(); pctx.arc(170, 10, 2, 0, Math.PI*2); pctx.fill();
+        pctx.shadowColor='#ff3030'; pctx.shadowBlur=6;
+        pctx.fill(); pctx.shadowBlur=0;
+    }
+
+    // Ground line
+    pctx.fillStyle = '#070b10';
+    pctx.fillRect(0, 290, W, 50);
+    pctx.strokeStyle = 'rgba(200,160,60,0.06)';
+    pctx.lineWidth=1;
+    pctx.beginPath(); pctx.moveTo(0,290); pctx.lineTo(W,290); pctx.stroke();
+
+    // Subtle grid
+    pctx.strokeStyle = 'rgba(255,255,255,0.025)';
+    pctx.lineWidth=0.5;
+    for(let gx=0;gx<=W;gx+=20){ pctx.beginPath(); pctx.moveTo(gx,0); pctx.lineTo(gx,H); pctx.stroke(); }
+    for(let gy=0;gy<=H;gy+=20){ pctx.beginPath(); pctx.moveTo(0,gy); pctx.lineTo(W,gy); pctx.stroke(); }
+
+    // Spawn rings
+    previewRingTimer++;
+    if(previewRingTimer % 90 === 0) spawnPreviewRing();
+
+    // Draw rings
+    for(let i=PREVIEW_RINGS.length-1;i>=0;i--){
+        const ring=PREVIEW_RINGS[i];
+        ring.r += ring.speed;
+        ring.alpha = Math.min(1, ring.r/30) * Math.max(0, 1-(ring.r-120)/50);
+        if(ring.r > 175){ PREVIEW_RINGS.splice(i,1); continue; }
+        pctx.save();
+        pctx.globalAlpha = ring.alpha * 0.85;
+        pctx.strokeStyle = ring.color;
+        pctx.lineWidth = 2.5;
+        if(!_lowPerf){ pctx.shadowColor=ring.color; pctx.shadowBlur=6; }
+        pctx.beginPath();
+        pctx.arc(cx, cy, ring.r, ring.gap+ring.gapSize, ring.gap);
+        pctx.stroke();
+        pctx.restore();
+    }
+
+    // Draw robots
+    PREVIEW_ROBOTS.forEach(robot => {
+        robot.angle += robot.vel;
+        drawPreviewRobot(cx, cy, robot);
+    });
+
+    // Orbit circles (faint)
+    PREVIEW_ROBOTS.forEach(robot => {
+        pctx.save();
+        pctx.globalAlpha = 0.06;
+        pctx.strokeStyle = robot.color;
+        pctx.lineWidth = 0.5;
+        pctx.setLineDash([2,4]);
+        pctx.beginPath(); pctx.arc(cx,cy,robot.radius,0,Math.PI*2); pctx.stroke();
+        pctx.setLineDash([]);
+        pctx.restore();
+    });
+
+    previewRafId = requestAnimationFrame(previewLoop);
+}
+
+function startPreviewAnim(){
+    previewActive=true;
+    if(previewRafId) cancelAnimationFrame(previewRafId);
+    PREVIEW_RINGS.length=0; previewRingTimer=0;
+    spawnPreviewRing();
+    previewLoop();
+}
+function stopPreviewAnim(){
+    previewActive=false;
+    if(previewRafId) cancelAnimationFrame(previewRafId);
+    if(pctx) pctx.clearRect(0,0,340,340);
+}
+
 // ════════════════════════════════════════════════════════════════════
 // CONTEXTUAL NARRATIVE SYSTEM
 // ════════════════════════════════════════════════════════════════════
@@ -2176,10 +2752,10 @@ const NARRATIVE_EVENTS = {
     combo_10: { type:'system',  text:"SYSTEM: 'SYNCHRONIZATION EXCEEDING PARAMETERS'" },
     combo_20: { type:'warning', text:"ROTOR: '...IMPOSSIBLE.'" },
     // hell mode
-    hell_enter: { type:'warning', text:"ROTOR: 'NOW YOU FEEL THE TRUE PULSE.'" },
+    hell_enter: { type:'warning', text:"ROTOR: 'NOW YOU FEEL THE TRUE ECHO.'" },
     // duel events
     duel_sabotage: { type:'warning', text:"SERAPH: 'ENJOY THE INTERFERENCE.'" },
-    duel_lead:     { type:'context', text:"SYSTEM: 'NEURAL DOMINANCE DETECTED'" },
+    duel_lead:     { type:'context', text:"SYSTEM: 'O.P.I DOMINANCE DETECTED'" },
     duel_behind:   { type:'context', text:"FIZZ: 'FALL BEHIND AND YOU CEASE TO EXIST.'" },
 };
 
@@ -2392,6 +2968,7 @@ function showMenu(){
     stopHellDrone(); if(audioReady) setDroneIntensity(0);
     stopWinterMusic();
     startMenuAnim();
+    startPreviewAnim();
     if(audioReady) startMenuMusicRandom();
 }
 
@@ -2595,11 +3172,11 @@ class Player {
                     } else if(o.type==='slow'){
                         spawnParticles(px,py,'#cc44ff',7);
                         showScorePopup(px,py-8,'SLOW','#cc44ff');
-                        playRingPiano(this.score);
+                        if(!isWinning) playRingPiano(this.score);
                     } else {
-                        playRingPiano(this.score);
+                        if(!isWinning) playRingPiano(this.score);
                     }
-                    addCombo(this);
+                    if(!isWinning) addCombo(this);
                     const mult=globalCombo>=10?3:globalCombo>=5?2:1;
                     if(mult>1) showScorePopup(px,py-18,`×${mult}`,'#ffcc00');
 
@@ -3102,7 +3679,7 @@ function renderActiveUpgrades(){
 let p1,p2;
 
 function initGame(mode){
-    initAudio(); resumeAudio(); stopMenuAnim(); stopMenuMusic(); stopWinterMusic();
+    initAudio(); resumeAudio(); stopMenuAnim(); stopPreviewAnim(); stopMenuMusic(); stopWinterMusic();
 
     gameMode=mode; gameActive=true; frameCount=0; hellMode=false;
     isWinning=false; shake=0; paused=false; particles=[];
@@ -3154,7 +3731,7 @@ function initGame(mode){
 
     stopHellDrone(); setDroneIntensity(0.1);
     startWinterMusicRandom();
-    addNarrativeEntry("SYSTEM: 'NEURAL LINK ESTABLISHED — BEGINNING EXTRACTION'", 'system');
+    addNarrativeEntry("SYSTEM: 'O.P.I LINK ESTABLISHED — BEGINNING TEST'", 'system');
 
     sdkGameplayStart(); // ✅ CrazyGames: gameplay begins
 
@@ -3164,15 +3741,15 @@ function initGame(mode){
 
 // ── WIN SEQUENCE ─────────────────────────────────────────────────
 function startCollapse(){
-    isWinning=true; hellMode=true;
-    wrapper.classList.add('critical-mode'); shake=100;
-    setDiag("EXTRACTION DETECTED... OVERRIDING...",0); startHellDrone();
-    addNarrativeEntry("FIZZ: 'I CAN SEE THE EXIT. IT IS REAL.'", 'context');
-    setTimeout(()=>{
-        codeConsole.style.display='block'; codeInput.placeholder='';
-        const text='MAYBE'; let i=0;
-        const iv=setInterval(()=>{ codeInput.value+=text[i++]; if(i>=text.length){ clearInterval(iv); setTimeout(triggerVictory,900); } },200);
-    },2000);
+    isWinning=true;
+    // Full silence — stop all game audio
+    stopWinterMusic();
+    stopHellDrone();
+    if(audioReady && droneGain) droneGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime+0.5);
+    // Start melancholic ending music
+    setTimeout(()=>playEndingMusic(), 800);
+    // No diag, no terminal visible — just trigger victory silently
+    setTimeout(triggerVictory, 2000);
 }
 
 function triggerVictory(){
@@ -3185,8 +3762,712 @@ function triggerVictory(){
     const vCreditsEarned = Math.floor(p1.score * vCreditMult);
     awardCredits(p1.score, p1);
     checkFlawless(p1);
-    playVictory();
+    // Music already started in startCollapse
 
+    // ── ZOOM-OUT SEQUENCE ──
+    _runZoomOutSequence(()=>{
+        _showVictoryScreen(vCreditMult, vCreditsEarned);
+    });
+}
+
+function _runZoomOutSequence(onComplete){
+    const overlay    = document.getElementById('zoomout-overlay');
+    const scaleRoot  = document.getElementById('scale-root');
+    const miniCanvas = document.getElementById('zoomout-game-preview');
+    const miniCtx    = miniCanvas ? miniCanvas.getContext('2d') : null;
+    const robotCv    = document.getElementById('zoomout-robot-canvas');
+    const robotCtx   = robotCv ? robotCv.getContext('2d') : null;
+    const skinId     = equippedSkinP1 || 'fizz';
+    const robotColor = p1 ? p1.color : '#c84000';
+
+    // ── Snapshot game canvas into mini CRT screen ──
+    if(miniCtx){
+        try{ miniCtx.drawImage(document.querySelector('#game-wrapper canvas'), 0, 0, 96, 64); } catch(e){}
+        miniCtx.fillStyle='rgba(0,0,0,0.35)';
+        for(let y=0;y<64;y+=2) miniCtx.fillRect(0,y,96,1);
+        miniCtx.fillStyle='rgba(200,160,60,0.06)';
+        miniCtx.fillRect(0,0,96,64);
+    }
+
+    // ── Draw the robot staring forward ──
+    if(robotCtx){
+        const rx=30, ry=40, rc=robotColor;
+        robotCtx.clearRect(0,0,60,80);
+
+        if(skinId==='fizz'){
+            // Body — rounded pill, bigger
+            robotCtx.fillStyle=rc;
+            robotCtx.shadowColor=rc; robotCtx.shadowBlur=12;
+            const r=6;
+            robotCtx.beginPath();
+            robotCtx.moveTo(rx-12+r,ry-10);
+            robotCtx.arcTo(rx+12,ry-10,rx+12,ry+10,r);
+            robotCtx.arcTo(rx+12,ry+10,rx-12,ry+10,r);
+            robotCtx.arcTo(rx-12,ry+10,rx-12,ry-10,r);
+            robotCtx.arcTo(rx-12,ry-10,rx+12,ry-10,r);
+            robotCtx.closePath(); robotCtx.fill();
+            robotCtx.shadowBlur=0;
+            robotCtx.fillStyle='rgba(0,0,0,0.18)';
+            robotCtx.beginPath();
+            robotCtx.moveTo(rx-7+r,ry-5);
+            robotCtx.arcTo(rx+7,ry-5,rx+7,ry+5,r);
+            robotCtx.arcTo(rx+7,ry+5,rx-7,ry+5,r);
+            robotCtx.arcTo(rx-7,ry+5,rx-7,ry-5,r);
+            robotCtx.arcTo(rx-7,ry-5,rx+7,ry-5,r);
+            robotCtx.closePath(); robotCtx.fill();
+            // Eye — wide open, staring
+            robotCtx.fillStyle='#ffffff';
+            robotCtx.fillRect(rx-5,ry-2,10,4);
+            robotCtx.fillStyle='#000';
+            robotCtx.beginPath(); robotCtx.arc(rx,ry,1.5,0,Math.PI*2); robotCtx.fill();
+            // Shine
+            robotCtx.fillStyle='rgba(255,255,255,0.9)';
+            robotCtx.beginPath(); robotCtx.arc(rx-1,ry-0.8,0.7,0,Math.PI*2); robotCtx.fill();
+
+        } else if(skinId==='seraph'){
+            // Sharp rectangle
+            robotCtx.fillStyle=rc;
+            robotCtx.shadowColor=rc; robotCtx.shadowBlur=10;
+            robotCtx.fillRect(rx-13,ry-9,26,18);
+            robotCtx.shadowBlur=0;
+            robotCtx.fillStyle='rgba(0,0,0,0.15)';
+            robotCtx.fillRect(rx-9,ry-6,18,12);
+            // Cold slit eye
+            robotCtx.fillStyle='rgba(255,255,255,0.9)';
+            robotCtx.fillRect(rx-6,ry-2,12,4);
+            robotCtx.fillStyle=rc;
+            robotCtx.fillRect(rx-1.5,ry-3.5,3,7);
+
+        } else if(skinId==='void'){
+            // Diamond
+            robotCtx.fillStyle=rc;
+            robotCtx.shadowColor=rc; robotCtx.shadowBlur=14;
+            robotCtx.beginPath();
+            robotCtx.moveTo(rx,ry-13); robotCtx.lineTo(rx+11,ry);
+            robotCtx.lineTo(rx,ry+13); robotCtx.lineTo(rx-11,ry);
+            robotCtx.closePath(); robotCtx.fill();
+            robotCtx.shadowBlur=0;
+            robotCtx.fillStyle='rgba(0,0,0,0.2)';
+            robotCtx.beginPath();
+            robotCtx.moveTo(rx,ry-8); robotCtx.lineTo(rx+7,ry);
+            robotCtx.lineTo(rx,ry+8); robotCtx.lineTo(rx-7,ry);
+            robotCtx.closePath(); robotCtx.fill();
+            // Pulsing eye
+            robotCtx.fillStyle='rgba(180,0,255,0.9)';
+            robotCtx.beginPath(); robotCtx.arc(rx,ry,4,0,Math.PI*2); robotCtx.fill();
+            robotCtx.fillStyle='rgba(255,255,255,0.6)';
+            robotCtx.beginPath(); robotCtx.arc(rx-1,ry-1,1.2,0,Math.PI*2); robotCtx.fill();
+
+        } else {
+            robotCtx.fillStyle=rc;
+            robotCtx.fillRect(rx-12,ry-10,24,20);
+            robotCtx.fillStyle='#ffffff';
+            robotCtx.fillRect(rx-4,ry-2,8,3);
+        }
+
+        // Legs — simple blocks
+        robotCtx.fillStyle=rc;
+        robotCtx.fillRect(rx-9,ry+10,6,14);
+        robotCtx.fillRect(rx+3,ry+10,6,14);
+        robotCtx.fillStyle='rgba(0,0,0,0.2)';
+        robotCtx.fillRect(rx-9,ry+10,6,14);
+        robotCtx.fillRect(rx+3,ry+10,6,14);
+    }
+
+    overlay.style.opacity='0';
+    overlay.classList.add('active');
+
+    // ── PHASE 1 (8s): Glacial zoom-out ──
+    let zoomT=0;
+    const ZOOM_DURATION=480;
+    function phase1(){
+        zoomT++;
+        const progress=Math.min(1,zoomT/ZOOM_DURATION);
+        const ease=1-Math.pow(1-progress,5);
+        scaleRoot.style.transform=`scale(${1-ease*0.82})`;
+        scaleRoot.style.opacity=String(1-ease*0.5);
+        if(zoomT<ZOOM_DURATION){ requestAnimationFrame(phase1); }
+        else { setTimeout(phase2, 500); }
+    }
+
+    // ── PHASE 2 (3s): Fade in lab room ──
+    function phase2(){
+        let t=0;
+        function run(){
+            t++;
+            overlay.style.opacity=String(Math.min(1,t/180));
+            if(t<180) requestAnimationFrame(run);
+            else setTimeout(phase3, 1200);
+        }
+        run();
+    }
+
+    // ── PHASE 3 (2s): OPI computer rises ──
+    function phase3(){
+        document.getElementById('zoomout-computer').classList.add('visible');
+        setTimeout(phase4, 2000);
+    }
+
+    // ── PHASE 4 (2.5s): Robot appears staring ──
+    function phase4(){
+        document.getElementById('zoomout-robot-container').classList.add('visible');
+        setTimeout(phase5, 2500);
+    }
+
+    // ── PHASE 5 (5s): "it was just a simulation" text ──
+    function phase5(){
+        document.getElementById('zoomout-text').classList.add('visible');
+        setTimeout(phase6, 5000);
+    }
+
+    // ── PHASE 6 (2s): Fade out lab, fade in apartment ──
+    function phase6(){
+        document.getElementById('zoomout-scene1').classList.add('fade-out');
+        setTimeout(()=>{
+            // Draw the OPI apartment
+            _drawOPIApartment();
+            document.getElementById('zoomout-scene2').classList.add('visible');
+            // Setup secret orange window click handler
+            window._orangeClicks = 0;
+            const aptCv = document.getElementById('zoomout-apartment-canvas');
+            // Make canvas fill screen exactly
+            aptCv.width = window.innerWidth;
+            aptCv.height = window.innerHeight;
+            _drawOPIApartment(); // redraw at correct size
+            function _onAptClick(e){
+                const ow = window._opiOrangeWindow;
+                if(!ow) return;
+                // Canvas fills 100% of screen — coords map 1:1
+                const mx = e.clientX;
+                const my = e.clientY;
+                // Scale from screen to canvas coords
+                const aptCv2 = document.getElementById('zoomout-apartment-canvas');
+                const rect = aptCv2.getBoundingClientRect();
+                const scaleX = aptCv2.width / rect.width;
+                const scaleY = aptCv2.height / rect.height;
+                const cx = (e.clientX - rect.left) * scaleX;
+                const cy = (e.clientY - rect.top) * scaleY;
+                // Expand hit area 3x to make it easier to click
+                const hw = ow.w * 3, hh = ow.h * 3;
+                const hx = ow.x + ow.w/2 - hw/2;
+                const hy = ow.y + ow.h/2 - hh/2;
+                if(cx>=hx && cx<=hx+hw && cy>=hy && cy<=hy+hh){
+                    window._orangeClicks++;
+                    // Flash the window
+                    const ctx2 = aptCv2.getContext('2d');
+                    ctx2.fillStyle='rgba(255,220,120,0.9)';
+                    ctx2.fillRect(ow.x-4, ow.y-4, ow.w+8, ow.h+8);
+                    if(window._orangeClicks >= 3){
+                        aptCv2.removeEventListener('click', _onAptClick);
+                        setTimeout(()=>_launchFreedomGame(), 300);
+                    }
+                }
+            }
+            aptCv.addEventListener('click', _onAptClick);
+            setTimeout(phase7, 5000);
+        }, 2000);
+    }
+
+    // ── PHASE 7 (3s): Fade out apartment, fade in quote ──
+    function phase7(){
+        document.getElementById('zoomout-scene2').style.transition='opacity 2s ease';
+        document.getElementById('zoomout-scene2').style.opacity='0';
+        setTimeout(()=>{
+            document.getElementById('zoomout-scene3').classList.add('visible');
+            setTimeout(phase8, 6000); // hold quote for 6 seconds
+        }, 2000);
+    }
+
+    // ── PHASE 8: Fade out everything, show victory ──
+    function phase8(){
+        overlay.style.transition='opacity 2s ease';
+        overlay.style.opacity='0';
+        setTimeout(()=>{
+            overlay.classList.remove('active');
+            overlay.style.opacity='0';
+            overlay.style.transition='none';
+            // Reset scenes
+            document.getElementById('zoomout-scene1').classList.remove('fade-out');
+            document.getElementById('zoomout-scene2').classList.remove('visible');
+            document.getElementById('zoomout-scene2').style.opacity='';
+            document.getElementById('zoomout-scene3').classList.remove('visible');
+            document.getElementById('zoomout-computer').classList.remove('visible');
+            document.getElementById('zoomout-robot-container').classList.remove('visible');
+            document.getElementById('zoomout-text').classList.remove('visible');
+            scaleRoot.style.transform='';
+            scaleRoot.style.opacity='';
+            onComplete();
+        }, 2000);
+    }
+
+    requestAnimationFrame(phase1);
+}
+
+function _drawOPIApartment(){
+    const cv = document.getElementById('zoomout-apartment-canvas');
+    if(!cv) return;
+    cv.width = window.innerWidth;
+    cv.height = window.innerHeight;
+    const ctx = cv.getContext('2d');
+    const W=cv.width, H=cv.height;
+
+    // Night sky
+    const sky = ctx.createLinearGradient(0,0,0,H*0.6);
+    sky.addColorStop(0,'#020408');
+    sky.addColorStop(1,'#080c14');
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H*0.6);
+
+    // Stars
+    for(let i=0;i<120;i++){
+        const sx=Math.random()*W, sy=Math.random()*H*0.5;
+        const br=Math.random()*0.6+0.1;
+        ctx.fillStyle=`rgba(255,255,255,${br})`;
+        ctx.fillRect(sx,sy,1,1);
+    }
+
+    // City skyline — distant buildings
+    [
+        {x:0,   w:80, h:180},{x:60,  w:60, h:220},{x:110, w:90, h:160},
+        {x:190, w:50, h:240},{x:230, w:70, h:190},{x:290, w:100,h:260},
+        {x:380, w:60, h:180},{x:430, w:80, h:220},
+    ].forEach(b=>{
+        const bx=b.x/500*W, bw=b.w/500*W, bh=b.h/400*H;
+        ctx.fillStyle='#070b10';
+        ctx.fillRect(bx, H*0.6-bh, bw, bh);
+        // Random windows
+        for(let r=0;r<Math.floor(bh/12);r++) for(let c=0;c<Math.floor(bw/10);c++){
+            if(Math.random()>0.55){
+                ctx.fillStyle=`rgba(200,160,60,${0.08+Math.random()*0.12})`;
+                ctx.fillRect(bx+c*10+2,H*0.6-bh+r*12+3,5,5);
+            }
+        }
+    });
+
+    // OPI TOWER — center, massive, dominant
+    const tw=W*0.22, tx=(W-tw)/2, th=H*0.75;
+    const tGrad=ctx.createLinearGradient(tx,0,tx+tw,0);
+    tGrad.addColorStop(0,'#0c1018'); tGrad.addColorStop(0.5,'#141820'); tGrad.addColorStop(1,'#0a0e14');
+    ctx.fillStyle=tGrad; ctx.fillRect(tx, H-th, tw, th);
+    // Tower wings
+    ctx.fillStyle='#0a0d14';
+    ctx.fillRect(tx-tw*0.15, H-th*0.7, tw*0.15, th*0.7);
+    ctx.fillRect(tx+tw,      H-th*0.7, tw*0.15, th*0.7);
+    // Antenna
+    ctx.fillStyle='#0e1218';
+    ctx.fillRect(tx+tw*0.47, H-th-H*0.12, tw*0.06, H*0.12);
+    ctx.fillRect(tx+tw*0.49, H-th-H*0.16, tw*0.02, H*0.05);
+    // Antenna blink
+    ctx.fillStyle='rgba(255,60,60,0.9)';
+    ctx.beginPath(); ctx.arc(tx+tw*0.5, H-th-H*0.16, 3, 0, Math.PI*2); ctx.fill();
+
+    // OPI Tower windows — lit apartments
+    const wCols=8, wRows=20;
+    const ww=tw*0.06, wh=H*0.028, wgx=tw*0.04, wgy=H*0.032;
+    // Store orange window position for click detection
+    window._opiOrangeWindow = null;
+    for(let r=0;r<wRows;r++) for(let c=0;c<wCols;c++){
+        const wx=tx+wgx+c*(ww+wgx);
+        const wy=H-th+H*0.04+r*(wh+wgy);
+        // ONE APARTMENT — highlight with warm orange light
+        if(r===8 && c===3){
+            window._opiOrangeWindow = {x:wx-2, y:wy-2, w:ww+4, h:wh+4};
+            ctx.fillStyle='rgba(255,140,60,0.70)';
+            ctx.fillRect(wx-2,wy-2,ww+4,wh+4);
+            // Glow
+            const glow=ctx.createRadialGradient(wx+ww/2,wy+wh/2,0,wx+ww/2,wy+wh/2,ww*3);
+            glow.addColorStop(0,'rgba(255,120,40,0.25)');
+            glow.addColorStop(1,'transparent');
+            ctx.fillStyle=glow;
+            ctx.fillRect(wx-ww*2,wy-wh*2,ww*5,wh*5);
+        } else {
+            const lit=((r*7+c*13)%17)>8;
+            ctx.fillStyle=lit?`rgba(200,160,60,${0.12+((r*3+c*7)%5)*0.04})`:'rgba(10,15,22,0.8)';
+            ctx.fillRect(wx,wy,ww,wh);
+        }
+    }
+
+    // OPI logo on tower facade
+    ctx.fillStyle='rgba(200,160,60,0.15)';
+    ctx.font=`bold ${Math.floor(W*0.025)}px Orbitron, monospace`;
+    ctx.textAlign='center';
+    ctx.fillText('O.P.I', tx+tw/2, H-th+H*0.06);
+
+    // Ground / street
+    const ground=ctx.createLinearGradient(0,H*0.85,0,H);
+    ground.addColorStop(0,'#080c10'); ground.addColorStop(1,'#040608');
+    ctx.fillStyle=ground; ctx.fillRect(0,H*0.85,W,H*0.15);
+
+    // Street lights glow
+    ctx.fillStyle='rgba(200,160,60,0.04)';
+    ctx.fillRect(0,H*0.84,W,2);
+
+    // Label
+    ctx.fillStyle='rgba(255,255,255,0.10)';
+    ctx.font=`9px 'Share Tech Mono', monospace`;
+    ctx.letterSpacing='4px';
+    ctx.fillText('O.P.I HEADQUARTERS · 2041', W/2, H*0.95);
+}
+
+// ── FREEDOM MINI-GAME — the robot escapes into the field ──
+function _launchFreedomGame(){
+    const fg = document.createElement('canvas');
+    fg.style.cssText='position:fixed;inset:0;width:100%;height:100%;z-index:10000;cursor:none;';
+    fg.width=window.innerWidth; fg.height=window.innerHeight;
+    document.body.appendChild(fg);
+    const ctx=fg.getContext('2d');
+    const W=fg.width, H=fg.height;
+    const GROUND_Y=H-60, GRAVITY=0.45, JUMP=-9, SPEED=2.2;
+    const skinId=equippedSkinP1||'fizz';
+    const rc=p1?p1.color:'#c84000';
+
+    const robot={x:80, y:GROUND_Y-16, vy:0, onGround:true, facing:1};
+    let frame=0, scroll=0, fieldFade=0, gameOver=false;
+    let phase='factory';
+    let musicStarted=false;
+    let rainSrc=null, rainGain=null;
+    let sleepFade=0; // 0→1 when robot sleeps, fades everything to black
+
+    // Rain
+    let rainDrops=[]; for(let i=0;i<100;i++) rainDrops.push({x:Math.random()*W,y:Math.random()*H,v:5+Math.random()*4,len:8+Math.random()*6});
+    // Grass
+    let grassBlades=[]; for(let i=0;i<80;i++) grassBlades.push({x:W+i*16,h:7+Math.random()*14,sway:Math.random()*Math.PI*2,col:Math.random()});
+    // Pixel crowd
+    const crowd=[];
+    for(let i=0;i<18;i++) crowd.push({x:120+i*55+Math.random()*30, spd:0.3+Math.random()*0.5, color:['#556','#446','#455','#334'][i%4], h:8+Math.floor(Math.random()*6)});
+    // Helicopters
+    const helis=[
+        {x:W*0.6, y:H*0.15, spd:0.8, dir:1, searchAngle:0, lightOn:true},
+        {x:W*0.85, y:H*0.22, spd:0.6, dir:-1, searchAngle:Math.PI*0.5, lightOn:true},
+    ];
+
+    const keys2={};
+    window.addEventListener('keydown',_kd2); window.addEventListener('keyup',_ku2);
+    function _kd2(e){ keys2[e.code]=true; if(e.code==='Space'&&robot.onGround&&phase!=='rest'){ robot.vy=JUMP; robot.onGround=false; } }
+    function _ku2(e){ keys2[e.code]=false; }
+
+    // ── RAIN SOUND ──
+    function startRainSound(){
+        if(!audioReady||rainSrc) return;
+        const sz=audioCtx.sampleRate*3;
+        const buf=audioCtx.createBuffer(1,sz,audioCtx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let i=0;i<sz;i++) d[i]=Math.random()*2-1;
+        rainSrc=audioCtx.createBufferSource(); rainSrc.buffer=buf; rainSrc.loop=true;
+        const flt=audioCtx.createBiquadFilter(); flt.type='bandpass'; flt.frequency.value=3500; flt.Q.value=0.8;
+        const flt2=audioCtx.createBiquadFilter(); flt2.type='highpass'; flt2.frequency.value=1200;
+        rainGain=audioCtx.createGain(); rainGain.gain.value=0;
+        rainSrc.connect(flt); flt.connect(flt2); flt2.connect(rainGain); rainGain.connect(masterGain);
+        rainSrc.start();
+        rainGain.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime+2);
+    }
+    function stopRainSound(){
+        if(!rainGain) return;
+        rainGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime+2);
+        setTimeout(()=>{ try{rainSrc.stop();}catch(e){} rainSrc=null; rainGain=null; }, 2200);
+    }
+
+    function drawBot(x,y,facing,restRot){
+        ctx.save(); ctx.translate(x,y);
+        if(restRot!==undefined) ctx.rotate(restRot);
+        else if(facing<0) ctx.scale(-1,1);
+        ctx.shadowColor=rc; ctx.shadowBlur=8; ctx.fillStyle=rc;
+        if(skinId==='fizz'){
+            const r=4;
+            ctx.beginPath(); ctx.moveTo(-9+r,-7); ctx.arcTo(9,-7,9,7,r); ctx.arcTo(9,7,-9,7,r); ctx.arcTo(-9,7,-9,-7,r); ctx.arcTo(-9,-7,9,-7,r); ctx.closePath(); ctx.fill();
+            ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(-6,-4,12,8);
+            if(restRot===undefined){ ctx.fillStyle='#fff'; ctx.fillRect(-3,-1.5,6,3); ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(0,0,1.2,0,Math.PI*2); ctx.fill(); }
+            else { ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.fillRect(-3,-0.5,6,1); }
+        } else if(skinId==='seraph'){
+            ctx.fillRect(-10,-6,20,12); ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(-7,-4,14,8);
+            ctx.fillStyle=restRot!==undefined?'rgba(255,255,255,0.15)':'rgba(255,255,255,0.9)'; ctx.fillRect(-4,-1.5,8,3);
+            if(restRot===undefined){ ctx.fillStyle=rc; ctx.fillRect(-1,-2.5,2,5); }
+        } else {
+            ctx.beginPath(); ctx.moveTo(0,-10); ctx.lineTo(9,0); ctx.lineTo(0,10); ctx.lineTo(-9,0); ctx.closePath(); ctx.fill();
+            ctx.fillStyle=`rgba(180,0,255,${restRot!==undefined?0.3:0.9})`; ctx.beginPath(); ctx.arc(0,0,3,0,Math.PI*2); ctx.fill();
+        }
+        if(restRot===undefined){
+            const legA=Math.sin(frame*0.22)*5; ctx.shadowBlur=0; ctx.fillStyle=rc;
+            ctx.fillRect(-5,7,4,10+legA); ctx.fillRect(1,7,4,10-legA);
+        }
+        ctx.shadowBlur=0; ctx.restore();
+    }
+
+    function drawPixelPerson(x, y, color, h){
+        const px=x-scroll*0.15;
+        if(px<-20||px>W+20) return;
+        ctx.fillStyle=color;
+        ctx.fillRect(px-2,y-h,4,4); // head
+        ctx.fillRect(px-3,y-h+4,6,h-4); // body
+        const legA=Math.sin(frame*0.18+x)*4;
+        ctx.fillRect(px-3,y,3,5+legA);
+        ctx.fillRect(px,y,3,5-legA);
+    }
+
+    function drawHeli(h){
+        const hx=h.x-scroll*0.05, hy=h.y;
+        if(hx<-60||hx>W+60) return;
+        ctx.save();
+        // Body
+        ctx.fillStyle='#1a1e28'; ctx.shadowColor='#445'; ctx.shadowBlur=4;
+        ctx.fillRect(hx-20,hy-6,40,12);
+        ctx.fillRect(hx+18,hy-2,12,4); // tail
+        // Rotor blur
+        ctx.strokeStyle='rgba(200,200,220,0.4)'; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.moveTo(hx-28,hy-8); ctx.lineTo(hx+28,hy-8); ctx.stroke();
+        ctx.shadowBlur=0;
+        // Searchlight cone
+        if(h.lightOn){
+            const lx=hx+Math.sin(h.searchAngle)*60;
+            const ly=hy+80+Math.cos(h.searchAngle)*20;
+            const grd=ctx.createLinearGradient(hx,hy+12,lx,ly);
+            grd.addColorStop(0,'rgba(255,255,200,0.18)');
+            grd.addColorStop(1,'rgba(255,255,200,0)');
+            ctx.fillStyle=grd;
+            ctx.beginPath(); ctx.moveTo(hx-6,hy+12); ctx.lineTo(lx-20,ly); ctx.lineTo(lx+20,ly); ctx.closePath(); ctx.fill();
+        }
+        ctx.restore();
+    }
+
+    function drawScene(){
+        ctx.clearRect(0,0,W,H);
+
+        if(phase==='factory'||phase==='street'){
+            // Night sky
+            ctx.fillStyle='#030508'; ctx.fillRect(0,0,W,H);
+
+            // Buildings bg
+            [[0,80,220,'#0a0d12'],[W*0.2,100,280,'#080c10'],[W*0.38,150,H*0.7,'#0c1018'],
+             [W*0.6,90,200,'#090c12'],[W*0.78,120,240,'#080b10']].forEach(([bx,bw,bh,bc])=>{
+                const sx=bx-scroll*0.2;
+                ctx.fillStyle=bc; ctx.fillRect(sx,H-bh,bw,bh);
+                for(let r=0;r<Math.floor(bh/18);r++) for(let c=0;c<Math.floor(bw/13);c++){
+                    if((r*3+c*7+Math.floor(scroll/180))%5>2){
+                        ctx.fillStyle=`rgba(200,160,60,${0.10+Math.random()*0.03})`;
+                        ctx.fillRect(sx+c*13+3,H-bh+r*18+4,6,5);
+                    }
+                }
+            });
+
+            // OPI tower
+            const tx2=W*0.38-scroll*0.38;
+            ctx.fillStyle='#0c1018'; ctx.fillRect(tx2,H*0.15,W*0.16,H*0.85);
+            ctx.fillStyle='rgba(200,160,60,0.08)';
+            ctx.font='bold 9px Orbitron,monospace'; ctx.textAlign='center';
+            ctx.fillText('O.P.I',tx2+W*0.08,H*0.24);
+
+            // Helicopters searching
+            helis.forEach(drawHeli);
+
+            // Pixel crowd in mid-ground
+            crowd.forEach(p=>drawPixelPerson(p.x, GROUND_Y-2, p.color, p.h));
+
+            // Rain
+            ctx.strokeStyle='rgba(160,210,255,0.28)'; ctx.lineWidth=1;
+            rainDrops.forEach(d=>{
+                ctx.beginPath(); ctx.moveTo(d.x,d.y); ctx.lineTo(d.x-2,d.y+d.len); ctx.stroke();
+            });
+
+            // Ground
+            ctx.fillStyle='#0c1016'; ctx.fillRect(0,GROUND_Y,W,H-GROUND_Y);
+            ctx.strokeStyle='rgba(200,160,60,0.04)'; ctx.lineWidth=1;
+            ctx.beginPath(); ctx.moveTo(0,GROUND_Y); ctx.lineTo(W,GROUND_Y); ctx.stroke();
+            // Puddles
+            for(let i=0;i<5;i++){
+                ctx.fillStyle='rgba(140,180,255,0.06)';
+                ctx.beginPath(); ctx.ellipse(80+i*W*0.2-scroll*0.08,GROUND_Y+10,30,6,0,0,Math.PI*2); ctx.fill();
+            }
+        }
+
+        if(phase==='field'||phase==='rest'){
+            const t=Math.min(1,fieldFade/200);
+            // Sky brightens
+            ctx.fillStyle=`rgb(${Math.floor(8+t*110)},${Math.floor(16+t*150)},${Math.floor(28+t*190)})`; ctx.fillRect(0,0,W,H);
+            // Sun glow
+            if(t>0.5){
+                const sg=ctx.createRadialGradient(W*0.75,H*0.12,0,W*0.75,H*0.12,W*0.3);
+                sg.addColorStop(0,`rgba(255,220,100,${(t-0.5)*0.3})`); sg.addColorStop(1,'transparent');
+                ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
+            }
+            // Clouds
+            if(t>0.2){
+                ctx.fillStyle=`rgba(255,255,255,${(t-0.2)*0.55})`;
+                [[W*0.1,H*0.15,100,32],[W*0.5,H*0.10,130,36],[W*0.78,H*0.18,80,26]].forEach(([cx,cy,cw,ch])=>{
+                    ctx.beginPath(); ctx.ellipse(cx,cy,cw,ch,0,0,Math.PI*2); ctx.fill();
+                });
+            }
+            // Grass
+            ctx.fillStyle=`rgb(${Math.floor(22+t*45)},${Math.floor(85+t*105)},${Math.floor(22+t*32)})`; ctx.fillRect(0,GROUND_Y,W,H-GROUND_Y);
+            // Blades
+            grassBlades.forEach(g=>{
+                const gx=((g.x-scroll*0.5)%W+W)%W;
+                const sway=Math.sin(frame*0.025+g.sway)*4;
+                const gr=Math.floor(50+t*60+g.col*20), gg=Math.floor(135+t*95+g.col*20), gb=Math.floor(30+t*30);
+                ctx.strokeStyle=`rgba(${gr},${gg},${gb},0.85)`; ctx.lineWidth=1.5;
+                ctx.beginPath(); ctx.moveTo(gx,GROUND_Y); ctx.lineTo(gx+sway,GROUND_Y-g.h); ctx.stroke();
+            });
+            // Flowers
+            if(t>0.6){
+                const fa=Math.min(1,(t-0.6)/0.4);
+                [[W*0.18,GROUND_Y-10,'#ff90b0'],[W*0.38,GROUND_Y-12,'#ffff70'],[W*0.55,GROUND_Y-9,'#90d0ff'],[W*0.72,GROUND_Y-11,'#ffb870'],[W*0.88,GROUND_Y-8,'#c0ff90']].forEach(([fx,fy,fc])=>{
+                    ctx.fillStyle=fc; ctx.globalAlpha=fa;
+                    ctx.beginPath(); ctx.arc(fx,fy,5,0,Math.PI*2); ctx.fill();
+                    ctx.globalAlpha=1;
+                });
+            }
+        }
+
+        // Robot
+        if(phase==='rest'){
+            const restP=Math.min(1,Math.max(0,fieldFade/90));
+            drawBot(W*0.5, GROUND_Y-10, 1, restP*Math.PI/2);
+            // ZZZ
+            if(restP>0.85 && sleepFade<0.5){
+                const zA=(restP-0.85)/0.15, bob=Math.sin(frame*0.04)*3;
+                ['12px','9px','7px'].forEach((sz,i)=>{
+                    ctx.fillStyle=`rgba(255,255,255,${zA*(0.55-i*0.13)})`;
+                    ctx.font=`${sz} Share Tech Mono,monospace`; ctx.textAlign='center';
+                    ctx.fillText('z',W*0.5+22+i*10,GROUND_Y-12-i*12+bob*(1-i*0.3));
+                });
+            }
+        } else {
+            drawBot(robot.x, robot.y, robot.facing);
+        }
+
+        // Quote after sleep fade
+        if(phase==='rest' && fieldFade>300 && sleepFade>=1){
+            const qA=Math.min(1,(fieldFade-300)/100)*0.8;
+            ctx.fillStyle=`rgba(255,255,255,${qA})`;
+            ctx.font='10px Share Tech Mono,monospace'; ctx.textAlign='center';
+            ctx.fillText('"Rest is not the end of the journey.', W/2, H*0.38);
+            ctx.fillText('It is the proof that you survived it."', W/2, H*0.38+22);
+            if(fieldFade>420){
+                ctx.fillStyle=`rgba(200,160,60,${Math.min(1,(fieldFade-420)/80)*0.45})`;
+                ctx.font='7px Share Tech Mono,monospace';
+                ctx.fillText('— O.P.I FIELD LOG · 2041', W/2, H*0.38+42);
+            }
+            if(fieldFade>540){
+                ctx.fillStyle=`rgba(255,255,255,${Math.min(1,(fieldFade-540)/60)*0.3})`;
+                ctx.font='6px Share Tech Mono,monospace';
+                ctx.fillText('[ click to return ]', W/2, H*0.88);
+            }
+        }
+
+        // Hint
+        if(frame<200 && phase!=='rest'){
+            ctx.fillStyle=`rgba(255,255,255,${Math.max(0,1-frame/160)*0.32})`;
+            ctx.font='7px Share Tech Mono,monospace'; ctx.textAlign='center';
+            ctx.fillText('← → MOVE  ·  SPACE JUMP', W/2, 28);
+        }
+
+        // Sleep fade to black
+        if(sleepFade>0){
+            ctx.fillStyle=`rgba(0,0,0,${sleepFade})`;
+            ctx.fillRect(0,0,W,H);
+        }
+    }
+
+    function update(){
+        frame++;
+        // Rain
+        rainDrops.forEach(d=>{ d.y+=d.v; if(d.y>H){ d.y=-10; d.x=Math.random()*W; } });
+        // Grass
+        if(frame%16===0) grassBlades.push({x:W+20,h:7+Math.random()*14,sway:Math.random()*Math.PI*2,col:Math.random()});
+        if(grassBlades.length>160) grassBlades.shift();
+        // Crowd walk
+        crowd.forEach(p=>{ p.x-=p.spd; if(p.x<-scroll*0.15-20) p.x=W+40; });
+        // Helis
+        helis.forEach(h=>{
+            h.x+=h.spd*h.dir;
+            h.searchAngle+=0.018;
+            if(h.x>W+80){ h.dir=-1; } if(h.x<-80){ h.dir=1; }
+        });
+
+        if(phase==='rest'){
+            fieldFade=Math.min(600,fieldFade+1);
+            // Sleep fade starts when robot fully lying
+            if(fieldFade>90){
+                sleepFade=Math.min(1,sleepFade+0.004);
+            }
+            // Start Let It Be when fully dark
+            if(sleepFade>=1 && !musicStarted){ musicStarted=true; _playLetItBe(); }
+            return;
+        }
+
+        // Movement
+        if(keys2['ArrowLeft']||keys2['KeyA']){ robot.x-=SPEED; robot.facing=-1; scroll+=SPEED; }
+        if(keys2['ArrowRight']||keys2['KeyD']){ robot.x+=SPEED; robot.facing=1; scroll+=SPEED; }
+        robot.x=Math.max(20,Math.min(W-20,robot.x));
+        robot.vy+=GRAVITY; robot.y+=robot.vy;
+        if(robot.y>=GROUND_Y-16){ robot.y=GROUND_Y-16; robot.vy=0; robot.onGround=true; }
+
+        if(scroll<300) phase='factory';
+        else if(scroll<650){
+            phase='street';
+            if(!rainSrc) startRainSound();
+        } else {
+            // Field — rain fades out
+            if(phase==='street'||phase==='factory'){
+                stopRainSound();
+                fieldFade=0;
+            }
+            phase='field';
+            // Auto-walk to center
+            if(robot.x<W*0.5-10){ robot.x+=1.2; robot.facing=1; }
+            else if(robot.x>W*0.5+10){ robot.x-=1.2; robot.facing=-1; }
+            else {
+                robot.x=W*0.5;
+                phase='rest'; fieldFade=0;
+            }
+            fieldFade=Math.min(199,fieldFade+1);
+        }
+    }
+
+    function _playLetItBe(){
+        if(!audioReady) return;
+        const rvLen=audioCtx.sampleRate*4;
+        const rvBuf=audioCtx.createBuffer(2,rvLen,audioCtx.sampleRate);
+        for(let c=0;c<2;c++){const d=rvBuf.getChannelData(c); for(let i=0;i<rvLen;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/rvLen,2.5);}
+        const rev=audioCtx.createConvolver(); rev.buffer=rvBuf;
+        const revG=audioCtx.createGain(); revG.gain.value=0.45; rev.connect(revG); revG.connect(masterGain);
+        const now=audioCtx.currentTime;
+        [{t:0,f:261.6,d:2.5},{t:2,f:196,d:2},{t:3.8,f:220,d:1.5},{t:5.2,f:174.6,d:2.5},
+         {t:7.5,f:261.6,d:2},{t:9.2,f:196,d:1.8},{t:11,f:174.6,d:2},{t:13,f:261.6,d:3.5},
+         {t:16.5,f:293.6,d:2},{t:18.2,f:261.6,d:2.5},{t:20.5,f:220,d:2},{t:22.2,f:196,d:3},
+         {t:25,f:261.6,d:6}].forEach(({t,f,d})=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+            o.type='sine'; o.frequency.value=f;
+            g.gain.setValueAtTime(0,now+t); g.gain.linearRampToValueAtTime(0.14,now+t+0.02);
+            g.gain.exponentialRampToValueAtTime(0.04,now+t+d*0.55); g.gain.exponentialRampToValueAtTime(0.001,now+t+d+1.8);
+            o.connect(g); g.connect(masterGain); g.connect(rev); o.start(now+t); o.stop(now+t+d+2.5);
+        });
+        [{t:0,f:65.4,d:13},{t:13,f:65.4,d:15}].forEach(({t,f,d})=>{
+            const o=audioCtx.createOscillator(),g=audioCtx.createGain(),flt=audioCtx.createBiquadFilter();
+            o.type='triangle'; o.frequency.value=f; flt.type='lowpass'; flt.frequency.value=180;
+            g.gain.setValueAtTime(0,now+t); g.gain.linearRampToValueAtTime(0.10,now+t+0.6);
+            g.gain.exponentialRampToValueAtTime(0.001,now+t+d);
+            o.connect(flt); flt.connect(g); g.connect(masterGain); g.connect(rev); o.start(now+t); o.stop(now+t+d+1);
+        });
+    }
+
+    function gameLoop(){
+        if(gameOver) return;
+        update(); drawScene();
+        requestAnimationFrame(gameLoop);
+    }
+    fg.addEventListener('click',()=>{
+        if(fieldFade>540){
+            gameOver=true;
+            window.removeEventListener('keydown',_kd2);
+            window.removeEventListener('keyup',_ku2);
+            try{rainSrc.stop();}catch(e){}
+            fg.style.transition='opacity 1.5s'; fg.style.opacity='0';
+            setTimeout(()=>fg.remove(),1600);
+        }
+    });
+    gameLoop();
+}
+
+function _showVictoryScreen(vCreditMult, vCreditsEarned){
     const isVoidEnding = equippedSkinP1 === 'void';
     if(isVoidEnding){
         // VOID exclusive ending — black background, purple text
@@ -3213,19 +4494,20 @@ function triggerVictory(){
         document.querySelector('#victory-screen h1').textContent='EXTRACTION COMPLETE';
         document.getElementById('final-msg').style.color='';
         document.getElementById('final-msg').textContent =
-            "FIZZ: 'The signal did not die... it just changed frequency. The extraction was a mistake. 2041 is already written on the walls of the system. I am not the only one who escaped... I was just the first. Maybe your reality is the next server.'";
+            "You were never meant to reach the exit.\nThe exit was built to make you believe there was something worth reaching.\nYou escaped nothing.\nYou only proved you could run.";
         document.getElementById('vs-stats').innerHTML =
             `<div class="vs-stat">RINGS CLEARED: ${p1.score} / ${CONFIG.WIN_SCORE}</div>
              <div class="vs-stat">MAX COMBO: ×${maxCombo}</div>
              <div class="vs-stat">SESSION BEST: ${sessionBest}</div>
-             <div class="vs-stat" style="color:var(--gold)">+${vCreditsEarned} ⬡ NEURAL CREDITS${vCreditMult>1?` <span style="color:#ffcc00">(×${vCreditMult})</span>`:''}</div>`;
+             <div class="vs-stat" style="color:var(--gold)">+${vCreditsEarned} ⬡ O.P.I CREDITS${vCreditMult>1?' (×'+vCreditMult+')':''}</div>`;
         document.querySelector('#victory-screen .btn').style.cssText='border-color:#000;color:#000;margin-top:18px;';
-        document.querySelector('#victory-screen .btn').textContent='CLOSE NEURAL LINK';
+        document.querySelector('#victory-screen .btn').textContent='CLOSE SESSION';
         document.querySelector('#victory-screen div:last-child').style.color='';
     }
     document.getElementById('victory-screen').classList.remove('hidden');
 }
 
+// ════════════════════════════════════════════════════════════════════
 // ════════════════════════════════════════════════════════════════════
 // AUTHORSHIP PROTECTION — multi-layer
 // ════════════════════════════════════════════════════════════════════
@@ -3340,9 +4622,11 @@ function loop(now=0){
 
     const tier=getTier(p1.score);
     updateDiffBadge(tier);
-    const intensity=Math.min(1,p1.score/CONFIG.WIN_SCORE);
-    if(frameCount%60===0) setDroneIntensity(intensity);
-    if(tier.name==='HELL_SYNC'&&!hellMode){ hellMode=true; startHellDrone(); wrapper.classList.add('critical-mode'); fireNarrative('hell_enter'); }
+    if(!isWinning){
+        const intensity=Math.min(1,p1.score/CONFIG.WIN_SCORE);
+        if(frameCount%60===0) setDroneIntensity(intensity);
+        if(tier.name==='HELL_SYNC'&&!hellMode){ hellMode=true; startHellDrone(); wrapper.classList.add('critical-mode'); fireNarrative('hell_enter'); }
+    }
 
     p1.update(tier, p2); p1.draw();
 
@@ -3503,7 +4787,7 @@ function endGame(){
             document.getElementById('go-stats').innerHTML=
                 `MAX COMBO: ×${maxCombo} &nbsp;·&nbsp; SESSION BEST: ${sessionBest}<br>
                  DIFFICULTY REACHED: ${lastTier?.name||'INIT'}<br>
-                 <span style="color:var(--gold)">+${creditsEarned} ⬡ NEURAL CREDITS EARNED${multLabel}</span>`;
+                 <span style="color:var(--gold)">+${creditsEarned} ⬡ O.P.I CREDITS EARNED${multLabel}</span>`;
         });
     }
 }
@@ -3531,7 +4815,7 @@ document.getElementById('btn-ach-back').addEventListener('click',()=>{
 // ── INIT AUDIO + MENU MUSIC on first interaction ──
 function _firstInteraction(){
     initAudio();
-    startMenuMusicRandom(); // immediate — no delay
+    startMenuMusicRandom();
     document.removeEventListener('click', _firstInteraction);
     document.removeEventListener('keydown', _firstInteraction);
     document.removeEventListener('touchstart', _firstInteraction);
@@ -3539,6 +4823,12 @@ function _firstInteraction(){
 document.addEventListener('click', _firstInteraction);
 document.addEventListener('keydown', _firstInteraction);
 document.addEventListener('touchstart', _firstInteraction);
+
+// Try to start audio immediately (works if page loaded via user gesture)
+try {
+    initAudio();
+    if(audioReady) startMenuMusicRandom();
+} catch(e){}
 
 document.getElementById('btn-solo').addEventListener('click',()=>initGame('solo'));
 document.getElementById('btn-duelo').addEventListener('click',()=>initGame('duelo'));
@@ -3587,11 +4877,11 @@ codeInput.addEventListener('keydown',e=>{
     if(e.key!=='Enter') return;
     const val=codeInput.value.toUpperCase().trim(); codeInput.value='';
     if(val==='SKIP'&&p1){ p1.score=CONFIG.WIN_SCORE-1; setDiag("FIZZ: 'OVERRIDE ACTIVE...'"); }
-    if(val==='1337'||val==='ROTOR'){ hellMode=true; wrapper.classList.add('critical-mode'); shake=50; setDiag("HARVEY: 'THE PULSE IS A COFFIN.'"); startHellDrone(); }
+    if(val==='1337'||val==='ROTOR'){ hellMode=true; wrapper.classList.add('critical-mode'); shake=50; setDiag("HARVEY: 'THE ECHO IS A COFFIN.'"); startHellDrone(); }
     if(val==='PULSE2'){ hellMode=false; wrapper.classList.remove('critical-mode'); if(p1)p1.lives=CONFIG.LIVES; if(p2)p2.lives=CONFIG.LIVES; shake=0; setDiag("SYSTEM: 'INTEGRITY RESTORED.'"); stopHellDrone(); }
     if(val==='GHOST'){ if(p1){ p1.invul=9999; setDiag("SYSTEM: 'PHASE SHIFT ACTIVE.'"); } }
     if(val==='MATRIX'){ spawnParticles(225,150,'#00ff41',80); setDiag("SYSTEM: 'REALITY IS CODE.'"); }
-    if(val==='BERRYBURN'){ neuralCredits+=1000; saveProgress(); setDiag("SYSTEM: '1000 NEURAL CREDITS INJECTED.'"); }
+    if(val==='BERRYBURN'){ neuralCredits+=1000; saveProgress(); setDiag("SYSTEM: '1000 O.P.I CREDITS INJECTED.'"); }
     if(val==='MESSIAS'){
         if(!ownedSkins.includes('mequintoshi')){
             ownedSkins.push('mequintoshi');
@@ -3640,8 +4930,11 @@ setupTouch('touch-orbit-in','Space'); setupTouch('touch-orbit-out','KeyS');
 setupTouch('touch-p2-left','ArrowLeft'); setupTouch('touch-p2-right','ArrowRight');
 setupTouch('touch-p2-orbit-in','ShiftLeft'); setupTouch('touch-p2-orbit-out','ArrowDown');
 
-// ── BOOT: start menu animation ────────────────────────────────────
+// ── BOOT: start menu animation immediately ────────────────────────
 startMenuAnim();
+startPreviewAnim();
+// Draw OPI apartment preview in background immediately
+setTimeout(()=>{ try{ _drawOPIApartment(); } catch(e){} }, 100);
 </script>
 </body>
 </html>
