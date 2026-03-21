@@ -3,6 +3,7 @@
 > **ORBITAL PULSE INDUSTRIES · 2041**
 
 ECHOTRON is a minimalist arcade reflex game set in a cyberpunk dystopia. You are an operator — a signal being tested inside a collapsing neural network built by O.P.I, Orbital Pulse Industries. Navigate through an endless stream of expanding rings. Time your orbits. Pass through the gap. Don't get hit. Reach 100 rings and discover what you were really running from.
+
 ---
 
 ## Gameplay
