@@ -8,7 +8,7 @@ ECHOTRON is a minimalist arcade reflex game set in a cyberpunk dystopia. You are
 
 ## Play
 
-🎮 **[Play on GitHub Pages](https://syscolor.github.io/PULSE/)**
+🎮 **[Play on GitHub Pages](https:/marziogames.github.io/PULSE/)**
 
 ---
 
